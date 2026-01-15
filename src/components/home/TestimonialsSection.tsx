@@ -1,29 +1,37 @@
 import { motion } from "framer-motion";
-import { Star, Quote } from "lucide-react";
+import { Star, Quote, User } from "lucide-react";
 
 const testimonials = [
   {
     name: "Rajesh Kumar",
     role: "Business Owner",
-    image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=faces",
-    content: "ZappTek saved my business when our server crashed. Their 24/7 support and quick response time is unmatched. Highly recommended!",
+    content:
+      "ZappTek saved my business when our server crashed. Their 24/7 support and quick response time is unmatched. Highly recommended!",
     rating: 5,
   },
   {
     name: "Priya Sharma",
     role: "Freelance Designer",
-    image: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150&h=150&fit=crop&crop=faces",
-    content: "Professional, affordable, and reliable. They fixed my MacBook in just 2 hours. The AMC plan is a great value for money.",
+    content:
+      "Professional, affordable, and reliable. They fixed my MacBook in just 2 hours. The AMC plan is a great value for money.",
     rating: 5,
   },
   {
     name: "Amit Patel",
     role: "IT Manager",
-    image: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=faces",
-    content: "We've been using ZappTek for our office network and CCTV setup. Their enterprise plan is perfect for businesses like ours.",
+    content:
+      "We've been using ZappTek for our office network and CCTV setup. Their enterprise plan is perfect for businesses like ours.",
     rating: 5,
   },
 ];
+
+// Get initials
+const getInitials = (name) =>
+  name
+    .split(" ")
+    .map((n) => n[0])
+    .join("")
+    .toUpperCase();
 
 export function TestimonialsSection() {
   return (
@@ -39,6 +47,7 @@ export function TestimonialsSection() {
           >
             Testimonials
           </motion.span>
+
           <motion.h2
             initial={{ opacity: 0, y: 10 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -48,6 +57,7 @@ export function TestimonialsSection() {
           >
             What Our Customers Say
           </motion.h2>
+
           <motion.p
             initial={{ opacity: 0, y: 10 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -55,7 +65,7 @@ export function TestimonialsSection() {
             transition={{ delay: 0.2 }}
             className="section-subheading mx-auto"
           >
-            Don't just take our word for it. Here's what our happy customers have to say.
+            Don’t just take our word for it. Here’s what our customers say about ZappTek.
           </motion.p>
         </div>
 
@@ -84,19 +94,23 @@ export function TestimonialsSection() {
 
               {/* Content */}
               <p className="text-foreground/80 mb-6 leading-relaxed">
-                "{testimonial.content}"
+                “{testimonial.content}”
               </p>
 
-              {/* Author */}
+              {/* Author (No Photo) */}
               <div className="flex items-center gap-4">
-                <img
-                  src={testimonial.image}
-                  alt={testimonial.name}
-                  className="w-12 h-12 rounded-full object-cover ring-2 ring-primary/20"
-                />
+                {/* Initials Avatar */}
+                <div className="w-12 h-12 rounded-full bg-primary/10 text-primary font-bold flex items-center justify-center ring-2 ring-primary/20">
+                  {getInitials(testimonial.name)}
+                </div>
+
                 <div>
-                  <h4 className="font-semibold text-foreground">{testimonial.name}</h4>
-                  <p className="text-sm text-muted-foreground">{testimonial.role}</p>
+                  <h4 className="font-semibold text-foreground">
+                    {testimonial.name}
+                  </h4>
+                  <p className="text-sm text-muted-foreground">
+                    {testimonial.role}
+                  </p>
                 </div>
               </div>
             </motion.div>
