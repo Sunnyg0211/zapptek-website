@@ -82,16 +82,16 @@ const Contact = () => {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
                     <Label htmlFor="name">Full Name</Label>
-                    <Input id="name" placeholder="John Doe" className="mt-2" />
+                    <Input id="name" placeholder="Your Name" className="mt-2" />
                   </div>
                   <div>
                     <Label htmlFor="phone">Phone Number</Label>
-                    <Input id="phone" placeholder="+91 98765 43210" className="mt-2" />
+                    <Input id="phone" placeholder="+91 9793541467" className="mt-2" />
                   </div>
                 </div>
                 <div>
                   <Label htmlFor="email">Email Address</Label>
-                  <Input id="email" type="email" placeholder="john@example.com" className="mt-2" />
+                  <Input id="email" type="email" placeholder="user@domain.com" className="mt-2" />
                 </div>
                 <div>
                   <Label htmlFor="subject">Subject</Label>
@@ -151,13 +151,13 @@ const Contact = () => {
                 </p>
                 <div className="flex flex-col sm:flex-row gap-3">
                   <Button variant="whatsapp" size="lg" className="flex-1" asChild>
-                    <a href="https://wa.me/919876543210" target="_blank" rel="noopener noreferrer">
+                    <a href="https://wa.me/919793541467" target="_blank" rel="noopener noreferrer">
                       <MessageCircle className="w-5 h-5" />
                       WhatsApp Us
                     </a>
                   </Button>
                   <Button variant="outline-light" size="lg" className="flex-1" asChild>
-                    <a href="tel:+919876543210">
+                    <a href="tel:+919793541467">
                       <Phone className="w-5 h-5" />
                       Call Now
                     </a>
