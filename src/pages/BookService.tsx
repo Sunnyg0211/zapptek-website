@@ -241,17 +241,17 @@ const BookService = () => {
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <div>
                         <Label htmlFor="name">Full Name</Label>
-                        <Input id="name" placeholder="John Doe" className="mt-2" />
+                        <Input id="name" placeholder="Input name" className="mt-2" />
                       </div>
                       <div>
                         <Label htmlFor="phone">Phone Number</Label>
-                        <Input id="phone" placeholder="+91 98765 43210" className="mt-2" />
+                        <Input id="phone" placeholder="Input number" className="mt-2" />
                       </div>
                     </div>
 
                     <div>
                       <Label htmlFor="email">Email Address</Label>
-                      <Input id="email" type="email" placeholder="john@example.com" className="mt-2" />
+                      <Input id="email" type="email" placeholder="user@domain.com" className="mt-2" />
                     </div>
 
                     <div className="p-4 bg-muted/50 rounded-xl">
