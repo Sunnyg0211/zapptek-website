@@ -61,13 +61,13 @@ export function CTASection() {
               </Link>
             </Button>
             <Button variant="whatsapp" size="xl" asChild>
-              <a href="https://wa.me/919876543210" target="_blank" rel="noopener noreferrer">
+              <a href="https://wa.me/919793541467" target="_blank" rel="noopener noreferrer">
                 <MessageCircle className="w-5 h-5" />
                 WhatsApp Us
               </a>
             </Button>
             <Button variant="outline-light" size="xl" asChild>
-              <a href="tel:+919876543210">
+              <a href="tel:+919793541467">
                 <Phone className="w-5 h-5" />
                 Call Now
               </a>
@@ -83,8 +83,8 @@ export function CTASection() {
             className="grid grid-cols-2 md:grid-cols-4 gap-8 mt-16 pt-16 border-t border-primary-foreground/10"
           >
             {[
-              { value: "5000+", label: "Happy Customers" },
-              { value: "15+", label: "Years Experience" },
+              { value: "2500+", label: "Happy Customers" },
+              { value: "10+", label: "Years Experience" },
               { value: "24/7", label: "Support Available" },
               { value: "98%", label: "Satisfaction Rate" },
             ].map((stat, index) => (
