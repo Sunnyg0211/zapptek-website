@@ -86,7 +86,7 @@ const Contact = () => {
                   </div>
                   <div>
                     <Label htmlFor="phone">Phone Number</Label>
-                    <Input id="phone" placeholder="+91 9793541467" className="mt-2" />
+                    <Input id="phone" placeholder="+91 12345 67890" className="mt-2" />
                   </div>
                 </div>
                 <div>
