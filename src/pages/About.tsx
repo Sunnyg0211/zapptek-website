@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
-import { Users, Award, Clock, MapPin, ArrowRight, Zap, Target, Heart } from "lucide-react";
+import { Award, ArrowRight, Zap, Target, Heart } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 const stats = [
@@ -28,29 +28,6 @@ const values = [
   },
 ];
 
-const team = [
-  {
-    name: "Vikram Sharma",
-    role: "Founder & CEO",
-    image: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=300&h=300&fit=crop&crop=faces",
-  },
-  {
-    name: "Priya Patel",
-    role: "Technical Director",
-    image: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=300&h=300&fit=crop&crop=faces",
-  },
-  {
-    name: "Rajesh Kumar",
-    role: "Operations Manager",
-    image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=300&h=300&fit=crop&crop=faces",
-  },
-  {
-    name: "Anjali Verma",
-    role: "Customer Success Lead",
-    image: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=300&h=300&fit=crop&crop=faces",
-  },
-];
-
 const About = () => {
   return (
     <div className="min-h-screen">
@@ -66,8 +43,11 @@ const About = () => {
               <div className="w-12 h-12 rounded-xl gradient-bg flex items-center justify-center">
                 <Zap className="w-7 h-7 text-primary-foreground" />
               </div>
-              <span className="text-2xl font-display font-bold text-primary-foreground">ZappTek</span>
+              <span className="text-2xl font-display font-bold text-primary-foreground">
+                ZappTek
+              </span>
             </motion.div>
+
             <motion.h1
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -76,6 +56,7 @@ const About = () => {
             >
               About Us
             </motion.h1>
+
             <motion.p
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -134,13 +115,13 @@ const About = () => {
               className="prose prose-lg mx-auto text-muted-foreground"
             >
               <p>
-                Founded in 2009, ZappTek started as a small computer repair shop in Bangalore with a simple mission: to provide honest, reliable, and affordable IT services to everyone.
+                Founded in 2009, ZappTek started as a small computer repair shop with a simple mission: to provide honest, reliable, and affordable IT services to everyone.
               </p>
               <p>
-                Over the years, we've grown from a two-person team to a company with over 50 expert technicians serving thousands of customers across the city. Our commitment to quality service and customer satisfaction has remained unchanged.
+                Over the years, we've grown into a company with expert technicians serving thousands of customers. Our commitment to quality service and customer satisfaction has remained unchanged.
               </p>
               <p>
-                Today, we offer comprehensive IT solutions for homes and businesses, from basic computer repairs to complete network infrastructure setup. We take pride in our quick response times, transparent pricing, and skilled technicians who treat every device as if it were their own.
+                Today, we offer comprehensive IT solutions for homes and businesses — from basic computer repairs to complete network infrastructure setup.
               </p>
             </motion.div>
           </div>
@@ -170,44 +151,10 @@ const About = () => {
                 <div className="w-16 h-16 rounded-2xl gradient-bg flex items-center justify-center mx-auto mb-6">
                   <value.icon className="w-8 h-8 text-primary-foreground" />
                 </div>
-                <h3 className="text-xl font-display font-bold mb-3">{value.title}</h3>
+                <h3 className="text-xl font-display font-bold mb-3">
+                  {value.title}
+                </h3>
                 <p className="text-muted-foreground">{value.description}</p>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Team Section */}
-      <section className="py-20 bg-muted/30">
-        <div className="container mx-auto px-4">
-          <div className="text-center mb-16">
-            <span className="inline-block px-4 py-1.5 rounded-full bg-primary/10 text-primary text-sm font-medium mb-4">
-              Our Team
-            </span>
-            <h2 className="section-heading mb-4">Meet the Experts</h2>
-            <p className="section-subheading mx-auto">
-              Our leadership team brings decades of combined experience in IT services.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 max-w-4xl mx-auto">
-            {team.map((member, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: index * 0.1 }}
-                className="text-center"
-              >
-                <img
-                  src={member.image}
-                  alt={member.name}
-                  className="w-24 h-24 md:w-32 md:h-32 rounded-2xl object-cover mx-auto mb-4 ring-4 ring-primary/10"
-                />
-                <h4 className="font-display font-semibold">{member.name}</h4>
-                <p className="text-sm text-muted-foreground">{member.role}</p>
               </motion.div>
             ))}
           </div>
