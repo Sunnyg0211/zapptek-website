@@ -9,19 +9,19 @@ const contactInfo = [
   {
     icon: Phone,
     title: "Phone",
-    details: ["+91 98765 43210", "+91 80 1234 5678"],
-    action: "tel:+919876543210",
+    details: ["+91 97935 41467"],
+    action: "tel:+919793541467",
   },
   {
     icon: Mail,
     title: "Email",
-    details: ["support@zapptek.com", "sales@zapptek.com"],
-    action: "mailto:support@zapptek.com",
+    details: ["support@zapptek.online", "sales@zapptek.online"],
+    action: "mailto:support@zapptek.online",
   },
   {
     icon: MapPin,
     title: "Address",
-    details: ["123 Tech Park, Electronic City", "Bangalore, Karnataka 560100"],
+    details: ["Mumbai, Gorakhpur & Lucknow"],
     action: "#",
   },
   {
