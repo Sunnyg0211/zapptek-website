@@ -25,9 +25,9 @@ export function Header() {
           {/* Logo */}
           <Link to="/" className="flex items-center gap-2 group">
             <img
-              src="/logo2.png"
+              src="/logo3.png"
               alt="ZappTek Logo"
-              className="h-16 md:h-20 w-auto"
+              className="h-15 md:h-29 w-auto"
             />
           </Link>
 
