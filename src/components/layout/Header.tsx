@@ -24,11 +24,15 @@ export function Header() {
         <div className="flex items-center justify-between h-16 md:h-20">
           {/* Logo */}
           <Link to="/" className="flex items-center gap-2 group">
-            <img
-              src="/logo3.png"
-              alt="ZappTek Logo"
-              className="h-15 md:h-10 w-auto"
-            />
+            <div className="relative">
+              <div className="w-10 h-10 rounded-xl gradient-bg flex items-center justify-center shadow-md group-hover:shadow-glow transition-shadow duration-300">
+                <Zap className="w-6 h-6 text-primary-foreground" />
+              </div>
+            </div>
+            <span className="text-xl md:text-2xl font-display font-bold">
+              <span className="text-primary">Zapp</span>
+              <span className="text-foreground">Tek</span>
+            </span>
           </Link>
 
           {/* Desktop Navigation */}
