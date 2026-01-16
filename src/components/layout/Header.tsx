@@ -27,7 +27,7 @@ export function Header() {
             <img
               src="/logo3.png"
               alt="ZappTek Logo"
-              className="h-10 md:h-10 w-auto"
+              className="h-15 md:h-15 w-auto"
             />
           </Link>
 
