@@ -2,11 +2,19 @@ import { useEffect } from "react";
 import { useLocation } from "react-router-dom";
 
 export default function ScrollToHash() {
-  const { pathname, hash } = useLocation();
+  const location = useLocation();
 
   useEffect(() => {
-    if (hash) {
-      const id = hash.replace("#", "");
+    const hash = location.hash;
+
+    if (!hash) {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+      return;
+    }
+
+    const id = hash.replace("#", "");
+
+    const scroll = () => {
       const element = document.getElementById(id);
 
       if (element) {
@@ -15,10 +23,12 @@ export default function ScrollToHash() {
           block: "start",
         });
       }
-    } else {
-      window.scrollTo({ top: 0, behavior: "smooth" });
-    }
-  }, [pathname, hash]);
+    };
+
+    // Wait for React to finish rendering
+    setTimeout(scroll, 200);
+
+  }, [location]);
 
   return null;
 }
