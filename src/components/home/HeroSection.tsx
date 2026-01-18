@@ -56,7 +56,7 @@ export function HeroSection() {
           >
             <Zap className="w-4 h-4 text-accent" />
             <span className="text-sm font-medium text-primary-foreground">
-              Trusted by 5000+ Customers
+              Trusted by Clients Across Multiple Cities
             </span>
           </motion.div>
 
@@ -67,9 +67,9 @@ export function HeroSection() {
             transition={{ duration: 0.5, delay: 0.1 }}
             className="text-4xl md:text-5xl lg:text-7xl font-display font-bold text-primary-foreground mb-6 leading-tight"
           >
-            Expert IT Services
+            Expert Efforts, Timely Service
             <br />
-            <span className="text-accent">At Your Doorstep</span>
+            <span className="text-accent">– Delivered On-Site</span>
           </motion.h1>
 
           {/* Description */}
@@ -79,7 +79,7 @@ export function HeroSection() {
             transition={{ duration: 0.5, delay: 0.2 }}
             className="text-lg md:text-xl text-primary-foreground/70 mb-8 max-w-2xl"
           >
-            From computer repairs to network solutions, we provide comprehensive IT services for homes and businesses. Fast, reliable, and affordable.
+            Comprehensive IT services for homes and businesses—from computer repairs to network solutions—delivered fast, reliably, and affordably.
           </motion.p>
 
           {/* CTA Buttons */}
