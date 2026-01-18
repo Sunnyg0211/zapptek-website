@@ -38,7 +38,6 @@ import CustomerOrders from "./pages/customer/CustomerOrders";
 import CustomerTickets from "./pages/customer/CustomerTickets";
 import CustomerInvoices from "./pages/customer/CustomerInvoices";
 import CustomerProfile from "./pages/customer/CustomerProfile";
-import ProductDetails from "./pages/ProductDetails";
 import BuyNow from "./pages/BuyNow";
 
 const queryClient = new QueryClient();
@@ -78,7 +77,6 @@ const App = () => (
               <Route path="/products" element={<Products />} />
 
               {/* ✅ NEW E-COMMERCE ROUTES */}
-              <Route path="/product/:id" element={<ProductDetails />} />
               <Route path="/buy-now/:productId" element={<BuyNow />} />
 
               <Route path="/book-service" element={<BookService />} />
