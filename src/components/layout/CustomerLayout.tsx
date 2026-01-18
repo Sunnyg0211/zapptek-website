@@ -31,13 +31,6 @@ export default function CustomerLayout() {
   const location = useLocation();
   const [mobileOpen, setMobileOpen] = useState(false);
 
-  const [cartCount, setCartCount] = useState(0);
-
-  useEffect(() => {
-    const cart = JSON.parse(localStorage.getItem("cart") || "[]");
-    setCartCount(cart.length);
-  }, [location.pathname]);
-
   const Sidebar = ({ mobile = false }: { mobile?: boolean }) => (
     <div className={cn("flex h-full flex-col", mobile && "pt-4")}>
       <div className="px-6 py-4">
@@ -64,12 +57,6 @@ export default function CustomerLayout() {
               >
                 <item.icon className="h-5 w-5" />
                 {item.name}
-
-                {item.name === "My Cart" && cartCount > 0 && (
-                  <span className="ml-auto bg-primary text-white text-xs px-2 py-0.5 rounded-full">
-                    {cartCount}
-                  </span>
-                )}
               </Link>
             );
           })}
