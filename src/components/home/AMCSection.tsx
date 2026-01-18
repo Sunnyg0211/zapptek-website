@@ -7,11 +7,11 @@ const plans = [
   {
     name: "Basic",
     icon: Zap,
-    price: "₹2,999",
+    price: "₹2,499",
     period: "/year",
     description: "Perfect for home users",
     features: [
-      "2 Service Visits",
+      "7 Service Visits",
       "Remote Support",
       "Software Updates",
       "Basic Maintenance",
@@ -22,11 +22,11 @@ const plans = [
   {
     name: "Professional",
     icon: Star,
-    price: "₹5,999",
+    price: "₹4,499",
     period: "/year",
     description: "Ideal for small businesses",
     features: [
-      "6 Service Visits",
+      " Service Visits" 12,
       "Priority Remote Support",
       "Software & Security Updates",
       "Hardware Cleaning",
@@ -37,20 +37,24 @@ const plans = [
   },
   {
     name: "Enterprise",
-    icon: Crown,
-    price: "₹12,999",
-    period: "/year",
-    description: "For growing businesses",
-    features: [
-      "Unlimited Service Visits",
-      "24/7 Priority Support",
-      "Complete Maintenance",
-      "Network Management",
-      "Dedicated Account Manager",
-      "20% Discount on Parts",
-      "Free Data Backup",
-    ],
-    popular: false,
+icon: Crown,
+price: null,
+period: null,
+description: "Custom AMC for Corporate & Bulk Requirements",
+ctaText: "Get Best Pricing",
+ctaLink: "/contact",
+note: "Contact us for customized enterprise pricing",
+features: [
+  "Unlimited Service Visits",
+  "24/7 Priority Support",
+  "Complete Maintenance",
+  "Network Management",
+  "Dedicated Account Manager",
+  "On-Site IT Support",
+  "Custom SLA & Response Time",
+],
+popular: false,
+
   },
 ];
 
