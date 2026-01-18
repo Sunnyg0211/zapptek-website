@@ -36,24 +36,16 @@ const bannerSlides = [
     subtitle: "Powerful performance for work & play",
     price: "Starting at ₹45,999",
     buttonText: "Buy Now",
-    link: "/products",
+    productId: 1
   },
   {
     image: "https://images.unsplash.com/photo-1587202372775-e229f172b9d7?w=1200&h=400&fit=crop",
     title: "Office Printers Sale",
     subtitle: "High speed & quality printing",
     price: "Up to 30% OFF",
-    buttonText: "Shop Printers",
-    link: "/products",
-  },
-  {
-    image: "https://images.unsplash.com/photo-1555617981-6fae9c3b0b1e?w=1200&h=400&fit=crop",
-    title: "Networking Devices",
-    subtitle: "Boost your connectivity",
-    price: "Exclusive Deals",
-    buttonText: "Explore",
-    link: "/products",
-  },
+    buttonText: "Buy Now",
+    productId: 3
+  }
 ];
 
 const products = [
