@@ -23,6 +23,13 @@ import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { useToast } from "@/components/ui/use-toast";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 const categories = [
   { id: "all", name: "All Products", icon: Grid },
@@ -34,24 +41,7 @@ const categories = [
   { id: "storage", name: "Storage", icon: HardDrive },
 ];
 
-const bannerSlides = [
-  {
-    image: "https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=1200&h=400&fit=crop",
-    title: "Latest Gaming Laptops",
-    subtitle: "Powerful performance for work & play",
-    price: "Starting at ₹45,999",
-    productId: 1,
-  },
-  {
-    image: "https://images.unsplash.com/photo-1587202372775-e229f172b9d7?w=1200&h=400&fit=crop",
-    title: "Office Printers Sale",
-    subtitle: "High speed & quality printing",
-    price: "Up to 30% OFF",
-    productId: 3,
-  },
-];
-
-const products = Array.from({ length: 60 }).map((_, i) => ({
+const products = Array.from({ length: 120 }).map((_, i) => ({
   id: i + 1,
   name: `Demo Product ${i + 1}`,
   category: i % 2 === 0 ? "laptops" : "printers",
@@ -69,34 +59,27 @@ const Products = () => {
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [searchQuery, setSearchQuery] = useState("");
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
-  const [currentSlide, setCurrentSlide] = useState(0);
 
-  // PAGINATION STATES
+  // PAGINATION + SELECTOR STATES
   const [currentPage, setCurrentPage] = useState(1);
-  const productsPerPage = 25;
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentSlide((prev) => (prev + 1) % bannerSlides.length);
-    }, 3000);
-
-    return () => clearInterval(interval);
-  }, []);
+  const [productsPerPage, setProductsPerPage] = useState(25);
 
   // FILTER LOGIC
   const filteredProducts = products.filter((product) => {
     const matchesCategory =
       selectedCategory === "all" || product.category === selectedCategory;
+
     const matchesSearch = product.name
       .toLowerCase()
       .includes(searchQuery.toLowerCase());
+
     return matchesCategory && matchesSearch;
   });
 
-  // RESET PAGE WHEN FILTER CHANGES
+  // Reset page when filters change
   useEffect(() => {
     setCurrentPage(1);
-  }, [searchQuery, selectedCategory]);
+  }, [searchQuery, selectedCategory, productsPerPage]);
 
   // PAGINATION CALCULATIONS
   const totalPages = Math.ceil(filteredProducts.length / productsPerPage);
@@ -124,33 +107,11 @@ const Products = () => {
   return (
     <div className="min-h-screen bg-background">
 
-      {/* Search Bar */}
+      {/* SEARCH BAR */}
       <section className="py-6 bg-muted/20">
-        <div className="container mx-auto px-4 flex gap-4 items-center">
+        <div className="container mx-auto px-4 flex flex-col md:flex-row gap-4 items-center">
 
-          <Sheet>
-            <SheetTrigger asChild>
-              <Button variant="outline" size="icon" className="lg:hidden">
-                <Filter className="w-5 h-5" />
-              </Button>
-            </SheetTrigger>
-
-            <SheetContent side="left">
-              <h3 className="font-semibold mb-4">Categories</h3>
-
-              {categories.map((category) => (
-                <button
-                  key={category.id}
-                  onClick={() => setSelectedCategory(category.id)}
-                  className="block w-full text-left p-2 hover:bg-muted rounded"
-                >
-                  {category.name}
-                </button>
-              ))}
-            </SheetContent>
-          </Sheet>
-
-          <div className="relative flex-1">
+          <div className="relative flex-1 w-full">
             <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5" />
             <Input
               placeholder="Search products..."
@@ -159,14 +120,35 @@ const Products = () => {
               className="pl-12 h-12"
             />
           </div>
+
+          {/* PRODUCTS PER PAGE SELECTOR */}
+          <div className="flex items-center gap-2">
+            <span className="text-sm">Show:</span>
+
+            <Select
+              value={String(productsPerPage)}
+              onValueChange={(value) => setProductsPerPage(Number(value))}
+            >
+              <SelectTrigger className="w-[100px]">
+                <SelectValue />
+              </SelectTrigger>
+
+              <SelectContent>
+                <SelectItem value="25">25</SelectItem>
+                <SelectItem value="50">50</SelectItem>
+                <SelectItem value="100">100</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+
         </div>
       </section>
 
-      {/* Products Section */}
+      {/* PRODUCTS SECTION */}
       <section className="py-10">
         <div className="container mx-auto px-4">
 
-          <div className="flex justify-between mb-4">
+          <div className="flex flex-col sm:flex-row justify-between items-center mb-4 gap-3">
             <p>
               Showing {currentProducts.length} of {filteredProducts.length} products
             </p>
@@ -182,7 +164,7 @@ const Products = () => {
             </div>
           </div>
 
-          {/* Product Grid */}
+          {/* PRODUCT GRID */}
           <div className="grid sm:grid-cols-2 xl:grid-cols-3 gap-5">
             {currentProducts.map((product) => (
               <div
@@ -221,7 +203,7 @@ const Products = () => {
 
           {/* PAGINATION CONTROLS */}
           {totalPages > 1 && (
-            <div className="flex justify-center items-center gap-2 mt-10">
+            <div className="flex justify-center items-center gap-2 mt-10 flex-wrap">
 
               <Button
                 variant="outline"
@@ -237,7 +219,6 @@ const Products = () => {
                   key={index}
                   variant={currentPage === index + 1 ? "default" : "outline"}
                   onClick={() => changePage(index + 1)}
-                  className="hidden sm:inline-flex"
                 >
                   {index + 1}
                 </Button>
