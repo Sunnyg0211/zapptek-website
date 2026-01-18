@@ -1,9 +1,9 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
-import { 
-  Search, 
-  ShoppingCart, 
+import {
+  Search,
+  ShoppingCart,
   Filter,
   Grid,
   List,
@@ -18,6 +18,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
+import { useToast } from "@/components/ui/use-toast";
 
 const categories = [
   { id: "all", name: "All Products", icon: Grid },
@@ -85,6 +86,8 @@ const products = [
 ];
 
 const Products = () => {
+  const { toast } = useToast();
+
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [searchQuery, setSearchQuery] = useState("");
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
@@ -100,15 +103,25 @@ const Products = () => {
   }, []);
 
   const filteredProducts = products.filter((product) => {
-    const matchesCategory = selectedCategory === "all" || product.category === selectedCategory;
-    const matchesSearch = product.name.toLowerCase().includes(searchQuery.toLowerCase());
+    const matchesCategory =
+      selectedCategory === "all" || product.category === selectedCategory;
+    const matchesSearch = product.name
+      .toLowerCase()
+      .includes(searchQuery.toLowerCase());
     return matchesCategory && matchesSearch;
   });
+
+  const handleAddToCart = (product: any) => {
+    toast({
+      title: "Added to Cart",
+      description: `${product.name} added to cart successfully`,
+    });
+  };
 
   return (
     <div className="min-h-screen bg-background">
 
-      {/* ====== BANNER SLIDER SECTION ====== */}
+      {/* BANNER SLIDER */}
       <section className="w-full overflow-hidden">
         <div className="relative h-[350px] md:h-[400px]">
 
@@ -143,7 +156,9 @@ const Products = () => {
                       </p>
 
                       <Button asChild variant="gradient">
-                        <Link to={slide.link}>{slide.buttonText}</Link>
+                        <Link to={`/buy-now/${slide.productId}`}>
+                          {slide.buttonText}
+                        </Link>
                       </Button>
                     </div>
                   </div>
@@ -158,9 +173,7 @@ const Products = () => {
                 key={i}
                 onClick={() => setCurrentSlide(i)}
                 className={`h-2 rounded-full transition-all ${
-                  currentSlide === i
-                    ? "bg-white w-6"
-                    : "bg-white/50 w-2"
+                  currentSlide === i ? "bg-white w-6" : "bg-white/50 w-2"
                 }`}
               />
             ))}
@@ -168,16 +181,12 @@ const Products = () => {
         </div>
       </section>
 
-      {/* HERO SEARCH SECTION */}
+      {/* SEARCH BAR */}
       <section className="py-10 gradient-hero">
         <div className="container mx-auto px-4 text-center">
           <h1 className="text-3xl md:text-4xl font-bold text-primary-foreground mb-4">
             IT Products Store
           </h1>
-
-          <p className="text-primary-foreground/70 mb-6">
-            Quality laptops, printers, networking equipment, and accessories at competitive prices.
-          </p>
 
           <div className="max-w-md mx-auto relative">
             <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
@@ -191,93 +200,73 @@ const Products = () => {
         </div>
       </section>
 
-      {/* PRODUCTS SECTION */}
+      {/* PRODUCTS */}
       <section className="py-12">
         <div className="container mx-auto px-4">
-          <div className="flex flex-col lg:flex-row gap-8">
 
-            {/* Sidebar */}
-            <aside className="lg:w-64">
-              <div className="bg-card rounded-2xl p-6 shadow-md border border-border sticky top-24">
-                <h3 className="font-semibold mb-4 flex items-center gap-2">
-                  <Filter className="w-5 h-5" />
-                  Categories
-                </h3>
+          <div className="flex justify-between mb-6">
+            <p>Showing {filteredProducts.length} products</p>
 
-                {categories.map((category) => (
-                  <button
-                    key={category.id}
-                    onClick={() => setSelectedCategory(category.id)}
-                    className={`w-full flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm transition-all ${
-                      selectedCategory === category.id
-                        ? "bg-primary text-white"
-                        : "hover:bg-muted"
-                    }`}
-                  >
-                    <category.icon className="w-4 h-4" />
-                    {category.name}
-                  </button>
-                ))}
-              </div>
-            </aside>
+            <div className="flex gap-2">
+              <Button size="icon" onClick={() => setViewMode("grid")}>
+                <Grid className="w-4 h-4" />
+              </Button>
 
-            {/* Products Grid */}
-            <div className="flex-1">
+              <Button size="icon" onClick={() => setViewMode("list")}>
+                <List className="w-4 h-4" />
+              </Button>
+            </div>
+          </div>
 
-              <div className="flex justify-between mb-6">
-                <p>
-                  Showing {filteredProducts.length} products
-                </p>
+          <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-6">
+            {filteredProducts.map((product) => (
+              <div
+                key={product.id}
+                className="bg-card rounded-2xl overflow-hidden shadow border hover:shadow-lg transition"
+              >
+                <Link to={`/buy-now/${product.id}`}>
+                  <img
+                    src={product.image}
+                    className="w-full h-48 object-cover"
+                  />
+                </Link>
 
-                <div className="flex gap-2">
+                <div className="p-5">
+                  <Link to={`/buy-now/${product.id}`}>
+                    <h3 className="font-semibold mb-2 hover:text-primary transition">
+                      {product.name}
+                    </h3>
+                  </Link>
+
+                  <div className="flex items-center gap-2 mb-2">
+                    <Star className="w-4 h-4 fill-accent text-accent" />
+                    <span>{product.rating}</span>
+                    <span className="text-muted-foreground">
+                      ({product.reviews})
+                    </span>
+                  </div>
+
+                  <div className="mb-3 font-bold">
+                    ₹{product.price.toLocaleString()}
+                  </div>
+
                   <Button
-                    size="icon"
-                    onClick={() => setViewMode("grid")}
+                    className="w-full"
+                    onClick={() => handleAddToCart(product)}
                   >
-                    <Grid className="w-4 h-4" />
-                  </Button>
-
-                  <Button
-                    size="icon"
-                    onClick={() => setViewMode("list")}
-                  >
-                    <List className="w-4 h-4" />
+                    <ShoppingCart className="w-4 h-4 mr-2" />
+                    Add to Cart
                   </Button>
                 </div>
               </div>
-
-              <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-6">
-                {filteredProducts.map((product) => (
-                  <div
-                    key={product.id}
-                    className="bg-card rounded-2xl overflow-hidden shadow border"
-                  >
-                    <img
-                      src={product.image}
-                      className="w-full h-48 object-cover"
-                    />
-
-                    <div className="p-5">
-                      <h3 className="font-semibold mb-2">
-                        {product.name}
-                      </h3>
-
-                      <div className="mb-2">
-                        ₹{product.price.toLocaleString()}
-                      </div>
-
-                      <Button className="w-full">
-                        <ShoppingCart className="w-4 h-4 mr-2" />
-                        Add to Cart
-                      </Button>
-                    </div>
-                  </div>
-                ))}
-              </div>
-
-            </div>
-
+            ))}
           </div>
+
+          {filteredProducts.length === 0 && (
+            <div className="text-center py-16">
+              <p>No products found</p>
+            </div>
+          )}
         </div>
       </section>
     </div>
