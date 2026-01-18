@@ -46,6 +46,7 @@ const Contact = () => {
             >
               Contact Us
             </motion.span>
+
             <motion.h1
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -54,6 +55,7 @@ const Contact = () => {
             >
               Get in Touch
             </motion.h1>
+
             <motion.p
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -70,6 +72,7 @@ const Contact = () => {
       <section className="py-20 bg-background">
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 max-w-6xl mx-auto">
+
             {/* Contact Form */}
             <motion.div
               initial={{ opacity: 0, x: -20 }}
@@ -77,7 +80,10 @@ const Contact = () => {
               viewport={{ once: true }}
               className="bg-card rounded-3xl p-8 shadow-lg border border-border"
             >
-              <h2 className="text-2xl font-display font-bold mb-6">Send us a Message</h2>
+              <h2 className="text-2xl font-display font-bold mb-6">
+                Send us a Message
+              </h2>
+
               <form className="space-y-6">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
@@ -89,14 +95,17 @@ const Contact = () => {
                     <Input id="phone" placeholder="+91 12345 67890" className="mt-2" />
                   </div>
                 </div>
+
                 <div>
                   <Label htmlFor="email">Email Address</Label>
                   <Input id="email" type="email" placeholder="user@domain.com" className="mt-2" />
                 </div>
+
                 <div>
                   <Label htmlFor="subject">Subject</Label>
                   <Input id="subject" placeholder="How can we help?" className="mt-2" />
                 </div>
+
                 <div>
                   <Label htmlFor="message">Message</Label>
                   <Textarea
@@ -105,6 +114,7 @@ const Contact = () => {
                     className="mt-2 min-h-[150px]"
                   />
                 </div>
+
                 <Button variant="gradient" size="lg" className="w-full">
                   <Send className="w-5 h-5" />
                   Send Message
@@ -128,10 +138,16 @@ const Contact = () => {
                     <div className="w-12 h-12 rounded-xl gradient-bg flex items-center justify-center flex-shrink-0">
                       <info.icon className="w-6 h-6 text-primary-foreground" />
                     </div>
+
                     <div>
-                      <h3 className="font-display font-semibold mb-1">{info.title}</h3>
+                      <h3 className="font-display font-semibold mb-1">
+                        {info.title}
+                      </h3>
+
                       {info.details.map((detail, i) => (
-                        <p key={i} className="text-muted-foreground">{detail}</p>
+                        <p key={i} className="text-muted-foreground">
+                          {detail}
+                        </p>
                       ))}
                     </div>
                   </motion.a>
@@ -145,17 +161,26 @@ const Contact = () => {
                 viewport={{ once: true }}
                 className="bg-gradient-to-br from-primary to-primary/80 rounded-3xl p-8 text-primary-foreground"
               >
-                <h3 className="text-xl font-display font-bold mb-3">Need Urgent Support?</h3>
+                <h3 className="text-xl font-display font-bold mb-3">
+                  Need Urgent Support?
+                </h3>
+
                 <p className="text-primary-foreground/70 mb-6">
-                  For immediate assistance, contact us via WhatsApp or call our 24/7 helpline.
+                  For immediate assistance, contact us via WhatsApp or call our helpline.
                 </p>
+
                 <div className="flex flex-col sm:flex-row gap-3">
                   <Button variant="whatsapp" size="lg" className="flex-1" asChild>
-                    <a href="https://wa.me/919793541467" target="_blank" rel="noopener noreferrer">
+                    <a
+                      href="https://wa.me/919793541467"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
                       <MessageCircle className="w-5 h-5" />
                       WhatsApp Us
                     </a>
                   </Button>
+
                   <Button variant="outline-light" size="lg" className="flex-1" asChild>
                     <a href="tel:+919793541467">
                       <Phone className="w-5 h-5" />
@@ -165,28 +190,11 @@ const Contact = () => {
                 </div>
               </motion.div>
             </div>
+
           </div>
         </div>
       </section>
 
-      {/* Map Section */}
-      <section className="py-8 bg-muted/30">
-        <div className="container mx-auto px-4">
-          <div className="max-w-6xl mx-auto rounded-3xl overflow-hidden shadow-lg">
-            <iframe
-              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3889.9461604073775!2d77.6655!3d12.8399!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMTLCsDUwJzIzLjYiTiA3N8KwMzknNTUuOCJF!5e0!3m2!1sen!2sin!4v1234567890"
-              width="100%"
-              height="400"
-              style={{ border: 0 }}
-              allowFullScreen
-              loading="lazy"
-              referrerPolicy="no-referrer-when-downgrade"
-              title="ZappTek Location"
-              className="w-full"
-            />
-          </div>
-        </div>
-      </section>
     </div>
   );
 };
