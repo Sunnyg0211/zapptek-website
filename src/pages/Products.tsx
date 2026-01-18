@@ -8,237 +8,323 @@ import {
   Grid,
   List,
   Star,
-  Laptop,
-  Printer,
-  Camera,
-  Wifi,
-  HardDrive,
-  Monitor,
-  ChevronLeft,
-  ChevronRight
+  X
 } from "lucide-react";
-
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { useToast } from "@/components/ui/use-toast";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { supabase } from "@/integrations/supabase/client";
 
-const categories = [
-  { id: "all", name: "All Products", icon: Grid },
-  { id: "laptops", name: "Laptops", icon: Laptop },
-  { id: "desktops", name: "Desktops", icon: Monitor },
-  { id: "printers", name: "Printers", icon: Printer },
-  { id: "cctv", name: "CCTV", icon: Camera },
-  { id: "networking", name: "Networking", icon: Wifi },
-  { id: "storage", name: "Storage", icon: HardDrive },
+const bannerSlides = [
+  {
+    image: "https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=1200&h=400&fit=crop",
+    title: "Latest IT Products",
+    subtitle: "Best deals on laptops & accessories",
+    price: "Starting at ₹9,999",
+    link: "/products"
+  },
+  {
+    image: "https://images.unsplash.com/photo-1587202372775-e229f172b9d7?w=1200&h=400&fit=crop",
+    title: "Printers & CCTV",
+    subtitle: "Home and office solutions",
+    price: "Up to 30% OFF",
+    link: "/products"
+  }
 ];
 
-const products = Array.from({ length: 120 }).map((_, i) => ({
-  id: i + 1,
-  name: `Demo Product ${i + 1}`,
-  category: i % 2 === 0 ? "laptops" : "printers",
-  price: 10000 + i * 200,
-  originalPrice: 12000 + i * 200,
-  image: "https://images.unsplash.com/photo-1496181133206-80ce9b88a853?w=400&h=300&fit=crop",
-  rating: 4.3,
-  reviews: 50 + i,
-  inStock: true,
-}));
+const categories = [
+  "all",
+  "laptops",
+  "desktops",
+  "printers",
+  "cctv",
+  "networking",
+  "storage"
+];
 
-const Products = () => {
-  const { toast } = useToast();
+export default function Products() {
+  const [products, setProducts] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  const [selectedCategory, setSelectedCategory] = useState("all");
-  const [searchQuery, setSearchQuery] = useState("");
-  const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
+  const [search, setSearch] = useState("");
+  const [category, setCategory] = useState("all");
 
-  // PAGINATION + SELECTOR STATES
-  const [currentPage, setCurrentPage] = useState(1);
-  const [productsPerPage, setProductsPerPage] = useState(25);
+  const [view, setView] = useState<"grid" | "list">("grid");
 
-  // FILTER LOGIC
-  const filteredProducts = products.filter((product) => {
-    const matchesCategory =
-      selectedCategory === "all" || product.category === selectedCategory;
+  const [currentSlide, setCurrentSlide] = useState(0);
 
-    const matchesSearch = product.name
-      .toLowerCase()
-      .includes(searchQuery.toLowerCase());
+  const [page, setPage] = useState(1);
+  const [perPage, setPerPage] = useState(25);
 
-    return matchesCategory && matchesSearch;
-  });
+  const [showFilter, setShowFilter] = useState(false);
 
-  // Reset page when filters change
   useEffect(() => {
-    setCurrentPage(1);
-  }, [searchQuery, selectedCategory, productsPerPage]);
+    loadProducts();
+  }, []);
 
-  // PAGINATION CALCULATIONS
-  const totalPages = Math.ceil(filteredProducts.length / productsPerPage);
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentSlide((prev) => (prev + 1) % bannerSlides.length);
+    }, 3000);
 
-  const indexOfLast = currentPage * productsPerPage;
-  const indexOfFirst = indexOfLast - productsPerPage;
+    return () => clearInterval(interval);
+  }, []);
 
-  const currentProducts = filteredProducts.slice(
-    indexOfFirst,
-    indexOfLast
-  );
+  const loadProducts = async () => {
+    setLoading(true);
 
-  const handleAddToCart = (product: any) => {
-    toast({
-      title: "Added to Cart",
-      description: `${product.name} added successfully`,
-    });
+    const { data } = await supabase
+      .from("products")
+      .select("*");
+
+    setProducts(data || []);
+    setLoading(false);
   };
 
-  const changePage = (page: number) => {
-    setCurrentPage(page);
-    window.scrollTo({ top: 0, behavior: "smooth" });
+  const filtered = products.filter((p) => {
+    const matchSearch = p.name.toLowerCase().includes(search.toLowerCase());
+    const matchCategory = category === "all" || p.category === category;
+    return matchSearch && matchCategory;
+  });
+
+  const totalPages = Math.ceil(filtered.length / perPage);
+
+  const start = (page - 1) * perPage;
+  const end = start + perPage;
+
+  const paginated = filtered.slice(start, end);
+
+  const addToCart = (product: any) => {
+    alert(product.name + " added to cart (demo)");
   };
 
   return (
     <div className="min-h-screen bg-background">
 
-      {/* SEARCH BAR */}
-      <section className="py-6 bg-muted/20">
-        <div className="container mx-auto px-4 flex flex-col md:flex-row gap-4 items-center">
-
-          <div className="relative flex-1 w-full">
-            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5" />
-            <Input
-              placeholder="Search products..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-12 h-12"
-            />
-          </div>
-
-          {/* PRODUCTS PER PAGE SELECTOR */}
-          <div className="flex items-center gap-2">
-            <span className="text-sm">Show:</span>
-
-            <Select
-              value={String(productsPerPage)}
-              onValueChange={(value) => setProductsPerPage(Number(value))}
+      {/* ======= BANNER SLIDER ======= */}
+      <section className="w-full overflow-hidden">
+        <div className="relative h-[300px] md:h-[380px]">
+          {bannerSlides.map((slide, i) => (
+            <motion.div
+              key={i}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: i === currentSlide ? 1 : 0 }}
+              transition={{ duration: 0.8 }}
+              className="absolute inset-0"
             >
-              <SelectTrigger className="w-[100px]">
-                <SelectValue />
-              </SelectTrigger>
+              <img
+                src={slide.image}
+                className="w-full h-full object-cover"
+              />
 
-              <SelectContent>
-                <SelectItem value="25">25</SelectItem>
-                <SelectItem value="50">50</SelectItem>
-                <SelectItem value="100">100</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
+              <div className="absolute inset-0 bg-black/50 flex items-center">
+                <div className="container mx-auto px-6 text-white">
+                  <h2 className="text-3xl font-bold">{slide.title}</h2>
+                  <p className="mt-2 text-white/80">{slide.subtitle}</p>
+                  <p className="mt-2 text-xl font-semibold">{slide.price}</p>
 
-        </div>
-      </section>
-
-      {/* PRODUCTS SECTION */}
-      <section className="py-10">
-        <div className="container mx-auto px-4">
-
-          <div className="flex flex-col sm:flex-row justify-between items-center mb-4 gap-3">
-            <p>
-              Showing {currentProducts.length} of {filteredProducts.length} products
-            </p>
-
-            <div className="flex gap-2">
-              <Button size="icon" onClick={() => setViewMode("grid")}>
-                <Grid className="w-4 h-4" />
-              </Button>
-
-              <Button size="icon" onClick={() => setViewMode("list")}>
-                <List className="w-4 h-4" />
-              </Button>
-            </div>
-          </div>
-
-          {/* PRODUCT GRID */}
-          <div className="grid sm:grid-cols-2 xl:grid-cols-3 gap-5">
-            {currentProducts.map((product) => (
-              <div
-                key={product.id}
-                className="bg-card border rounded-xl overflow-hidden hover:shadow-lg transition"
-              >
-                <Link to={`/buy-now/${product.id}`}>
-                  <img
-                    src={product.image}
-                    className="w-full h-44 object-cover"
-                  />
-                </Link>
-
-                <div className="p-4">
-                  <Link to={`/buy-now/${product.id}`}>
-                    <h3 className="font-semibold hover:text-primary">
-                      {product.name}
-                    </h3>
-                  </Link>
-
-                  <p className="font-bold mb-3">
-                    ₹{product.price.toLocaleString()}
-                  </p>
-
-                  <Button
-                    className="w-full"
-                    onClick={() => handleAddToCart(product)}
-                  >
-                    <ShoppingCart className="w-4 h-4 mr-2" />
-                    Add to Cart
+                  <Button asChild className="mt-4">
+                    <Link to={slide.link}>Shop Now</Link>
                   </Button>
                 </div>
               </div>
-            ))}
-          </div>
+            </motion.div>
+          ))}
+        </div>
+      </section>
 
-          {/* PAGINATION CONTROLS */}
-          {totalPages > 1 && (
-            <div className="flex justify-center items-center gap-2 mt-10 flex-wrap">
+      {/* ====== SEARCH ====== */}
+      <section className="py-6 bg-muted/20">
+        <div className="container mx-auto px-4">
+          <div className="flex gap-3 items-center">
+            <div className="flex-1 relative">
+              <Search className="absolute left-3 top-3 w-4 h-4" />
+              <Input
+                placeholder="Search products..."
+                className="pl-10"
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+              />
+            </div>
+
+            <Button
+              variant="outline"
+              className="lg:hidden"
+              onClick={() => setShowFilter(true)}
+            >
+              <Filter className="w-4 h-4" />
+            </Button>
+          </div>
+        </div>
+      </section>
+
+      <section className="py-6">
+        <div className="container mx-auto px-4 flex flex-col lg:flex-row gap-6">
+
+          {/* ===== FILTER SIDEBAR ===== */}
+          <aside
+            className={`
+            fixed lg:static inset-y-0 left-0 z-50 bg-white w-64 p-4 border-r
+            transform transition-all
+            ${showFilter ? "translate-x-0" : "-translate-x-full lg:translate-x-0"}
+          `}
+          >
+            <div className="flex justify-between lg:hidden mb-4">
+              <h3 className="font-bold">Filters</h3>
+              <X onClick={() => setShowFilter(false)} />
+            </div>
+
+            <h3 className="font-semibold mb-2">Category</h3>
+
+            {categories.map((c) => (
+              <button
+                key={c}
+                onClick={() => {
+                  setCategory(c);
+                  setShowFilter(false);
+                  setPage(1);
+                }}
+                className={`block w-full text-left px-3 py-2 rounded mb-1 ${
+                  category === c ? "bg-primary text-white" : "hover:bg-muted"
+                }`}
+              >
+                {c.toUpperCase()}
+              </button>
+            ))}
+          </aside>
+
+          {/* ===== PRODUCTS ===== */}
+          <div className="flex-1">
+
+            {/* Toolbar */}
+            <div className="flex justify-between mb-4 items-center flex-wrap gap-2">
+
+              <div className="flex gap-2">
+                <Button
+                  size="icon"
+                  onClick={() => setView("grid")}
+                  variant={view === "grid" ? "default" : "outline"}
+                >
+                  <Grid className="w-4 h-4" />
+                </Button>
+
+                <Button
+                  size="icon"
+                  onClick={() => setView("list")}
+                  variant={view === "list" ? "default" : "outline"}
+                >
+                  <List className="w-4 h-4" />
+                </Button>
+              </div>
+
+              <select
+                className="border rounded p-2"
+                value={perPage}
+                onChange={(e) => {
+                  setPerPage(Number(e.target.value));
+                  setPage(1);
+                }}
+              >
+                <option value={25}>Show 25</option>
+                <option value={50}>Show 50</option>
+                <option value={100}>Show 100</option>
+              </select>
+
+            </div>
+
+            {loading && <p>Loading products...</p>}
+
+            {!loading && (
+              <div
+                className={
+                  view === "grid"
+                    ? "grid md:grid-cols-2 xl:grid-cols-3 gap-5"
+                    : "space-y-4"
+                }
+              >
+                {paginated.map((p) => (
+                  <div
+                    key={p.id}
+                    className={`border rounded-lg overflow-hidden bg-white shadow ${
+                      view === "list" ? "flex" : ""
+                    }`}
+                  >
+                    <Link to={`/product/${p.id}`}>
+                      <img
+                        src={p.image || "https://via.placeholder.com/300"}
+                        className={
+                          view === "list"
+                            ? "w-40 h-full object-cover"
+                            : "w-full h-48 object-cover"
+                        }
+                      />
+                    </Link>
+
+                    <div className="p-4 flex-1">
+                      <Link to={`/product/${p.id}`}>
+                        <h3 className="font-semibold hover:text-primary">
+                          {p.name}
+                        </h3>
+                      </Link>
+
+                      <div className="flex items-center gap-2 my-2">
+                        <Star className="w-4 h-4 text-yellow-500" />
+                        <span>{p.rating || 4.5}</span>
+                      </div>
+
+                      <p className="text-xl font-bold">₹{p.price}</p>
+
+                      <div className="flex gap-2 mt-3">
+                        <Button
+                          className="flex-1"
+                          onClick={() => addToCart(p)}
+                        >
+                          <ShoppingCart className="w-4 h-4 mr-2" />
+                          Add to Cart
+                        </Button>
+
+                        <Button asChild variant="outline">
+                          <Link to={`/buy-now/${p.id}`}>Buy Now</Link>
+                        </Button>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {/* ===== PAGINATION ===== */}
+            <div className="flex justify-center gap-2 mt-6 flex-wrap">
 
               <Button
-                variant="outline"
-                disabled={currentPage === 1}
-                onClick={() => changePage(currentPage - 1)}
+                disabled={page === 1}
+                onClick={() => setPage(page - 1)}
               >
-                <ChevronLeft className="w-4 h-4" />
-                Prev
+                Previous
               </Button>
 
-              {Array.from({ length: totalPages }).map((_, index) => (
+              {Array.from({ length: totalPages }).map((_, i) => (
                 <Button
-                  key={index}
-                  variant={currentPage === index + 1 ? "default" : "outline"}
-                  onClick={() => changePage(index + 1)}
+                  key={i}
+                  variant={page === i + 1 ? "default" : "outline"}
+                  onClick={() => setPage(i + 1)}
                 >
-                  {index + 1}
+                  {i + 1}
                 </Button>
               ))}
 
               <Button
-                variant="outline"
-                disabled={currentPage === totalPages}
-                onClick={() => changePage(currentPage + 1)}
+                disabled={page === totalPages}
+                onClick={() => setPage(page + 1)}
               >
                 Next
-                <ChevronRight className="w-4 h-4" />
               </Button>
-            </div>
-          )}
 
+            </div>
+
+          </div>
         </div>
       </section>
     </div>
   );
-};
-
-export default Products;
+}
