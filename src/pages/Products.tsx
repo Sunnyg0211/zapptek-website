@@ -13,11 +13,14 @@ import {
   Camera,
   Wifi,
   HardDrive,
-  Monitor
+  Monitor,
+  X
 } from "lucide-react";
+
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { useToast } from "@/components/ui/use-toast";
 
 const categories = [
@@ -36,17 +39,15 @@ const bannerSlides = [
     title: "Latest Gaming Laptops",
     subtitle: "Powerful performance for work & play",
     price: "Starting at ₹45,999",
-    buttonText: "Buy Now",
-    productId: 1
+    productId: 1,
   },
   {
     image: "https://images.unsplash.com/photo-1587202372775-e229f172b9d7?w=1200&h=400&fit=crop",
     title: "Office Printers Sale",
     subtitle: "High speed & quality printing",
     price: "Up to 30% OFF",
-    buttonText: "Buy Now",
-    productId: 3
-  }
+    productId: 3,
+  },
 ];
 
 const products = [
@@ -91,7 +92,6 @@ const Products = () => {
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [searchQuery, setSearchQuery] = useState("");
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
-
   const [currentSlide, setCurrentSlide] = useState(0);
 
   useEffect(() => {
@@ -114,17 +114,45 @@ const Products = () => {
   const handleAddToCart = (product: any) => {
     toast({
       title: "Added to Cart",
-      description: `${product.name} added to cart successfully`,
+      description: `${product.name} added successfully`,
     });
   };
+
+  const FilterContent = ({ onSelect }: { onSelect?: () => void }) => (
+    <div>
+      <h3 className="font-semibold mb-4 flex items-center gap-2">
+        <Filter className="w-5 h-5" />
+        Categories
+      </h3>
+
+      <nav className="space-y-2">
+        {categories.map((category) => (
+          <button
+            key={category.id}
+            onClick={() => {
+              setSelectedCategory(category.id);
+              onSelect && onSelect();
+            }}
+            className={`w-full flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm transition-all ${
+              selectedCategory === category.id
+                ? "bg-primary text-white"
+                : "hover:bg-muted"
+            }`}
+          >
+            <category.icon className="w-4 h-4" />
+            {category.name}
+          </button>
+        ))}
+      </nav>
+    </div>
+  );
 
   return (
     <div className="min-h-screen bg-background">
 
-      {/* BANNER SLIDER */}
+      {/* Banner Slider */}
       <section className="w-full overflow-hidden">
-        <div className="relative h-[350px] md:h-[400px]">
-
+        <div className="relative h-[300px] md:h-[380px]">
           {bannerSlides.map((slide, index) => (
             <motion.div
               key={index}
@@ -133,140 +161,142 @@ const Products = () => {
               transition={{ duration: 0.8 }}
               className="absolute inset-0"
             >
-              <div className="relative h-full w-full">
-                <img
-                  src={slide.image}
-                  className="w-full h-full object-cover"
-                  alt={slide.title}
-                />
+              <img
+                src={slide.image}
+                className="w-full h-full object-cover"
+                alt="banner"
+              />
 
-                <div className="absolute inset-0 bg-black/50 flex items-center">
-                  <div className="container mx-auto px-6">
-                    <div className="max-w-xl text-white">
-                      <h2 className="text-3xl md:text-4xl font-bold mb-3">
-                        {slide.title}
-                      </h2>
+              <div className="absolute inset-0 bg-black/50 flex items-center px-6">
+                <div className="text-white max-w-lg">
+                  <h2 className="text-2xl md:text-3xl font-bold mb-2">
+                    {slide.title}
+                  </h2>
 
-                      <p className="mb-2 text-lg text-white/80">
-                        {slide.subtitle}
-                      </p>
+                  <p className="mb-2 text-white/80">{slide.subtitle}</p>
 
-                      <p className="text-xl font-semibold mb-4">
-                        {slide.price}
-                      </p>
+                  <p className="text-lg font-semibold mb-3">{slide.price}</p>
 
-                      <Button asChild variant="gradient">
-                        <Link to={`/buy-now/${slide.productId}`}>
-                          {slide.buttonText}
-                        </Link>
-                      </Button>
-                    </div>
-                  </div>
+                  <Button asChild>
+                    <Link to={`/buy-now/${slide.productId}`}>Buy Now</Link>
+                  </Button>
                 </div>
               </div>
             </motion.div>
           ))}
-
-          <div className="absolute bottom-4 left-0 right-0 flex justify-center gap-2">
-            {bannerSlides.map((_, i) => (
-              <button
-                key={i}
-                onClick={() => setCurrentSlide(i)}
-                className={`h-2 rounded-full transition-all ${
-                  currentSlide === i ? "bg-white w-6" : "bg-white/50 w-2"
-                }`}
-              />
-            ))}
-          </div>
         </div>
       </section>
 
-      {/* SEARCH BAR */}
-      <section className="py-10 gradient-hero">
-        <div className="container mx-auto px-4 text-center">
-          <h1 className="text-3xl md:text-4xl font-bold text-primary-foreground mb-4">
-            IT Products Store
-          </h1>
+      {/* Search & Mobile Filter Bar */}
+      <section className="py-6 bg-muted/20">
+        <div className="container mx-auto px-4 flex gap-4 items-center">
 
-          <div className="max-w-md mx-auto relative">
+          {/* Mobile Filter Drawer */}
+          <div className="lg:hidden">
+            <Sheet>
+              <SheetTrigger asChild>
+                <Button variant="outline" size="icon">
+                  <Filter className="w-5 h-5" />
+                </Button>
+              </SheetTrigger>
+
+              <SheetContent side="left">
+                <FilterContent />
+              </SheetContent>
+            </Sheet>
+          </div>
+
+          <div className="relative flex-1">
             <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
             <Input
               placeholder="Search products..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-12 h-12 rounded-xl"
+              className="pl-12 h-12"
             />
           </div>
         </div>
       </section>
 
-      {/* PRODUCTS */}
-      <section className="py-12">
+      {/* Products Section */}
+      <section className="py-10">
         <div className="container mx-auto px-4">
+          <div className="flex gap-6">
 
-          <div className="flex justify-between mb-6">
-            <p>Showing {filteredProducts.length} products</p>
+            {/* Desktop Filter */}
+            <aside className="hidden lg:block w-64 bg-card border rounded-xl p-4 h-fit sticky top-24">
+              <FilterContent />
+            </aside>
 
-            <div className="flex gap-2">
-              <Button size="icon" onClick={() => setViewMode("grid")}>
-                <Grid className="w-4 h-4" />
-              </Button>
+            {/* Products Grid */}
+            <div className="flex-1">
 
-              <Button size="icon" onClick={() => setViewMode("list")}>
-                <List className="w-4 h-4" />
-              </Button>
-            </div>
-          </div>
+              <div className="flex justify-between mb-4">
+                <p>Showing {filteredProducts.length} products</p>
 
-          <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-6">
-            {filteredProducts.map((product) => (
-              <div
-                key={product.id}
-                className="bg-card rounded-2xl overflow-hidden shadow border hover:shadow-lg transition"
-              >
-                <Link to={`/buy-now/${product.id}`}>
-                  <img
-                    src={product.image}
-                    className="w-full h-48 object-cover"
-                  />
-                </Link>
+                <div className="flex gap-2">
+                  <Button size="icon" onClick={() => setViewMode("grid")}>
+                    <Grid className="w-4 h-4" />
+                  </Button>
 
-                <div className="p-5">
-                  <Link to={`/buy-now/${product.id}`}>
-                    <h3 className="font-semibold mb-2 hover:text-primary transition">
-                      {product.name}
-                    </h3>
-                  </Link>
-
-                  <div className="flex items-center gap-2 mb-2">
-                    <Star className="w-4 h-4 fill-accent text-accent" />
-                    <span>{product.rating}</span>
-                    <span className="text-muted-foreground">
-                      ({product.reviews})
-                    </span>
-                  </div>
-
-                  <div className="mb-3 font-bold">
-                    ₹{product.price.toLocaleString()}
-                  </div>
-
-                  <Button
-                    className="w-full"
-                    onClick={() => handleAddToCart(product)}
-                  >
-                    <ShoppingCart className="w-4 h-4 mr-2" />
-                    Add to Cart
+                  <Button size="icon" onClick={() => setViewMode("list")}>
+                    <List className="w-4 h-4" />
                   </Button>
                 </div>
               </div>
-            ))}
-          </div>
 
-          {filteredProducts.length === 0 && (
-            <div className="text-center py-16">
-              <p>No products found</p>
+              <div className="grid sm:grid-cols-2 xl:grid-cols-3 gap-5">
+                {filteredProducts.map((product) => (
+                  <div
+                    key={product.id}
+                    className="bg-card border rounded-xl overflow-hidden hover:shadow-lg transition"
+                  >
+                    <Link to={`/buy-now/${product.id}`}>
+                      <img
+                        src={product.image}
+                        className="w-full h-44 object-cover"
+                      />
+                    </Link>
+
+                    <div className="p-4">
+                      <Link to={`/buy-now/${product.id}`}>
+                        <h3 className="font-semibold hover:text-primary">
+                          {product.name}
+                        </h3>
+                      </Link>
+
+                      <div className="flex items-center gap-2 my-2">
+                        <Star className="w-4 h-4 fill-accent text-accent" />
+                        {product.rating}
+                        <span className="text-muted-foreground">
+                          ({product.reviews})
+                        </span>
+                      </div>
+
+                      <p className="font-bold mb-3">
+                        ₹{product.price.toLocaleString()}
+                      </p>
+
+                      <Button
+                        className="w-full"
+                        onClick={() => handleAddToCart(product)}
+                      >
+                        <ShoppingCart className="w-4 h-4 mr-2" />
+                        Add to Cart
+                      </Button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              {filteredProducts.length === 0 && (
+                <div className="text-center py-10">
+                  No products found
+                </div>
+              )}
+
             </div>
-          )}
+          </div>
         </div>
       </section>
     </div>
