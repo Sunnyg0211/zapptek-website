@@ -38,25 +38,21 @@ const plans = [
   {
     name: "Enterprise",
     icon: Crown,
-    price: null,
-    period: null,
-    description: "Custom AMC for Corporate & Bulk Requirements",
-    ctaText: "Get Best Pricing",
-    ctaLink: "/contact",
-    note: "Contact us for customized enterprise pricing",
+    price: "₹12,999",
+    period: "/year",
+    description: "For growing businesses",
     features: [
       "Unlimited Service Visits",
       "24/7 Priority Support",
       "Complete Maintenance",
       "Network Management",
       "Dedicated Account Manager",
-      "On-Site IT Support",
-      "Custom SLA & Response Time",
+      "20% Discount on Parts",
+      "Free Data Backup",
     ],
     popular: false,
   },
 ];
-
 export function AMCSection() {
   return (
     <section className="py-20 md:py-28 bg-muted/30">
