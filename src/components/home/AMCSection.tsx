@@ -26,7 +26,7 @@ const plans = [
     period: "/year",
     description: "Ideal for small businesses",
     features: [
-      " Service Visits" 12,
+      "12 Service Visits",
       "Priority Remote Support",
       "Software & Security Updates",
       "Hardware Cleaning",
@@ -38,21 +38,25 @@ const plans = [
   {
     name: "Enterprise",
     icon: Crown,
-    price: "₹12,999",
-    period: "/year",
-    description: "For growing businesses",
+    price: null,
+    period: null,
+    description: "Custom AMC for Corporate & Bulk Requirements",
+    ctaText: "Get Best Pricing",
+    ctaLink: "/contact",
+    note: "Contact us for customized enterprise pricing",
     features: [
       "Unlimited Service Visits",
       "24/7 Priority Support",
       "Complete Maintenance",
       "Network Management",
       "Dedicated Account Manager",
-      "20% Discount on Parts",
-      "Free Data Backup",
+      "Custom SLA & Response Time",
+      "On-Site IT Support",
     ],
     popular: false,
   },
 ];
+
 export function AMCSection() {
   return (
     <section className="py-20 md:py-28 bg-muted/30">
@@ -67,6 +71,7 @@ export function AMCSection() {
           >
             AMC Plans
           </motion.span>
+
           <motion.h2
             initial={{ opacity: 0, y: 10 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -76,6 +81,7 @@ export function AMCSection() {
           >
             Annual Maintenance Contracts
           </motion.h2>
+
           <motion.p
             initial={{ opacity: 0, y: 10 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -108,47 +114,112 @@ export function AMCSection() {
                 </div>
               )}
 
-              <div className={`w-14 h-14 rounded-2xl flex items-center justify-center mb-6 ${
-                plan.popular ? "bg-primary-foreground/20" : "bg-primary/10"
-              }`}>
-                <plan.icon className={`w-7 h-7 ${plan.popular ? "text-primary-foreground" : "text-primary"}`} />
+              <div
+                className={`w-14 h-14 rounded-2xl flex items-center justify-center mb-6 ${
+                  plan.popular ? "bg-primary-foreground/20" : "bg-primary/10"
+                }`}
+              >
+                <plan.icon
+                  className={`w-7 h-7 ${
+                    plan.popular ? "text-primary-foreground" : "text-primary"
+                  }`}
+                />
               </div>
 
-              <h3 className="text-xl font-display font-bold mb-2">{plan.name}</h3>
-              <p className={`text-sm mb-6 ${plan.popular ? "text-primary-foreground/70" : "text-muted-foreground"}`}>
+              <h3 className="text-xl font-display font-bold mb-2">
+                {plan.name}
+              </h3>
+
+              <p
+                className={`text-sm mb-6 ${
+                  plan.popular
+                    ? "text-primary-foreground/70"
+                    : "text-muted-foreground"
+                }`}
+              >
                 {plan.description}
               </p>
 
+              {/* PRICE SECTION WITH CUSTOM LOGIC */}
               <div className="mb-6">
-                <span className="text-4xl font-display font-bold">{plan.price}</span>
-                <span className={plan.popular ? "text-primary-foreground/70" : "text-muted-foreground"}>
-                  {plan.period}
-                </span>
+                {plan.price ? (
+                  <>
+                    <span className="text-4xl font-display font-bold">
+                      {plan.price}
+                    </span>
+                    <span
+                      className={
+                        plan.popular
+                          ? "text-primary-foreground/70"
+                          : "text-muted-foreground"
+                      }
+                    >
+                      {plan.period}
+                    </span>
+                  </>
+                ) : (
+                  <>
+                    <div className="text-2xl font-display font-bold text-primary mb-1">
+                      Custom Pricing
+                    </div>
+                    <div className="text-sm text-muted-foreground">
+                      {plan.note}
+                    </div>
+                  </>
+                )}
               </div>
 
               <ul className="space-y-3 mb-8">
                 {plan.features.map((feature, i) => (
                   <li key={i} className="flex items-center gap-3">
-                    <div className={`w-5 h-5 rounded-full flex items-center justify-center ${
-                      plan.popular ? "bg-primary-foreground/20" : "bg-primary/10"
-                    }`}>
-                      <Check className={`w-3 h-3 ${plan.popular ? "text-primary-foreground" : "text-primary"}`} />
+                    <div
+                      className={`w-5 h-5 rounded-full flex items-center justify-center ${
+                        plan.popular
+                          ? "bg-primary-foreground/20"
+                          : "bg-primary/10"
+                      }`}
+                    >
+                      <Check
+                        className={`w-3 h-3 ${
+                          plan.popular
+                            ? "text-primary-foreground"
+                            : "text-primary"
+                        }`}
+                      />
                     </div>
-                    <span className={`text-sm ${plan.popular ? "text-primary-foreground/90" : "text-foreground"}`}>
+                    <span
+                      className={`text-sm ${
+                        plan.popular
+                          ? "text-primary-foreground/90"
+                          : "text-foreground"
+                      }`}
+                    >
                       {feature}
                     </span>
                   </li>
                 ))}
               </ul>
 
-              <Button
-                variant={plan.popular ? "outline-light" : "gradient"}
-                className="w-full"
-                size="lg"
-                asChild
-              >
-                <Link to="/amc-plans">Choose {plan.name}</Link>
-              </Button>
+              {/* BUTTON LOGIC */}
+              {plan.price ? (
+                <Button
+                  variant={plan.popular ? "outline-light" : "gradient"}
+                  className="w-full"
+                  size="lg"
+                  asChild
+                >
+                  <Link to="/amc-plans">Choose {plan.name}</Link>
+                </Button>
+              ) : (
+                <Button
+                  variant="gradient"
+                  className="w-full"
+                  size="lg"
+                  asChild
+                >
+                  <Link to={plan.ctaLink}>{plan.ctaText}</Link>
+                </Button>
+              )}
             </motion.div>
           ))}
         </div>
