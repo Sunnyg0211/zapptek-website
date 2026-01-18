@@ -1,186 +1,295 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import {
+import { Link } from "react-router-dom";
+import { 
+  Search, 
+  ShoppingCart, 
+  Filter,
+  Grid,
+  List,
   Star,
-  ShoppingCart,
-  Truck,
-  ShieldCheck,
-  RotateCcw,
-  Heart,
-  Tag,
-  CheckCircle,
+  Laptop,
+  Printer,
+  Camera,
+  Wifi,
+  HardDrive,
+  Monitor
 } from "lucide-react";
-
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 
-const sampleProduct = {
-  id: 1,
-  name: "HP Pavilion Laptop 15 - Intel i5, 16GB RAM, 512GB SSD",
-  price: 45999,
-  originalPrice: 52999,
-  rating: 4.5,
-  reviews: 128,
-  inStock: true,
-  images: [
-    "https://images.unsplash.com/photo-1496181133206-80ce9b88a853?w=600&h=400&fit=crop",
-    "https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=600&h=400&fit=crop",
-    "https://images.unsplash.com/photo-1587614382346-4ec70e388b28?w=600&h=400&fit=crop",
-  ],
-  highlights: [
-    "Intel Core i5 12th Gen Processor",
-    "16GB DDR4 RAM",
-    "512GB SSD Storage",
-    "15.6 inch Full HD Display",
-    "Windows 11 Home",
-    "1 Year Warranty",
-  ],
-  offers: [
-    "10% instant discount on HDFC cards",
-    "No Cost EMI available",
-    "Exchange offer up to ₹8,000",
-  ],
-};
+const categories = [
+  { id: "all", name: "All Products", icon: Grid },
+  { id: "laptops", name: "Laptops", icon: Laptop },
+  { id: "desktops", name: "Desktops", icon: Monitor },
+  { id: "printers", name: "Printers", icon: Printer },
+  { id: "cctv", name: "CCTV", icon: Camera },
+  { id: "networking", name: "Networking", icon: Wifi },
+  { id: "storage", name: "Storage", icon: HardDrive },
+];
 
-const ProductDetails = () => {
-  const [selectedImage, setSelectedImage] = useState(sampleProduct.images[0]);
+const bannerSlides = [
+  {
+    image: "https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=1200&h=400&fit=crop",
+    title: "Latest Gaming Laptops",
+    subtitle: "Powerful performance for work & play",
+    price: "Starting at ₹45,999",
+    buttonText: "Buy Now",
+    link: "/products",
+  },
+  {
+    image: "https://images.unsplash.com/photo-1587202372775-e229f172b9d7?w=1200&h=400&fit=crop",
+    title: "Office Printers Sale",
+    subtitle: "High speed & quality printing",
+    price: "Up to 30% OFF",
+    buttonText: "Shop Printers",
+    link: "/products",
+  },
+  {
+    image: "https://images.unsplash.com/photo-1555617981-6fae9c3b0b1e?w=1200&h=400&fit=crop",
+    title: "Networking Devices",
+    subtitle: "Boost your connectivity",
+    price: "Exclusive Deals",
+    buttonText: "Explore",
+    link: "/products",
+  },
+];
+
+const products = [
+  {
+    id: 1,
+    name: "HP Pavilion Laptop 15",
+    category: "laptops",
+    price: 45999,
+    originalPrice: 52999,
+    image: "https://images.unsplash.com/photo-1496181133206-80ce9b88a853?w=400&h=300&fit=crop",
+    rating: 4.5,
+    reviews: 128,
+    inStock: true,
+  },
+  {
+    id: 2,
+    name: "Dell OptiPlex Desktop",
+    category: "desktops",
+    price: 38999,
+    originalPrice: 44999,
+    image: "https://images.unsplash.com/photo-1587831990711-23ca6441447b?w=400&h=300&fit=crop",
+    rating: 4.3,
+    reviews: 86,
+    inStock: true,
+  },
+  {
+    id: 3,
+    name: "HP LaserJet Pro Printer",
+    category: "printers",
+    price: 18999,
+    originalPrice: 22999,
+    image: "https://images.unsplash.com/photo-1612815154858-60aa4c59eaa6?w=400&h=300&fit=crop",
+    rating: 4.7,
+    reviews: 204,
+    inStock: true,
+  },
+];
+
+const Products = () => {
+  const [selectedCategory, setSelectedCategory] = useState("all");
+  const [searchQuery, setSearchQuery] = useState("");
+  const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
+
+  const [currentSlide, setCurrentSlide] = useState(0);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentSlide((prev) => (prev + 1) % bannerSlides.length);
+    }, 3000);
+
+    return () => clearInterval(interval);
+  }, []);
+
+  const filteredProducts = products.filter((product) => {
+    const matchesCategory = selectedCategory === "all" || product.category === selectedCategory;
+    const matchesSearch = product.name.toLowerCase().includes(searchQuery.toLowerCase());
+    return matchesCategory && matchesSearch;
+  });
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
-      <div className="container mx-auto px-4">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 bg-white p-6 rounded-2xl shadow">
-          
-          {/* LEFT - IMAGE SECTION */}
-          <div>
+    <div className="min-h-screen bg-background">
+
+      {/* ====== BANNER SLIDER SECTION ====== */}
+      <section className="w-full overflow-hidden">
+        <div className="relative h-[350px] md:h-[400px]">
+
+          {bannerSlides.map((slide, index) => (
             <motion.div
+              key={index}
               initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              className="border rounded-xl overflow-hidden mb-4"
+              animate={{ opacity: index === currentSlide ? 1 : 0 }}
+              transition={{ duration: 0.8 }}
+              className="absolute inset-0"
             >
-              <img
-                src={selectedImage}
-                className="w-full h-[420px] object-contain"
-              />
-            </motion.div>
-
-            <div className="flex gap-3">
-              {sampleProduct.images.map((img, index) => (
+              <div className="relative h-full w-full">
                 <img
-                  key={index}
-                  src={img}
-                  onClick={() => setSelectedImage(img)}
-                  className={`w-20 h-20 border rounded-lg cursor-pointer object-cover ${
-                    selectedImage === img
-                      ? "border-primary"
-                      : "border-gray-300"
-                  }`}
+                  src={slide.image}
+                  className="w-full h-full object-cover"
+                  alt={slide.title}
                 />
-              ))}
-            </div>
-          </div>
 
-          {/* RIGHT - DETAILS SECTION */}
-          <div>
-            <h1 className="text-2xl font-semibold mb-3">
-              {sampleProduct.name}
-            </h1>
+                <div className="absolute inset-0 bg-black/50 flex items-center">
+                  <div className="container mx-auto px-6">
+                    <div className="max-w-xl text-white">
+                      <h2 className="text-3xl md:text-4xl font-bold mb-3">
+                        {slide.title}
+                      </h2>
 
-            <div className="flex items-center gap-2 mb-3">
-              <Star className="w-5 h-5 text-yellow-500 fill-yellow-500" />
-              <span className="font-medium">{sampleProduct.rating}</span>
-              <span className="text-gray-500">
-                ({sampleProduct.reviews} reviews)
-              </span>
-            </div>
+                      <p className="mb-2 text-lg text-white/80">
+                        {slide.subtitle}
+                      </p>
 
-            <div className="flex items-center gap-3 mb-4">
-              <span className="text-3xl font-bold text-green-600">
-                ₹{sampleProduct.price.toLocaleString()}
-              </span>
+                      <p className="text-xl font-semibold mb-4">
+                        {slide.price}
+                      </p>
 
-              <span className="line-through text-gray-500">
-                ₹{sampleProduct.originalPrice.toLocaleString()}
-              </span>
-
-              <Badge className="bg-green-100 text-green-700">
-                {Math.round(
-                  (1 -
-                    sampleProduct.price / sampleProduct.originalPrice) *
-                    100
-                )}
-                % OFF
-              </Badge>
-            </div>
-
-            {/* Offers Section */}
-            <div className="mb-4">
-              <h3 className="font-semibold mb-2 flex items-center gap-2">
-                <Tag className="w-4 h-4" /> Available Offers
-              </h3>
-
-              {sampleProduct.offers.map((offer, index) => (
-                <div
-                  key={index}
-                  className="flex items-center gap-2 text-sm mb-1"
-                >
-                  <CheckCircle className="w-4 h-4 text-green-600" />
-                  {offer}
+                      <Button asChild variant="gradient">
+                        <Link to={slide.link}>{slide.buttonText}</Link>
+                      </Button>
+                    </div>
+                  </div>
                 </div>
-              ))}
-            </div>
-
-            {/* Highlights */}
-            <div className="mb-6">
-              <h3 className="font-semibold mb-2">Highlights</h3>
-
-              <ul className="list-disc ml-5 text-gray-700 space-y-1">
-                {sampleProduct.highlights.map((h, i) => (
-                  <li key={i}>{h}</li>
-                ))}
-              </ul>
-            </div>
-
-            {/* Extra Info */}
-            <div className="grid grid-cols-3 gap-4 mb-6 text-sm">
-              <div className="flex items-center gap-2">
-                <Truck className="w-5 h-5 text-primary" />
-                Free Delivery
               </div>
+            </motion.div>
+          ))}
 
-              <div className="flex items-center gap-2">
-                <ShieldCheck className="w-5 h-5 text-primary" />
-                1 Year Warranty
-              </div>
-
-              <div className="flex items-center gap-2">
-                <RotateCcw className="w-5 h-5 text-primary" />
-                7 Days Replacement
-              </div>
-            </div>
-
-            {/* Buttons */}
-            <div className="flex gap-4">
-              <Button size="lg" className="flex-1">
-                <ShoppingCart className="w-5 h-5 mr-2" />
-                Add to Cart
-              </Button>
-
-              <Button size="lg" variant="outline" className="flex-1">
-                <Heart className="w-5 h-5 mr-2" />
-                Wishlist
-              </Button>
-            </div>
-
-            {!sampleProduct.inStock && (
-              <div className="mt-4 text-red-600 font-semibold">
-                Out of Stock
-              </div>
-            )}
+          <div className="absolute bottom-4 left-0 right-0 flex justify-center gap-2">
+            {bannerSlides.map((_, i) => (
+              <button
+                key={i}
+                onClick={() => setCurrentSlide(i)}
+                className={`h-2 rounded-full transition-all ${
+                  currentSlide === i
+                    ? "bg-white w-6"
+                    : "bg-white/50 w-2"
+                }`}
+              />
+            ))}
           </div>
         </div>
-      </div>
+      </section>
+
+      {/* HERO SEARCH SECTION */}
+      <section className="py-10 gradient-hero">
+        <div className="container mx-auto px-4 text-center">
+          <h1 className="text-3xl md:text-4xl font-bold text-primary-foreground mb-4">
+            IT Products Store
+          </h1>
+
+          <p className="text-primary-foreground/70 mb-6">
+            Quality laptops, printers, networking equipment, and accessories at competitive prices.
+          </p>
+
+          <div className="max-w-md mx-auto relative">
+            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
+            <Input
+              placeholder="Search products..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="pl-12 h-12 rounded-xl"
+            />
+          </div>
+        </div>
+      </section>
+
+      {/* PRODUCTS SECTION */}
+      <section className="py-12">
+        <div className="container mx-auto px-4">
+          <div className="flex flex-col lg:flex-row gap-8">
+
+            {/* Sidebar */}
+            <aside className="lg:w-64">
+              <div className="bg-card rounded-2xl p-6 shadow-md border border-border sticky top-24">
+                <h3 className="font-semibold mb-4 flex items-center gap-2">
+                  <Filter className="w-5 h-5" />
+                  Categories
+                </h3>
+
+                {categories.map((category) => (
+                  <button
+                    key={category.id}
+                    onClick={() => setSelectedCategory(category.id)}
+                    className={`w-full flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm transition-all ${
+                      selectedCategory === category.id
+                        ? "bg-primary text-white"
+                        : "hover:bg-muted"
+                    }`}
+                  >
+                    <category.icon className="w-4 h-4" />
+                    {category.name}
+                  </button>
+                ))}
+              </div>
+            </aside>
+
+            {/* Products Grid */}
+            <div className="flex-1">
+
+              <div className="flex justify-between mb-6">
+                <p>
+                  Showing {filteredProducts.length} products
+                </p>
+
+                <div className="flex gap-2">
+                  <Button
+                    size="icon"
+                    onClick={() => setViewMode("grid")}
+                  >
+                    <Grid className="w-4 h-4" />
+                  </Button>
+
+                  <Button
+                    size="icon"
+                    onClick={() => setViewMode("list")}
+                  >
+                    <List className="w-4 h-4" />
+                  </Button>
+                </div>
+              </div>
+
+              <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-6">
+                {filteredProducts.map((product) => (
+                  <div
+                    key={product.id}
+                    className="bg-card rounded-2xl overflow-hidden shadow border"
+                  >
+                    <img
+                      src={product.image}
+                      className="w-full h-48 object-cover"
+                    />
+
+                    <div className="p-5">
+                      <h3 className="font-semibold mb-2">
+                        {product.name}
+                      </h3>
+
+                      <div className="mb-2">
+                        ₹{product.price.toLocaleString()}
+                      </div>
+
+                      <Button className="w-full">
+                        <ShoppingCart className="w-4 h-4 mr-2" />
+                        Add to Cart
+                      </Button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+            </div>
+
+          </div>
+        </div>
+      </section>
     </div>
   );
 };
 
-export default ProductDetails;
+export default Products;
