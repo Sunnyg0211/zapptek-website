@@ -82,7 +82,7 @@ export function CTASection() {
             Professional IT services for home users, offices, and businesses — delivered on-site and remotely with transparency and expertise.
           </motion.p>
 
-          {/* TRUST POINT CARDS */}
+          {/* TRUST POINT CARDS – MATCHING COLOR STYLE */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -95,7 +95,19 @@ export function CTASection() {
                 key={index}
                 whileHover={{ y: -6, scale: 1.02 }}
                 transition={{ duration: 0.3 }}
-                className="bg-white/10 backdrop-blur-lg border border-white/20 text-white text-white rounded-2xl p-5 text-left shadow-lg hover:shadow-2xl transition-all duration-300"
+                className="
+                  bg-white/10 
+                  backdrop-blur-lg 
+                  border border-white/20 
+                  text-white 
+                  rounded-2xl 
+                  p-5 
+                  text-left 
+                  shadow-lg 
+                  hover:shadow-2xl 
+                  transition-all 
+                  duration-300
+                "
               >
                 <div className="w-10 h-10 rounded-xl bg-white/20 flex items-center justify-center mb-3">
                   <item.icon className="w-5 h-5 text-white" />
