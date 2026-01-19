@@ -16,21 +16,25 @@ const trustPoints = [
     icon: ShieldCheck,
     title: "Verified Technicians",
     text: "Trained, experienced & background-checked professionals",
+    link: "/services",
   },
   {
     icon: Clock,
     title: "Fast Response",
     text: "Quick on-site & remote support across locations",
+    link: "/book-service",
   },
   {
     icon: Headphones,
     title: "Dedicated Support",
     text: "Clear communication & regular follow-ups",
+    link: "/contact",
   },
   {
     icon: Award,
     title: "Quality Guaranteed",
     text: "Reliable service with genuine parts assurance",
+    link: "/amc-plans",
   },
 ];
 
@@ -45,23 +49,22 @@ export function CTASection() {
   return (
     <section className="py-20 md:py-28 relative overflow-hidden bg-gradient-to-br from-blue-50 via-white to-indigo-50">
 
-      {/* Soft Background Glow Effects */}
+      {/* Soft Background Effects */}
       <motion.div
-        className="absolute top-10 left-10 w-80 h-80 rounded-full bg-blue-200/30 blur-3xl"
-        animate={{ scale: [1, 1.2, 1], opacity: [0.4, 0.6, 0.4] }}
+        className="absolute top-10 left-10 w-80 h-80 rounded-full bg-blue-200/20 blur-3xl"
+        animate={{ scale: [1, 1.2, 1], opacity: [0.3, 0.5, 0.3] }}
         transition={{ duration: 8, repeat: Infinity }}
       />
 
       <motion.div
-        className="absolute bottom-10 right-10 w-96 h-96 rounded-full bg-indigo-200/30 blur-3xl"
-        animate={{ scale: [1.1, 1, 1.1], opacity: [0.4, 0.6, 0.4] }}
+        className="absolute bottom-10 right-10 w-96 h-96 rounded-full bg-indigo-200/20 blur-3xl"
+        animate={{ scale: [1.1, 1, 1.1], opacity: [0.3, 0.5, 0.3] }}
         transition={{ duration: 10, repeat: Infinity }}
       />
 
       <div className="container mx-auto px-4 relative z-10">
         <div className="max-w-5xl mx-auto text-center">
 
-          {/* Main Heading */}
           <motion.h2
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -71,7 +74,6 @@ export function CTASection() {
             Reliable IT Support You Can Trust
           </motion.h2>
 
-          {/* Sub Heading */}
           <motion.p
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -82,7 +84,7 @@ export function CTASection() {
             Professional IT services for home users, offices, and businesses — delivered on-site and remotely with transparency and expertise.
           </motion.p>
 
-          {/* TRUST POINT CARDS – MATCHING COLOR STYLE */}
+          {/* CLICKABLE DARK CARDS */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -91,36 +93,31 @@ export function CTASection() {
             className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-12"
           >
             {trustPoints.map((item, index) => (
-              <motion.div
-                key={index}
-                whileHover={{ y: -6, scale: 1.02 }}
-                transition={{ duration: 0.3 }}
-                className="
-                  bg-white/10 
-                  backdrop-blur-lg 
-                  border border-white/20 
-                  text-white 
-                  rounded-2xl 
-                  p-5 
-                  text-left 
-                  shadow-lg 
-                  hover:shadow-2xl 
-                  transition-all 
-                  duration-300
-                "
-              >
-                <div className="w-10 h-10 rounded-xl bg-white/20 flex items-center justify-center mb-3">
-                  <item.icon className="w-5 h-5 text-white" />
-                </div>
+              <Link key={index} to={item.link}>
+                <motion.div
+                  whileHover={{ y: -8, scale: 1.03 }}
+                  whileTap={{ scale: 0.98 }}
+                  transition={{ duration: 0.3 }}
+                  className="bg-gray-900 text-white rounded-2xl p-6 text-left shadow-lg hover:shadow-2xl transition-all duration-300 cursor-pointer border border-gray-800"
+                >
+                  <div className="w-12 h-12 rounded-xl bg-blue-600/20 flex items-center justify-center mb-4">
+                    <item.icon className="w-6 h-6 text-blue-400" />
+                  </div>
 
-                <h4 className="font-semibold mb-1">
-                  {item.title}
-                </h4>
+                  <h4 className="font-semibold text-lg mb-2">
+                    {item.title}
+                  </h4>
 
-                <p className="text-sm text-white/80">
-                  {item.text}
-                </p>
-              </motion.div>
+                  <p className="text-sm text-gray-400">
+                    {item.text}
+                  </p>
+
+                  <div className="mt-4 flex items-center text-blue-400 text-sm font-medium">
+                    Learn More
+                    <ArrowRight className="w-4 h-4 ml-2" />
+                  </div>
+                </motion.div>
+              </Link>
             ))}
           </motion.div>
 
@@ -158,7 +155,7 @@ export function CTASection() {
             </Button>
           </motion.div>
 
-          {/* STATS SECTION */}
+          {/* STATS */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -182,7 +179,6 @@ export function CTASection() {
             ))}
           </motion.div>
 
-          {/* TRUST LINE */}
           <motion.p
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
