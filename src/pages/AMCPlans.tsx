@@ -1,7 +1,32 @@
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { Link } from "react-router-dom";
+import { useEffect, useState } from "react";
 import { Check, Star, Zap, Crown, ArrowRight, Shield, Clock, Users } from "lucide-react";
 import { Button } from "@/components/ui/button";
+
+const banners = [
+  {
+    title: "Professional IT Services",
+    text: "Complete computer and laptop repair services at your doorstep",
+    button: "View Services",
+    link: "/services",
+    image: "https://images.unsplash.com/photo-1581092160562-40aa08e78837?w=1200"
+  },
+  {
+    title: "Instant Repair Support",
+    text: "Fast, reliable and affordable device repair solutions",
+    button: "Book Repair",
+    link: "/book-service",
+    image: "https://images.unsplash.com/photo-1581091870622-28a6c6f36e8f?w=1200"
+  },
+  {
+    title: "AMC Plans for Everyone",
+    text: "Annual maintenance contracts for homes and businesses",
+    button: "Explore Plans",
+    link: "/amc-plans",
+    image: "https://images.unsplash.com/photo-1518770660439-4636190af475?w=1200"
+  },
+];
 
 const plans = [
   {
@@ -78,61 +103,79 @@ const benefits = [
 ];
 
 const AMCPlans = () => {
+  const [index, setIndex] = useState(0);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setIndex((prev) => (prev + 1) % banners.length);
+    }, 4000);
+
+    return () => clearInterval(interval);
+  }, []);
+
   return (
     <div className="min-h-screen">
 
-      {/* HERO SECTION */}
-      <section className="relative py-20 md:py-28 overflow-hidden">
+      {/* BANNER SLIDER SECTION */}
+      <section className="relative h-[420px] overflow-hidden">
 
-        {/* Animated Black Background */}
-        <motion.div
-          className="absolute inset-0 -z-10"
-          animate={{
-            backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"],
-          }}
-          transition={{
-            duration: 10,
-            repeat: Infinity,
-            ease: "linear",
-          }}
-          style={{
-            background:
-              "linear-gradient(270deg, #000000, #0f0f0f, #1a1a1a, #050505)",
-            backgroundSize: "400% 400%",
-          }}
-        />
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={index}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="absolute inset-0"
+          >
+            <img
+              src={banners[index].image}
+              className="w-full h-full object-cover"
+            />
 
-        <div className="container mx-auto px-4 text-center relative z-10">
+            <div className="absolute inset-0 bg-black/70 flex items-center justify-center">
+              <div className="text-center max-w-3xl px-4">
 
-          <motion.span className="inline-block px-4 py-1.5 rounded-full bg-white/10 text-white text-sm mb-4">
-            AMC Plans
-          </motion.span>
+                <h1 className="text-3xl md:text-4xl font-bold text-white mb-4">
+                  {banners[index].title}
+                </h1>
 
-          <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">
-            Annual Maintenance Contracts
-          </h1>
+                <p className="text-gray-300 mb-6">
+                  {banners[index].text}
+                </p>
 
-          <p className="text-gray-300 max-w-2xl mx-auto">
-            Protect your IT infrastructure with our comprehensive maintenance plans.
-          </p>
-        </div>
+                <Button
+                  className="bg-gradient-to-r from-blue-600 to-blue-800 text-white"
+                  asChild
+                >
+                  <Link to={banners[index].link}>
+                    {banners[index].button}
+                    <ArrowRight className="w-4 h-4 ml-2" />
+                  </Link>
+                </Button>
+              </div>
+            </div>
+          </motion.div>
+        </AnimatePresence>
       </section>
 
       {/* PLANS SECTION */}
       <section className="py-20">
         <div className="container mx-auto px-4">
 
+          <h2 className="text-center text-3xl font-bold text-white mb-12">
+            Choose Your AMC Plan
+          </h2>
+
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
-            {plans.map((plan, index) => (
+            {plans.map((plan, i) => (
               <motion.div
-                key={index}
+                key={i}
                 whileHover={{ scale: 1.03 }}
-                className={`p-8 rounded-3xl border border-white/10 backdrop-blur-md ${
-                  plan.popular ? "bg-black/90" : "bg-black/70"
-                }`}
+                className="p-8 rounded-3xl border border-white/10 backdrop-blur-md 
+                bg-gradient-to-br from-black via-black/80 to-gray-900"
               >
                 {plan.popular && (
-                  <div className="mb-3 text-center">
+                  <div className="text-center mb-3">
                     <span className="px-3 py-1 rounded-full bg-blue-600 text-white text-xs">
                       Most Popular
                     </span>
@@ -159,16 +202,16 @@ const AMCPlans = () => {
                 </div>
 
                 <ul className="space-y-3 mb-6">
-                  {plan.features.map((feature, i) => (
+                  {plan.features.map((f, i) => (
                     <li key={i} className="flex items-center gap-2 text-gray-300 text-sm">
                       <Check className="w-4 h-4 text-blue-400" />
-                      {feature}
+                      {f}
                     </li>
                   ))}
                 </ul>
 
                 <Button
-                  className="w-full bg-gradient-to-r from-blue-600 to-blue-800 text-white hover:from-blue-500 hover:to-blue-700"
+                  className="w-full bg-gradient-to-r from-blue-600 to-blue-800 text-white"
                   asChild
                 >
                   <Link to="/contact">
@@ -176,6 +219,7 @@ const AMCPlans = () => {
                     <ArrowRight className="w-4 h-4 ml-2" />
                   </Link>
                 </Button>
+
               </motion.div>
             ))}
           </div>
@@ -183,7 +227,7 @@ const AMCPlans = () => {
         </div>
       </section>
 
-      {/* BENEFITS SECTION */}
+      {/* BENEFITS */}
       <section className="py-20">
         <div className="container mx-auto px-4 text-center">
 
@@ -192,45 +236,28 @@ const AMCPlans = () => {
           </h2>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto">
-            {benefits.map((benefit, index) => (
+            {benefits.map((b, i) => (
               <motion.div
-                key={index}
+                key={i}
                 whileHover={{ scale: 1.05 }}
-                className="p-6 bg-black/70 rounded-2xl border border-white/10"
+                className="p-6 rounded-2xl border border-white/10 
+                bg-gradient-to-br from-black via-black/80 to-gray-900"
               >
                 <div className="w-14 h-14 mx-auto mb-4 rounded-xl bg-blue-600/20 flex items-center justify-center">
-                  <benefit.icon className="w-7 h-7 text-blue-400" />
+                  <b.icon className="w-7 h-7 text-blue-400" />
                 </div>
 
                 <h3 className="text-lg font-bold text-white mb-2">
-                  {benefit.title}
+                  {b.title}
                 </h3>
 
                 <p className="text-gray-400 text-sm">
-                  {benefit.description}
+                  {b.description}
                 </p>
               </motion.div>
             ))}
           </div>
         </div>
-      </section>
-
-      {/* CTA */}
-      <section className="py-16 text-center">
-        <h2 className="text-2xl md:text-3xl font-bold text-white mb-3">
-          Have Questions?
-        </h2>
-
-        <p className="text-gray-400 mb-6 max-w-xl mx-auto">
-          Contact our team to learn more about our AMC plans.
-        </p>
-
-        <Button
-          className="bg-gradient-to-r from-blue-600 to-blue-800 text-white hover:from-blue-500 hover:to-blue-700"
-          asChild
-        >
-          <Link to="/contact">Contact Us</Link>
-        </Button>
       </section>
 
     </div>
