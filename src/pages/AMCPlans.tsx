@@ -80,160 +80,159 @@ const benefits = [
 const AMCPlans = () => {
   return (
     <div className="min-h-screen">
-      {/* Hero Section */}
-      <section className="py-20 md:py-28 gradient-hero relative overflow-hidden">
-        <div className="absolute inset-0 opacity-10" style={{
-          backgroundImage: `radial-gradient(circle at 2px 2px, hsl(var(--primary-foreground)) 1px, transparent 0)`,
-          backgroundSize: '40px 40px'
-        }} />
-        
-        <div className="container mx-auto px-4 relative z-10">
-          <div className="max-w-3xl mx-auto text-center">
-            <motion.span
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="inline-block px-4 py-1.5 rounded-full bg-primary-foreground/10 text-primary-foreground text-sm font-medium mb-6"
-            >
-              AMC Plans
-            </motion.span>
-            <motion.h1
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.1 }}
-              className="text-4xl md:text-5xl lg:text-6xl font-display font-bold text-primary-foreground mb-6"
-            >
-              Annual Maintenance Contracts
-            </motion.h1>
-            <motion.p
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.2 }}
-              className="text-lg md:text-xl text-primary-foreground/70"
-            >
-              Protect your IT infrastructure with our comprehensive maintenance plans. Choose a plan that fits your needs.
-            </motion.p>
-          </div>
+
+      {/* HERO SECTION */}
+      <section className="relative py-20 md:py-28 overflow-hidden">
+
+        {/* Animated Black Background */}
+        <motion.div
+          className="absolute inset-0 -z-10"
+          animate={{
+            backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"],
+          }}
+          transition={{
+            duration: 10,
+            repeat: Infinity,
+            ease: "linear",
+          }}
+          style={{
+            background:
+              "linear-gradient(270deg, #000000, #0f0f0f, #1a1a1a, #050505)",
+            backgroundSize: "400% 400%",
+          }}
+        />
+
+        <div className="container mx-auto px-4 text-center relative z-10">
+
+          <motion.span className="inline-block px-4 py-1.5 rounded-full bg-white/10 text-white text-sm mb-4">
+            AMC Plans
+          </motion.span>
+
+          <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">
+            Annual Maintenance Contracts
+          </h1>
+
+          <p className="text-gray-300 max-w-2xl mx-auto">
+            Protect your IT infrastructure with our comprehensive maintenance plans.
+          </p>
         </div>
       </section>
 
-      {/* Plans Section */}
-      <section className="py-20 bg-background">
+      {/* PLANS SECTION */}
+      <section className="py-20">
         <div className="container mx-auto px-4">
+
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
             {plans.map((plan, index) => (
               <motion.div
                 key={index}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: index * 0.1 }}
-                className={`relative rounded-3xl p-8 ${
-                  plan.popular
-                    ? "bg-gradient-to-br from-primary to-primary/80 text-primary-foreground shadow-glow scale-105"
-                    : "bg-card border border-border shadow-lg"
+                whileHover={{ scale: 1.03 }}
+                className={`p-8 rounded-3xl border border-white/10 backdrop-blur-md ${
+                  plan.popular ? "bg-black/90" : "bg-black/70"
                 }`}
               >
                 {plan.popular && (
-                  <div className="absolute -top-4 left-1/2 -translate-x-1/2 px-4 py-1 rounded-full bg-accent text-accent-foreground text-sm font-semibold">
-                    Most Popular
+                  <div className="mb-3 text-center">
+                    <span className="px-3 py-1 rounded-full bg-blue-600 text-white text-xs">
+                      Most Popular
+                    </span>
                   </div>
                 )}
 
-                <div className={`w-16 h-16 rounded-2xl flex items-center justify-center mb-6 ${
-                  plan.popular ? "bg-primary-foreground/20" : "bg-primary/10"
-                }`}>
-                  <plan.icon className={`w-8 h-8 ${plan.popular ? "text-primary-foreground" : "text-primary"}`} />
+                <div className="w-14 h-14 rounded-xl bg-blue-600/20 flex items-center justify-center mb-4">
+                  <plan.icon className="w-7 h-7 text-blue-400" />
                 </div>
 
-                <h3 className="text-2xl font-display font-bold mb-2">{plan.name}</h3>
-                <p className={`text-sm mb-6 ${plan.popular ? "text-primary-foreground/70" : "text-muted-foreground"}`}>
+                <h3 className="text-xl font-bold text-white mb-1">
+                  {plan.name}
+                </h3>
+
+                <p className="text-sm text-gray-400 mb-4">
                   {plan.description}
                 </p>
 
-                <div className="mb-8">
-                  <span className="text-5xl font-display font-bold">{plan.price}</span>
-                  <span className={plan.popular ? "text-primary-foreground/70" : "text-muted-foreground"}>
-                    {plan.period}
+                <div className="mb-6">
+                  <span className="text-4xl font-bold text-white">
+                    {plan.price}
                   </span>
+                  <span className="text-gray-400">{plan.period}</span>
                 </div>
 
-                <ul className="space-y-4 mb-8">
+                <ul className="space-y-3 mb-6">
                   {plan.features.map((feature, i) => (
-                    <li key={i} className="flex items-start gap-3">
-                      <div className={`w-5 h-5 rounded-full flex items-center justify-center mt-0.5 ${
-                        plan.popular ? "bg-primary-foreground/20" : "bg-primary/10"
-                      }`}>
-                        <Check className={`w-3 h-3 ${plan.popular ? "text-primary-foreground" : "text-primary"}`} />
-                      </div>
-                      <span className={`text-sm ${plan.popular ? "text-primary-foreground/90" : "text-foreground"}`}>
-                        {feature}
-                      </span>
+                    <li key={i} className="flex items-center gap-2 text-gray-300 text-sm">
+                      <Check className="w-4 h-4 text-blue-400" />
+                      {feature}
                     </li>
                   ))}
                 </ul>
 
                 <Button
-                  variant={plan.popular ? "outline-light" : "gradient"}
-                  className="w-full"
-                  size="lg"
+                  className="w-full bg-gradient-to-r from-blue-600 to-blue-800 text-white hover:from-blue-500 hover:to-blue-700"
                   asChild
                 >
-                  <Link to="/register">
+                  <Link to="/contact">
                     Subscribe Now
-                    <ArrowRight className="w-4 h-4" />
+                    <ArrowRight className="w-4 h-4 ml-2" />
                   </Link>
                 </Button>
               </motion.div>
             ))}
           </div>
+
         </div>
       </section>
 
-      {/* Benefits Section */}
-      <section className="py-20 bg-muted/30">
-        <div className="container mx-auto px-4">
-          <div className="text-center mb-16">
-            <h2 className="section-heading mb-4">Why Choose Our AMC Plans?</h2>
-            <p className="section-subheading mx-auto">
-              Our AMC plans are designed to give you complete peace of mind.
-            </p>
-          </div>
+      {/* BENEFITS SECTION */}
+      <section className="py-20">
+        <div className="container mx-auto px-4 text-center">
+
+          <h2 className="text-3xl font-bold text-white mb-10">
+            Why Choose Our AMC Plans?
+          </h2>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto">
             {benefits.map((benefit, index) => (
               <motion.div
                 key={index}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: index * 0.1 }}
-                className="text-center"
+                whileHover={{ scale: 1.05 }}
+                className="p-6 bg-black/70 rounded-2xl border border-white/10"
               >
-                <div className="w-16 h-16 rounded-2xl gradient-bg flex items-center justify-center mx-auto mb-6">
-                  <benefit.icon className="w-8 h-8 text-primary-foreground" />
+                <div className="w-14 h-14 mx-auto mb-4 rounded-xl bg-blue-600/20 flex items-center justify-center">
+                  <benefit.icon className="w-7 h-7 text-blue-400" />
                 </div>
-                <h3 className="text-xl font-display font-bold mb-3">{benefit.title}</h3>
-                <p className="text-muted-foreground">{benefit.description}</p>
+
+                <h3 className="text-lg font-bold text-white mb-2">
+                  {benefit.title}
+                </h3>
+
+                <p className="text-gray-400 text-sm">
+                  {benefit.description}
+                </p>
               </motion.div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* FAQ CTA */}
-      <section className="py-16 bg-background">
-        <div className="container mx-auto px-4 text-center">
-          <h2 className="text-2xl md:text-3xl font-display font-bold mb-4">
-            Have Questions?
-          </h2>
-          <p className="text-muted-foreground mb-8 max-w-xl mx-auto">
-            Contact our team to learn more about our AMC plans and find the perfect fit for your needs.
-          </p>
-          <Button variant="gradient" size="lg" asChild>
-            <Link to="/contact">Contact Us</Link>
-          </Button>
-        </div>
+      {/* CTA */}
+      <section className="py-16 text-center">
+        <h2 className="text-2xl md:text-3xl font-bold text-white mb-3">
+          Have Questions?
+        </h2>
+
+        <p className="text-gray-400 mb-6 max-w-xl mx-auto">
+          Contact our team to learn more about our AMC plans.
+        </p>
+
+        <Button
+          className="bg-gradient-to-r from-blue-600 to-blue-800 text-white hover:from-blue-500 hover:to-blue-700"
+          asChild
+        >
+          <Link to="/contact">Contact Us</Link>
+        </Button>
       </section>
+
     </div>
   );
 };
