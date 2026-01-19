@@ -77,19 +77,22 @@ export function AMCSection() {
   return (
     <section className="relative py-20 md:py-28 overflow-hidden">
 
-      {/* LIGHT GRADIENT BLUR BACKGROUND */}
-      <div className="absolute inset-0 bg-gradient-to-br from-blue-100 via-purple-100 to-pink-100" />
-
+      {/* ANIMATED BLACK GRADIENT BACKGROUND */}
       <motion.div
-        className="absolute top-10 left-10 w-96 h-96 rounded-full bg-blue-200/30 blur-3xl"
-        animate={{ scale: [1, 1.2, 1] }}
-        transition={{ duration: 8, repeat: Infinity }}
-      />
-
-      <motion.div
-        className="absolute bottom-10 right-10 w-96 h-96 rounded-full bg-purple-200/30 blur-3xl"
-        animate={{ scale: [1.1, 1, 1.1] }}
-        transition={{ duration: 10, repeat: Infinity }}
+        className="absolute inset-0 -z-10"
+        animate={{
+          backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"],
+        }}
+        transition={{
+          duration: 10,
+          repeat: Infinity,
+          ease: "linear",
+        }}
+        style={{
+          background:
+            "linear-gradient(270deg, #000000, #0f0f0f, #1a1a1a, #050505)",
+          backgroundSize: "400% 400%",
+        }}
       />
 
       <div className="container mx-auto px-4 relative z-10">
@@ -99,17 +102,17 @@ export function AMCSection() {
           <motion.span
             initial={{ opacity: 0, y: 10 }}
             whileInView={{ opacity: 1, y: 0 }}
-            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-black/10 text-black text-sm font-medium mb-4"
+            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/10 text-white text-sm font-medium mb-4"
           >
             <Users className="w-4 h-4" />
             Smart AMC Plans
           </motion.span>
 
-          <motion.h2 className="text-3xl md:text-4xl font-bold mb-4 text-black">
+          <motion.h2 className="text-3xl md:text-4xl font-bold mb-4 text-white">
             Professional IT Maintenance Plans
           </motion.h2>
 
-          <p className="text-black/70 max-w-2xl mx-auto">
+          <p className="text-gray-300 max-w-2xl mx-auto">
             Affordable, reliable and proactive IT support packages designed for
             homes, offices and enterprises.
           </p>
@@ -129,7 +132,7 @@ export function AMCSection() {
               }`}
             >
               {plan.popular && (
-                <div className="absolute -top-4 left-1/2 -translate-x-1/2 px-4 py-1 rounded-full bg-purple-500 text-white text-sm font-semibold">
+                <div className="absolute -top-4 left-1/2 -translate-x-1/2 px-4 py-1 rounded-full bg-blue-600 text-white text-sm font-semibold">
                   Recommended
                 </div>
               )}
@@ -139,18 +142,20 @@ export function AMCSection() {
                 <plan.icon className="w-7 h-7 text-white" />
               </div>
 
-              <h3 className="text-xl font-bold mb-1">{plan.name}</h3>
+              <h3 className="text-xl font-bold mb-1 text-white">
+                {plan.name}
+              </h3>
 
-              <div className="inline-block px-3 py-1 rounded-full text-xs mb-3 bg-white/10">
+              <div className="inline-block px-3 py-1 rounded-full text-xs mb-3 bg-white/10 text-white">
                 Best for: {plan.audience}
               </div>
 
-              <p className="text-sm text-white/70 mb-4">
+              <p className="text-sm text-gray-300 mb-4">
                 {plan.description}
               </p>
 
               {/* RESPONSE */}
-              <div className="flex items-center gap-2 mb-4 text-sm text-white/80">
+              <div className="flex items-center gap-2 mb-4 text-sm text-gray-300">
                 <Clock className="w-4 h-4" />
                 <span>{plan.response}</span>
               </div>
@@ -159,19 +164,19 @@ export function AMCSection() {
               <div className="mb-6">
                 {plan.price ? (
                   <>
-                    <span className="text-4xl font-bold">
+                    <span className="text-4xl font-bold text-white">
                       {plan.price}
                     </span>
-                    <span className="text-white/60">
+                    <span className="text-gray-400">
                       {plan.period}
                     </span>
                   </>
                 ) : (
                   <>
-                    <div className="text-2xl font-bold mb-1">
+                    <div className="text-2xl font-bold mb-1 text-white">
                       Custom Pricing
                     </div>
-                    <div className="text-sm text-white/60">
+                    <div className="text-sm text-gray-400">
                       {plan.note}
                     </div>
                   </>
@@ -185,17 +190,17 @@ export function AMCSection() {
                     <div className="w-5 h-5 rounded-full bg-white/10 flex items-center justify-center">
                       <Check className="w-3 h-3 text-white" />
                     </div>
-                    <span className="text-sm text-white/90">
+                    <span className="text-sm text-gray-300">
                       {feature}
                     </span>
                   </li>
                 ))}
               </ul>
 
-              {/* CTA BUTTON */}
+              {/* CTA BUTTONS WITH BLUE GRADIENT */}
               {plan.price ? (
                 <Button
-                  className="w-full bg-white text-black hover:bg-gray-200"
+                  className="w-full bg-gradient-to-r from-blue-600 to-blue-800 text-white hover:from-blue-500 hover:to-blue-700 transition-all"
                   size="lg"
                   asChild
                 >
@@ -205,7 +210,7 @@ export function AMCSection() {
                 </Button>
               ) : (
                 <Button
-                  className="w-full bg-purple-500 text-white hover:bg-purple-600"
+                  className="w-full bg-gradient-to-r from-blue-600 to-blue-800 text-white hover:from-blue-500 hover:to-blue-700 transition-all"
                   size="lg"
                   asChild
                 >
