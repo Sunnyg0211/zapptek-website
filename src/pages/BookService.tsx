@@ -92,7 +92,9 @@ export default function OnlineBookingBenefits() {
                   initial={{ y: 30, opacity: 0 }}
                   animate={{ y: 0, opacity: 1 }}
                 >
-                  <slides[index].icon className="w-12 h-12 text-blue-400 mb-4" />
+                  const SlideIcon = slides[index].icon;
+
+                  <SlideIcon className="w-12 h-12 text-blue-400 mb-4" />
 
                   <h2 className="text-3xl md:text-4xl font-bold mb-4">
                     {slides[index].title}
