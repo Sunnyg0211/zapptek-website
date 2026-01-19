@@ -1,43 +1,43 @@
 import { motion } from "framer-motion";
-import { Star, Quote, User } from "lucide-react";
+import { Star, Quote, Cpu, Wifi, ShieldCheck, Laptop } from "lucide-react";
 
-const testimonials = [
+const caseStudies = [
   {
-    name: "Rajesh Kumar",
-    role: "Business Owner",
+    title: "Office Network Revival",
+    category: "Corporate IT Support",
     content:
-      "ZappTek saved my business when our server crashed. Their 24/7 support and quick response time is unmatched. Highly recommended!",
-    rating: 5,
+      "A growing startup faced constant network downtime and slow systems. We restructured their office network, optimized devices, and implemented security measures. Productivity increased and downtime reduced by over 90%.",
+    icon: Wifi,
   },
   {
-    name: "Priya Sharma",
-    role: "Freelance Designer",
+    title: "Critical Data Recovery",
+    category: "Emergency IT Services",
     content:
-      "Professional, affordable, and reliable. They fixed my MacBook in just 2 hours. The AMC plan is a great value for money.",
-    rating: 5,
+      "A local business lost access to important accounting data due to hardware failure. Our technicians recovered 100% of their critical files and restored operations within hours.",
+    icon: Cpu,
   },
   {
-    name: "Amit Patel",
-    role: "IT Manager",
+    title: "Complete IT Maintenance",
+    category: "AMC Success Story",
     content:
-      "We've been using ZappTek for our office network and CCTV setup. Their enterprise plan is perfect for businesses like ours.",
-    rating: 5,
+      "Through our annual maintenance plan, a small company avoided multiple system failures, received regular health checks, and enjoyed uninterrupted IT operations all year long.",
+    icon: ShieldCheck,
+  },
+  {
+    title: "Laptop Repair Turnaround",
+    category: "Home User Support",
+    content:
+      "A professional needed urgent laptop repair before an important presentation. We diagnosed, repaired, and delivered the device the same day—saving valuable time and stress.",
+    icon: Laptop,
   },
 ];
-
-// Get initials
-const getInitials = (name) =>
-  name
-    .split(" ")
-    .map((n) => n[0])
-    .join("")
-    .toUpperCase();
 
 export function TestimonialsSection() {
   return (
     <section className="py-20 md:py-28 bg-background">
       <div className="container mx-auto px-4">
-        {/* Header */}
+
+        {/* HEADER */}
         <div className="text-center mb-16">
           <motion.span
             initial={{ opacity: 0, y: 10 }}
@@ -45,7 +45,7 @@ export function TestimonialsSection() {
             viewport={{ once: true }}
             className="inline-block px-4 py-1.5 rounded-full bg-primary/10 text-primary text-sm font-medium mb-4"
           >
-            Testimonials
+            Success Stories
           </motion.span>
 
           <motion.h2
@@ -55,7 +55,7 @@ export function TestimonialsSection() {
             transition={{ delay: 0.1 }}
             className="section-heading mb-4"
           >
-            What Our Customers Say
+            Real Results, Real Impact
           </motion.h2>
 
           <motion.p
@@ -65,13 +65,13 @@ export function TestimonialsSection() {
             transition={{ delay: 0.2 }}
             className="section-subheading mx-auto"
           >
-            Don’t just take our word for it. Here’s what our customers say about ZappTek.
+            Practical examples of how we solve IT problems for businesses and individuals every day.
           </motion.p>
         </div>
 
-        {/* Testimonials Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
-          {testimonials.map((testimonial, index) => (
+        {/* CASE STUDIES GRID */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-6xl mx-auto">
+          {caseStudies.map((item, index) => (
             <motion.div
               key={index}
               initial={{ opacity: 0, y: 20 }}
@@ -85,37 +85,45 @@ export function TestimonialsSection() {
                 <Quote className="w-5 h-5 text-primary-foreground" />
               </div>
 
-              {/* Stars */}
-              <div className="flex gap-1 mb-6">
-                {Array.from({ length: testimonial.rating }).map((_, i) => (
+              {/* Rating (Static Trust Indicator) */}
+              <div className="flex gap-1 mb-4">
+                {[...Array(5)].map((_, i) => (
                   <Star key={i} className="w-5 h-5 fill-accent text-accent" />
                 ))}
               </div>
 
               {/* Content */}
-              <p className="text-foreground/80 mb-6 leading-relaxed">
-                “{testimonial.content}”
+              <h3 className="text-lg font-semibold mb-2 text-foreground">
+                {item.title}
+              </h3>
+
+              <p className="text-sm text-primary mb-3">
+                {item.category}
               </p>
 
-              {/* Author (No Photo) */}
-              <div className="flex items-center gap-4">
-                {/* Initials Avatar */}
-                <div className="w-12 h-12 rounded-full bg-primary/10 text-primary font-bold flex items-center justify-center ring-2 ring-primary/20">
-                  {getInitials(testimonial.name)}
+              <p className="text-foreground/80 mb-6 leading-relaxed">
+                “{item.content}”
+              </p>
+
+              {/* Icon Footer */}
+              <div className="flex items-center gap-3">
+                <div className="w-12 h-12 rounded-full bg-primary/10 text-primary flex items-center justify-center ring-2 ring-primary/20">
+                  <item.icon className="w-6 h-6" />
                 </div>
 
                 <div>
-                  <h4 className="font-semibold text-foreground">
-                    {testimonial.name}
-                  </h4>
                   <p className="text-sm text-muted-foreground">
-                    {testimonial.role}
+                    Delivered by ZappTek Experts
+                  </p>
+                  <p className="text-xs text-muted-foreground">
+                    Trusted IT Solutions
                   </p>
                 </div>
               </div>
             </motion.div>
           ))}
         </div>
+
       </div>
     </section>
   );
