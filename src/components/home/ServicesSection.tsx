@@ -160,7 +160,7 @@ export function ServicesSection() {
           ))}
         </motion.div>
 
-        {/* CTA */}
+        {/* CTA BUTTON WITH BLUE GRADIENT */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -171,11 +171,11 @@ export function ServicesSection() {
             <Button
               size="lg"
               asChild
-              className="bg-gradient-to-r from-gray-700 to-black text-white border border-white/20"
+              className="bg-gradient-to-r from-blue-600 to-blue-800 text-white border border-white/20 hover:from-blue-500 hover:to-blue-700 transition-all"
             >
               <Link to="/services">
                 View All Services
-                <ArrowRight className="w-5 h-5 ml-2" />
+                <ArrowRight className="w-5 h-5 ml-2 text-white" />
               </Link>
             </Button>
           </motion.div>
