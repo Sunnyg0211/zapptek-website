@@ -1,4 +1,5 @@
-import { Link } from "react-router-dom";
+import { useState } from "react";
+import { ContactPopup } from "@/components/ContactPopup";
 import { Phone, MessageCircle, MapPin, Facebook, Twitter, Linkedin, Instagram } from "lucide-react";
 import { motion } from "framer-motion";
 
@@ -30,6 +31,8 @@ const socialLinks = [
 ];
 
 export function Footer() {
+  const [openForm, setOpenForm] = useState(false);
+
   return (
     <footer className="relative overflow-hidden mt-10">
 
@@ -79,12 +82,13 @@ export function Footer() {
                 WhatsApp
               </a>
 
-              <Link
-                to="/contact"
+              {/* OPEN CONTACT POPUP INSTEAD OF NAVIGATION */}
+              <button
+                onClick={() => setOpenForm(true)}
                 className="flex items-center gap-2 px-5 py-2 rounded-full border border-white/20 text-white hover:bg-white/10 transition"
               >
                 Fill a Form
-              </Link>
+              </button>
             </div>
 
             {/* Address */}
@@ -120,6 +124,10 @@ export function Footer() {
         </div>
 
       </div>
+
+      {/* CONTACT FORM POPUP COMPONENT */}
+      <ContactPopup open={openForm} onClose={() => setOpenForm(false)} />
+
     </footer>
   );
 }
