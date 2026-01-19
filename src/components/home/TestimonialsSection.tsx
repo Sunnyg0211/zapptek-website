@@ -2,13 +2,6 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useEffect, useState } from "react";
 import { Star, Quote, Cpu, Wifi, ShieldCheck, Laptop, Play, X } from "lucide-react";
 
-const backgrounds = [
-  "https://images.unsplash.com/photo-1518770660439-4636190af475?w=1200&h=800&fit=crop",
-  "https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=1200&h=800&fit=crop",
-  "https://images.unsplash.com/photo-1531297484001-80022131f5a1?w=1200&h=800&fit=crop",
-  "https://images.unsplash.com/photo-1504384308090-c894fdcc538d?w=1200&h=800&fit=crop"
-];
-
 const caseStudies = [
   {
     title: "Office Network Revival",
@@ -62,15 +55,12 @@ const caseStudies = [
 
 export function TestimonialsSection() {
   const [index, setIndex] = useState(0);
-  const [bgIndex, setBgIndex] = useState(0);
-
   const [videoOpen, setVideoOpen] = useState(false);
   const [currentVideo, setCurrentVideo] = useState("");
 
   useEffect(() => {
     const interval = setInterval(() => {
       setIndex((prev) => (prev + 2) % caseStudies.length);
-      setBgIndex((prev) => (prev + 1) % backgrounds.length);
     }, 6000);
 
     return () => clearInterval(interval);
@@ -89,37 +79,37 @@ export function TestimonialsSection() {
   return (
     <section className="relative py-16 md:py-20 overflow-hidden">
 
-      {/* BACKGROUND */}
-      <div className="absolute inset-0 z-0">
-        <AnimatePresence mode="wait">
-          <motion.img
-            key={bgIndex}
-            src={backgrounds[bgIndex]}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 1 }}
-            className="w-full h-full object-cover blur-xl scale-110"
-            alt="IT Background"
-          />
-        </AnimatePresence>
-
-        <div className="absolute inset-0 bg-gradient-to-br from-blue-100/80 via-purple-100/80 to-pink-100/80" />
-      </div>
+      {/* ANIMATED BLACK GRADIENT BACKGROUND */}
+      <motion.div
+        className="absolute inset-0 -z-10"
+        animate={{
+          backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"],
+        }}
+        transition={{
+          duration: 10,
+          repeat: Infinity,
+          ease: "linear",
+        }}
+        style={{
+          background:
+            "linear-gradient(270deg, #000000, #0f0f0f, #1a1a1a, #050505)",
+          backgroundSize: "400% 400%",
+        }}
+      />
 
       <div className="container mx-auto px-4 relative z-10">
 
         {/* HEADER */}
         <div className="text-center mb-10">
-          <span className="inline-block px-3 py-1 rounded-full bg-black/10 text-black text-sm font-medium mb-3">
+          <span className="inline-block px-3 py-1 rounded-full bg-white/10 text-white text-sm font-medium mb-3">
             Success Stories
           </span>
 
-          <h2 className="text-2xl md:text-3xl font-bold mb-2 text-black">
+          <h2 className="text-2xl md:text-3xl font-bold mb-2 text-white">
             Client Video Testimonials
           </h2>
 
-          <p className="text-black/70 max-w-2xl mx-auto">
+          <p className="text-gray-300 max-w-2xl mx-auto">
             Watch how we solved real IT problems for real customers.
           </p>
         </div>
@@ -138,7 +128,7 @@ export function TestimonialsSection() {
               {visibleTestimonials.map((item, i) => (
                 <div
                   key={i}
-                  className="bg-black/80 backdrop-blur-lg rounded-2xl p-6 border border-white/10 relative shadow-xl"
+                  className="bg-black/70 backdrop-blur-lg rounded-2xl p-6 border border-white/10 relative shadow-xl"
                 >
                   <div className="absolute -top-3 right-5 w-8 h-8 rounded-full bg-white/10 flex items-center justify-center">
                     <Quote className="w-4 h-4 text-white" />
@@ -157,17 +147,17 @@ export function TestimonialsSection() {
                     {item.title}
                   </h3>
 
-                  <p className="text-xs text-white/60 mb-2">
+                  <p className="text-xs text-gray-400 mb-2">
                     {item.category}
                   </p>
 
-                  <p className="text-sm text-white/80 mb-4 leading-relaxed">
+                  <p className="text-sm text-gray-300 mb-4 leading-relaxed">
                     “{item.content}”
                   </p>
 
                   <button
                     onClick={() => openVideo(item.video)}
-                    className="flex items-center gap-2 px-4 py-2 bg-white/10 hover:bg-white/20 transition rounded-lg text-white text-sm"
+                    className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-blue-600 to-blue-800 hover:from-blue-500 hover:to-blue-700 transition rounded-lg text-white text-sm"
                   >
                     <Play className="w-4 h-4" />
                     Watch Video
