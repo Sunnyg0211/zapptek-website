@@ -40,18 +40,18 @@ const Login = () => {
   };
 
   return (
-    <div className="min-h-screen flex bg-black">
+    <div className="min-h-screen flex">
 
-      {/* LEFT SIDE LOGIN FORM */}
-      <div className="flex-1 flex items-center justify-center p-8">
+      {/* LEFT SIDE - LOGIN SECTION (WHITE BACKGROUND) */}
+      <div className="flex-1 flex items-center justify-center p-8 bg-white">
 
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
-          className="w-full max-w-md bg-black/60 border border-white/10 p-8 rounded-3xl backdrop-blur-lg"
+          className="w-full max-w-md bg-black text-white p-8 rounded-3xl shadow-2xl"
         >
 
-          {/* LOGO + NAME (FROM PUBLIC FOLDER) */}
+          {/* LOGO + NAME */}
           <Link to="/" className="flex items-center gap-3 mb-8">
             <img
               src="/logo_main.png"
@@ -64,7 +64,7 @@ const Login = () => {
             </span>
           </Link>
 
-          <h1 className="text-3xl font-bold text-white mb-2">
+          <h1 className="text-3xl font-bold mb-2 text-white">
             Welcome back
           </h1>
 
@@ -86,7 +86,7 @@ const Login = () => {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="john@example.com"
-                  className="pl-10 bg-black/50 border-white/10 text-white"
+                  className="pl-10 bg-black border-white/20 text-white"
                 />
               </div>
             </div>
@@ -103,7 +103,7 @@ const Login = () => {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="••••••••"
-                  className="pl-10 pr-10 bg-black/50 border-white/10 text-white"
+                  className="pl-10 pr-10 bg-black border-white/20 text-white"
                 />
 
                 <button
@@ -151,10 +151,10 @@ const Login = () => {
         </motion.div>
       </div>
 
-      {/* RIGHT SIDE BANNER SECTION */}
+      {/* RIGHT SIDE - BRAND SECTION (DARK THEME) */}
       <div className="hidden lg:flex flex-1 relative overflow-hidden items-center justify-center p-12">
 
-        {/* ANIMATED BACKGROUND */}
+        {/* ANIMATED DARK BACKGROUND */}
         <motion.div
           className="absolute inset-0 -z-10"
           animate={{
