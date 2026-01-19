@@ -15,22 +15,22 @@ const trustPoints = [
   {
     icon: ShieldCheck,
     title: "Verified Technicians",
-    text: "Trained & background-checked professionals",
+    text: "Trained, experienced & background-checked professionals",
   },
   {
     icon: Clock,
     title: "Fast Response",
-    text: "Quick on-site & remote support",
+    text: "Quick on-site & remote support across locations",
   },
   {
     icon: Headphones,
     title: "Dedicated Support",
-    text: "Clear communication & follow-ups",
+    text: "Clear communication & regular follow-ups",
   },
   {
     icon: Award,
     title: "Quality Guaranteed",
-    text: "Reliable service you can trust",
+    text: "Reliable service with genuine parts assurance",
   },
 ];
 
@@ -45,10 +45,10 @@ export function CTASection() {
   return (
     <section className="py-20 md:py-28 relative overflow-hidden bg-gradient-to-br from-blue-50 via-white to-indigo-50">
 
-      {/* Animated Light Effects */}
+      {/* Soft Background Glow Effects */}
       <motion.div
-        className="absolute top-10 left-10 w-96 h-96 rounded-full bg-blue-200/30 blur-3xl"
-        animate={{ scale: [1, 1.15, 1], opacity: [0.4, 0.6, 0.4] }}
+        className="absolute top-10 left-10 w-80 h-80 rounded-full bg-blue-200/30 blur-3xl"
+        animate={{ scale: [1, 1.2, 1], opacity: [0.4, 0.6, 0.4] }}
         transition={{ duration: 8, repeat: Infinity }}
       />
 
@@ -58,30 +58,20 @@ export function CTASection() {
         transition={{ duration: 10, repeat: Infinity }}
       />
 
-      {/* Grid Overlay */}
-      <div
-        className="absolute inset-0 opacity-[0.03]"
-        style={{
-          backgroundImage: `linear-gradient(#000 1px, transparent 1px),
-                           linear-gradient(90deg, #000 1px, transparent 1px)`,
-          backgroundSize: "60px 60px",
-        }}
-      />
-
       <div className="container mx-auto px-4 relative z-10">
         <div className="max-w-5xl mx-auto text-center">
 
-          {/* Heading */}
+          {/* Main Heading */}
           <motion.h2
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             className="text-3xl md:text-4xl lg:text-5xl font-display font-bold text-foreground mb-6"
           >
-            Reliable IT Support When You Need It Most
+            Reliable IT Support You Can Trust
           </motion.h2>
 
-          {/* Subheading */}
+          {/* Sub Heading */}
           <motion.p
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -89,11 +79,10 @@ export function CTASection() {
             transition={{ delay: 0.1 }}
             className="text-lg md:text-xl text-muted-foreground mb-12 max-w-3xl mx-auto"
           >
-            From home users to enterprises – we deliver fast, professional, and transparent IT services
-            with on-site and remote support from certified experts.
+            Professional IT services for home users, offices, and businesses — delivered on-site and remotely with transparency and expertise.
           </motion.p>
 
-          {/* TRUST POINTS – Animated Hover Cards */}
+          {/* TRUST POINT CARDS */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -104,25 +93,19 @@ export function CTASection() {
             {trustPoints.map((item, index) => (
               <motion.div
                 key={index}
-                whileHover={{
-                  y: -8,
-                  scale: 1.03,
-                }}
-                transition={{ type: "spring", stiffness: 300 }}
-                className="bg-white/80 backdrop-blur-lg border border-border rounded-2xl p-5 text-left shadow-md hover:shadow-xl transition-all group cursor-pointer"
+                whileHover={{ y: -6, scale: 1.02 }}
+                transition={{ duration: 0.3 }}
+                className="bg-gradient-to-br from-blue-500 to-indigo-500 text-white rounded-2xl p-5 text-left shadow-lg hover:shadow-2xl transition-all duration-300"
               >
-                <motion.div
-                  whileHover={{ rotate: 6, scale: 1.1 }}
-                  className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center mb-3"
-                >
-                  <item.icon className="w-5 h-5 text-primary" />
-                </motion.div>
+                <div className="w-10 h-10 rounded-xl bg-white/20 flex items-center justify-center mb-3">
+                  <item.icon className="w-5 h-5 text-white" />
+                </div>
 
-                <h4 className="text-foreground font-semibold mb-1 group-hover:tracking-wide transition-all">
+                <h4 className="font-semibold mb-1">
                   {item.title}
                 </h4>
 
-                <p className="text-sm text-muted-foreground group-hover:text-foreground transition-colors">
+                <p className="text-sm text-white/80">
                   {item.text}
                 </p>
               </motion.div>
@@ -137,42 +120,27 @@ export function CTASection() {
             transition={{ delay: 0.3 }}
             className="flex flex-col sm:flex-row gap-4 justify-center mb-16"
           >
-            <Button
-              variant="gradient"
-              size="xl"
-              className="hover:shadow-[0_10px_40px_rgba(59,130,246,0.4)] transition-all"
-              asChild
-            >
+            <Button variant="gradient" size="xl" asChild>
               <Link to="/book-service">
                 Book a Service
-                <ArrowRight className="w-5 h-5" />
+                <ArrowRight className="w-5 h-5 ml-2" />
               </Link>
             </Button>
 
-            <Button
-              variant="whatsapp"
-              size="xl"
-              className="hover:shadow-[0_10px_40px_rgba(37,211,102,0.4)] transition-all"
-              asChild
-            >
+            <Button variant="whatsapp" size="xl" asChild>
               <a
                 href="https://wa.me/919793541467"
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                <MessageCircle className="w-5 h-5" />
+                <MessageCircle className="w-5 h-5 mr-2" />
                 Chat on WhatsApp
               </a>
             </Button>
 
-            <Button
-              variant="outline"
-              size="xl"
-              className="hover:bg-primary hover:text-white transition-all"
-              asChild
-            >
+            <Button variant="outline" size="xl" asChild>
               <a href="tel:+919793541467">
-                <Phone className="w-5 h-5" />
+                <Phone className="w-5 h-5 mr-2" />
                 Call Now
               </a>
             </Button>
@@ -190,7 +158,7 @@ export function CTASection() {
               <motion.div
                 key={index}
                 whileHover={{ scale: 1.05 }}
-                className="text-center cursor-default"
+                className="text-center"
               >
                 <div className="text-3xl md:text-4xl font-display font-bold text-primary mb-2">
                   {stat.value}
@@ -202,7 +170,7 @@ export function CTASection() {
             ))}
           </motion.div>
 
-          {/* FINAL TRUST LINE */}
+          {/* TRUST LINE */}
           <motion.p
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
