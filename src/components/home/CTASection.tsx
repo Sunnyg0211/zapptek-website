@@ -43,30 +43,40 @@ const stats = [
 
 export function CTASection() {
   return (
-    <section className="py-20 md:py-28 relative overflow-hidden">
-      {/* Background */}
-      <div className="absolute inset-0 gradient-hero" />
-
-      {/* Subtle Animated Blobs */}
+    <section className="py-20 md:py-28 relative overflow-hidden bg-gradient-to-br from-blue-50 via-white to-purple-50">
+      
+      {/* Soft Animated Light Blobs */}
       <motion.div
-        className="absolute top-20 left-10 w-72 h-72 rounded-full bg-primary/20 blur-3xl"
-        animate={{ scale: [1, 1.15, 1], opacity: [0.25, 0.45, 0.25] }}
-        transition={{ duration: 6, repeat: Infinity }}
-      />
-      <motion.div
-        className="absolute bottom-20 right-10 w-96 h-96 rounded-full bg-accent/20 blur-3xl"
-        animate={{ scale: [1.1, 1, 1.1], opacity: [0.25, 0.45, 0.25] }}
+        className="absolute top-20 left-10 w-80 h-80 rounded-full bg-blue-200/40 blur-3xl"
+        animate={{ scale: [1, 1.15, 1], opacity: [0.4, 0.6, 0.4] }}
         transition={{ duration: 8, repeat: Infinity }}
+      />
+
+      <motion.div
+        className="absolute bottom-20 right-10 w-96 h-96 rounded-full bg-purple-200/40 blur-3xl"
+        animate={{ scale: [1.1, 1, 1.1], opacity: [0.4, 0.6, 0.4] }}
+        transition={{ duration: 10, repeat: Infinity }}
+      />
+
+      {/* Subtle Grid Overlay */}
+      <div
+        className="absolute inset-0 opacity-[0.03]"
+        style={{
+          backgroundImage: `linear-gradient(#000 1px, transparent 1px),
+                           linear-gradient(90deg, #000 1px, transparent 1px)`,
+          backgroundSize: "60px 60px",
+        }}
       />
 
       <div className="container mx-auto px-4 relative z-10">
         <div className="max-w-5xl mx-auto text-center">
+
           {/* HEADING */}
           <motion.h2
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="text-3xl md:text-4xl lg:text-5xl font-display font-bold text-primary-foreground mb-6"
+            className="text-3xl md:text-4xl lg:text-5xl font-display font-bold text-foreground mb-6"
           >
             Reliable IT Support When You Need It Most
           </motion.h2>
@@ -77,7 +87,7 @@ export function CTASection() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: 0.1 }}
-            className="text-lg md:text-xl text-primary-foreground/70 mb-12 max-w-3xl mx-auto"
+            className="text-lg md:text-xl text-muted-foreground mb-12 max-w-3xl mx-auto"
           >
             From home users to businesses, we provide fast, professional, and transparent IT services—
             on-site and remote—delivered by experienced technicians you can depend on.
@@ -94,15 +104,15 @@ export function CTASection() {
             {trustPoints.map((item, index) => (
               <div
                 key={index}
-                className="bg-primary-foreground/5 border border-primary-foreground/10 rounded-2xl p-5 text-left"
+                className="bg-white/70 backdrop-blur-lg border border-border rounded-2xl p-5 text-left shadow-sm"
               >
-                <div className="w-10 h-10 rounded-xl bg-accent/10 flex items-center justify-center mb-3">
-                  <item.icon className="w-5 h-5 text-accent" />
+                <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center mb-3">
+                  <item.icon className="w-5 h-5 text-primary" />
                 </div>
-                <h4 className="text-primary-foreground font-semibold mb-1">
+                <h4 className="text-foreground font-semibold mb-1">
                   {item.title}
                 </h4>
-                <p className="text-sm text-primary-foreground/70">
+                <p className="text-sm text-muted-foreground">
                   {item.text}
                 </p>
               </div>
@@ -117,7 +127,7 @@ export function CTASection() {
             transition={{ delay: 0.3 }}
             className="flex flex-col sm:flex-row gap-4 justify-center mb-16"
           >
-            <Button variant="hero" size="xl" asChild>
+            <Button variant="gradient" size="xl" asChild>
               <Link to="/book-service">
                 Book a Service
                 <ArrowRight className="w-5 h-5" />
@@ -135,7 +145,7 @@ export function CTASection() {
               </a>
             </Button>
 
-            <Button variant="outline-light" size="xl" asChild>
+            <Button variant="outline" size="xl" asChild>
               <a href="tel:+919793541467">
                 <Phone className="w-5 h-5" />
                 Call Now
@@ -149,14 +159,14 @@ export function CTASection() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: 0.4 }}
-            className="grid grid-cols-2 md:grid-cols-4 gap-8 pt-12 border-t border-primary-foreground/10"
+            className="grid grid-cols-2 md:grid-cols-4 gap-8 pt-12 border-t border-border"
           >
             {stats.map((stat, index) => (
               <div key={index} className="text-center">
-                <div className="text-3xl md:text-4xl font-display font-bold text-accent mb-2">
+                <div className="text-3xl md:text-4xl font-display font-bold text-primary mb-2">
                   {stat.value}
                 </div>
-                <div className="text-sm text-primary-foreground/60">
+                <div className="text-sm text-muted-foreground">
                   {stat.label}
                 </div>
               </div>
@@ -169,10 +179,11 @@ export function CTASection() {
             whileInView={{ opacity: 1 }}
             viewport={{ once: true }}
             transition={{ delay: 0.5 }}
-            className="mt-10 text-sm text-primary-foreground/60"
+            className="mt-10 text-sm text-muted-foreground"
           >
             Transparent pricing • Genuine spare parts • Professional service guarantee
           </motion.p>
+
         </div>
       </div>
     </section>
