@@ -1,208 +1,213 @@
-import { motion } from "framer-motion";
+import { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import { Link } from "react-router-dom";
-import { 
-  Monitor, 
-  Laptop, 
-  Wifi, 
-  Camera, 
-  HardDrive, 
+import {
+  Monitor,
+  Laptop,
+  Wifi,
+  Camera,
+  HardDrive,
   Printer,
-  Server,
   Shield,
-  Cpu,
-  Database,
-  Cloud,
   Wrench,
+  Users,
+  Clock,
+  ThumbsUp,
   ArrowRight
 } from "lucide-react";
+
 import { Button } from "@/components/ui/button";
+
+/* ---------- BANNERS FOR AUTOSLIDE ---------- */
+
+const banners = [
+  {
+    image: "https://images.unsplash.com/photo-1517430816045-df4b7de4a7d5?w=1200",
+    title: "Professional IT Repair Services",
+    text: "Fast, reliable and affordable IT solutions for home and business users.",
+    button: "Book Repair Now",
+    link: "/book-service"
+  },
+  {
+    image: "https://images.unsplash.com/photo-1519389950473-47ba0277781c?w=1200",
+    title: "Expert Laptop & Desktop Support",
+    text: "Certified technicians for all hardware and software problems.",
+    button: "Schedule Service",
+    link: "/book-service"
+  },
+  {
+    image: "https://images.unsplash.com/photo-1504384308090-c894fdcc538d?w=1200",
+    title: "Network & CCTV Solutions",
+    text: "Secure your home and office with smart networking and CCTV systems.",
+    button: "Contact Us",
+    link: "/contact"
+  },
+  {
+    image: "https://images.unsplash.com/photo-1556740738-b6a63e27c4df?w=1200",
+    title: "Annual Maintenance Contracts",
+    text: "Complete IT care with our AMC plans for businesses and offices.",
+    button: "View AMC Plans",
+    link: "/amc"
+  }
+];
+
+/* ---------- SERVICES LIST ---------- */
 
 const services = [
   {
     icon: Monitor,
     title: "Desktop Repair",
-    description: "Complete desktop computer repair including hardware diagnostics, OS installation, and performance optimization.",
-    features: ["Hardware Diagnostics", "Component Replacement", "OS Installation", "Performance Tuning"],
+    description: "Hardware diagnostics, OS installation and performance optimization."
   },
   {
     icon: Laptop,
     title: "Laptop Service",
-    description: "Expert laptop repair services including screen replacement, battery replacement, and motherboard repair.",
-    features: ["Screen Replacement", "Keyboard Repair", "Battery Replacement", "Motherboard Repair"],
+    description: "Screen replacement, battery repair and motherboard services."
   },
   {
     icon: Wifi,
-    title: "Network Solutions",
-    description: "Professional networking services from WiFi setup to enterprise network infrastructure.",
-    features: ["WiFi Setup", "Router Configuration", "Network Security", "Enterprise Solutions"],
+    title: "Network Setup",
+    description: "Router configuration, WiFi setup and network security."
   },
   {
     icon: Camera,
     title: "CCTV Installation",
-    description: "Complete CCTV security solutions including installation, remote monitoring and maintenance.",
-    features: ["Camera Setup", "DVR/NVR Setup", "Remote Viewing", "24/7 Monitoring"],
+    description: "Camera installation, DVR setup and remote monitoring."
   },
   {
     icon: HardDrive,
     title: "Data Recovery",
-    description: "Professional data recovery from damaged or corrupted storage devices.",
-    features: ["HDD Recovery", "SSD Recovery", "Memory Card Recovery", "RAID Recovery"],
+    description: "Recover lost data from HDD, SSD and memory cards."
   },
   {
     icon: Printer,
     title: "Printer Service",
-    description: "Complete printer maintenance including cartridge refilling and driver setup.",
-    features: ["Cartridge Refill", "Head Cleaning", "Paper Jam Fix", "Driver Setup"],
+    description: "Cartridge refilling, driver setup and maintenance."
+  }
+];
+
+/* ---------- TRUST FACTORS ---------- */
+
+const trustPoints = [
+  {
+    icon: Users,
+    title: "Trusted by 1000+ Customers",
+    desc: "Years of experience serving home and business clients."
   },
   {
-    icon: Server,
-    title: "Server Management",
-    description: "Enterprise server solutions including setup, maintenance and cloud migration.",
-    features: ["Server Setup", "Backup Solutions", "Security Hardening", "Cloud Migration"],
+    icon: Clock,
+    title: "Quick Response Time",
+    desc: "Fast service delivery with minimum downtime."
   },
   {
     icon: Shield,
-    title: "Virus Removal",
-    description: "Complete malware removal and security services.",
-    features: ["Malware Removal", "Antivirus Setup", "Security Audit", "System Cleanup"],
+    title: "Secure & Reliable",
+    desc: "Your data and devices are always safe with us."
   },
   {
-    icon: Cpu,
-    title: "Hardware Upgrades",
-    description: "Upgrade your system with latest components for better performance.",
-    features: ["RAM Upgrade", "SSD Installation", "GPU Upgrade", "CPU Upgrade"],
-  },
-  {
-    icon: Database,
-    title: "Software Solutions",
-    description: "Custom software installation and troubleshooting services.",
-    features: ["Installation", "Licensing", "Configuration", "Troubleshooting"],
-  },
-  {
-    icon: Cloud,
-    title: "Cloud Services",
-    description: "Cloud infrastructure setup and configuration services.",
-    features: ["Office 365 Setup", "Google Workspace", "AWS/Azure", "Cloud Backup"],
-  },
-  {
-    icon: Wrench,
-    title: "Preventive Maintenance",
-    description: "Regular maintenance services to prevent system failures.",
-    features: ["System Cleaning", "Health Checks", "Updates", "Optimization"],
-  },
+    icon: ThumbsUp,
+    title: "Affordable Pricing",
+    desc: "Best service at reasonable and transparent cost."
+  }
 ];
 
 const Services = () => {
+  const [index, setIndex] = useState(0);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setIndex((prev) => (prev + 1) % banners.length);
+    }, 4000);
+
+    return () => clearInterval(interval);
+  }, []);
+
   return (
     <div className="min-h-screen bg-black">
 
-      {/* HERO SECTION */}
-      <section className="relative py-24 md:py-32 overflow-hidden">
-
-        <motion.div
-          className="absolute inset-0 -z-10"
-          animate={{
-            backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"],
-          }}
-          transition={{
-            duration: 12,
-            repeat: Infinity,
-            ease: "linear",
-          }}
-          style={{
-            background:
-              "linear-gradient(270deg, #000000, #0f0f0f, #1a1a1a, #050505)",
-            backgroundSize: "400% 400%",
-          }}
-        />
-
-        <div className="container mx-auto px-4 text-center relative z-10">
-
-          <motion.span
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="inline-block px-4 py-1.5 rounded-full bg-white/10 text-white text-sm mb-6"
+      {/* ===== AUTO SLIDING BANNER ===== */}
+      <section className="relative h-[450px] overflow-hidden">
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={index}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="absolute inset-0"
           >
-            Our Services
-          </motion.span>
+            <img
+              src={banners[index].image}
+              className="w-full h-full object-cover"
+            />
 
-          <motion.h1
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="text-4xl md:text-5xl font-bold text-white mb-6"
-          >
-            Comprehensive IT Solutions
-          </motion.h1>
+            <div className="absolute inset-0 bg-black/70 flex items-center">
+              <div className="container mx-auto px-4 text-white">
 
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2 }}
-            className="text-gray-300 max-w-2xl mx-auto mb-8"
-          >
-            From quick repairs to complete IT infrastructure, we've got you covered with expert solutions for all your technology needs.
-          </motion.p>
+                <motion.div
+                  initial={{ y: 30, opacity: 0 }}
+                  animate={{ y: 0, opacity: 1 }}
+                >
+                  <h2 className="text-3xl md:text-4xl font-bold mb-4">
+                    {banners[index].title}
+                  </h2>
 
-          <Button
-            className="bg-gradient-to-r from-blue-600 to-blue-800 text-white"
-            asChild
-          >
-            <Link to="/book-service">
-              Book a Service
-              <ArrowRight className="ml-2 w-4 h-4" />
-            </Link>
-          </Button>
+                  <p className="text-gray-300 max-w-xl mb-6">
+                    {banners[index].text}
+                  </p>
 
-        </div>
+                  <Button
+                    className="bg-gradient-to-r from-blue-600 to-blue-800"
+                    asChild
+                  >
+                    <Link to={banners[index].link}>
+                      {banners[index].button}
+                      <ArrowRight className="ml-2 w-4 h-4" />
+                    </Link>
+                  </Button>
+                </motion.div>
+
+              </div>
+            </div>
+          </motion.div>
+        </AnimatePresence>
       </section>
 
-      {/* SERVICES GRID */}
+      {/* ===== SERVICES PROMOTION GRID ===== */}
       <section className="py-20">
         <div className="container mx-auto px-4">
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <h2 className="text-3xl font-bold text-white text-center mb-10">
+            Our Core IT Services
+          </h2>
 
-            {services.map((service, index) => (
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+
+            {services.map((service, i) => (
               <motion.div
-                key={index}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                whileHover={{ scale: 1.03 }}
-                className="bg-black/70 backdrop-blur-md border border-white/10 rounded-2xl p-6 transition-all"
+                key={i}
+                whileHover={{ scale: 1.04 }}
+                className="bg-black/70 border border-white/10 rounded-2xl p-6 text-center"
               >
-
-                <div className="w-14 h-14 bg-blue-600/20 rounded-xl flex items-center justify-center mb-4">
-                  <service.icon className="w-7 h-7 text-blue-400" />
+                <div className="w-16 h-16 bg-blue-600/20 rounded-xl flex items-center justify-center mx-auto mb-4">
+                  <service.icon className="w-8 h-8 text-blue-400" />
                 </div>
 
                 <h3 className="text-xl font-bold text-white mb-2">
                   {service.title}
                 </h3>
 
-                <p className="text-gray-400 mb-4 text-sm">
+                <p className="text-gray-400 mb-4">
                   {service.description}
                 </p>
 
-                <ul className="space-y-2 mb-6">
-                  {service.features.map((feature, i) => (
-                    <li key={i} className="flex items-center gap-2 text-gray-300 text-sm">
-                      <div className="w-1.5 h-1.5 rounded-full bg-blue-500" />
-                      {feature}
-                    </li>
-                  ))}
-                </ul>
-
                 <Button
-                  className="w-full bg-gradient-to-r from-blue-600 to-blue-800 text-white"
+                  className="bg-gradient-to-r from-blue-600 to-blue-800 w-full"
                   asChild
                 >
                   <Link to="/book-service">
                     Book This Service
-                    <ArrowRight className="w-4 h-4 ml-2" />
                   </Link>
                 </Button>
-
               </motion.div>
             ))}
 
@@ -210,35 +215,59 @@ const Services = () => {
         </div>
       </section>
 
-      {/* CTA SECTION */}
+      {/* ===== WHY TRUST ZAPPTEK ===== */}
+      <section className="py-20 bg-black/50">
+        <div className="container mx-auto px-4 text-center">
+
+          <h2 className="text-3xl font-bold text-white mb-10">
+            Why Choose ZappTek?
+          </h2>
+
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+
+            {trustPoints.map((point, i) => (
+              <motion.div
+                key={i}
+                whileHover={{ scale: 1.05 }}
+                className="p-6 border border-white/10 bg-black/70 rounded-2xl"
+              >
+                <div className="w-14 h-14 bg-blue-600/20 rounded-xl flex items-center justify-center mx-auto mb-3">
+                  <point.icon className="w-7 h-7 text-blue-400" />
+                </div>
+
+                <h4 className="text-lg font-semibold text-white mb-2">
+                  {point.title}
+                </h4>
+
+                <p className="text-gray-400 text-sm">
+                  {point.desc}
+                </p>
+              </motion.div>
+            ))}
+
+          </div>
+        </div>
+      </section>
+
+      {/* ===== HOW WE WORK ===== */}
       <section className="py-16 text-center">
         <h2 className="text-3xl font-bold text-white mb-4">
-          Need Custom IT Solutions?
+          How We Deliver Best IT Services
         </h2>
 
-        <p className="text-gray-400 mb-6 max-w-xl mx-auto">
-          Contact us for business-specific IT services and AMC plans tailored to your needs.
+        <p className="text-gray-400 max-w-2xl mx-auto mb-8">
+          At ZappTek we follow a professional process: Diagnose → Repair → Test → Deliver.  
+          We make sure every customer gets reliable, transparent and affordable service.
         </p>
 
-        <div className="flex flex-col sm:flex-row gap-4 justify-center">
-
-          <Button
-            className="bg-gradient-to-r from-blue-600 to-blue-800 text-white"
-            asChild
-          >
-            <Link to="/contact">Contact Us</Link>
-          </Button>
-
-          <Button
-            className="border border-white/20 text-white"
-            asChild
-          >
-            <a href="tel:+919793541467">
-              Call: +91 97935 41467
-            </a>
-          </Button>
-
-        </div>
+        <Button
+          className="bg-gradient-to-r from-blue-600 to-blue-800"
+          asChild
+        >
+          <Link to="/contact">
+            Talk to Expert
+          </Link>
+        </Button>
       </section>
 
     </div>
