@@ -47,21 +47,24 @@ const stats = [
 
 export function CTASection() {
   return (
-    <section className="py-20 md:py-28 relative overflow-hidden bg-black">
+    <section className="py-20 md:py-28 relative overflow-hidden">
 
-      {/* Blurred Gradient Background */}
-      <div className="absolute inset-0 backdrop-blur-xl bg-black/80 z-0" />
-
+      {/* Animated Black Gradient Background */}
       <motion.div
-        className="absolute top-10 left-10 w-96 h-96 rounded-full bg-blue-600/20 blur-3xl"
-        animate={{ scale: [1, 1.2, 1], opacity: [0.3, 0.5, 0.3] }}
-        transition={{ duration: 8, repeat: Infinity }}
-      />
-
-      <motion.div
-        className="absolute bottom-10 right-10 w-96 h-96 rounded-full bg-indigo-600/20 blur-3xl"
-        animate={{ scale: [1.1, 1, 1.1], opacity: [0.3, 0.5, 0.3] }}
-        transition={{ duration: 10, repeat: Infinity }}
+        className="absolute inset-0 -z-10"
+        animate={{
+          backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"],
+        }}
+        transition={{
+          duration: 10,
+          repeat: Infinity,
+          ease: "linear",
+        }}
+        style={{
+          background:
+            "linear-gradient(270deg, #000000, #0f0f0f, #1a1a1a, #050505)",
+          backgroundSize: "400% 400%",
+        }}
       />
 
       <div className="container mx-auto px-4 relative z-10">
@@ -71,7 +74,7 @@ export function CTASection() {
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="text-3xl md:text-4xl lg:text-5xl font-display font-bold text-white mb-6"
+            className="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-6"
           >
             Reliable IT Support You Can Trust
           </motion.h2>
@@ -81,12 +84,12 @@ export function CTASection() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: 0.1 }}
-            className="text-lg md:text-xl text-gray-400 mb-12 max-w-3xl mx-auto"
+            className="text-lg md:text-xl text-gray-300 mb-12 max-w-3xl mx-auto"
           >
             Professional IT services for home users, offices, and businesses — delivered on-site and remotely with transparency and expertise.
           </motion.p>
 
-          {/* DARK BLUR CLICKABLE CARDS */}
+          {/* TRUST CARDS */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -113,7 +116,7 @@ export function CTASection() {
                     <item.icon className="w-6 h-6 text-blue-400" />
                   </div>
 
-                  <h4 className="font-semibold text-lg mb-2">
+                  <h4 className="font-semibold text-lg mb-2 text-white">
                     {item.title}
                   </h4>
 
@@ -130,7 +133,7 @@ export function CTASection() {
             ))}
           </motion.div>
 
-          {/* CTA BUTTONS */}
+          {/* CTA BUTTONS - BLUE GRADIENT */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -138,27 +141,39 @@ export function CTASection() {
             transition={{ delay: 0.3 }}
             className="flex flex-col sm:flex-row gap-4 justify-center mb-16"
           >
-            <Button variant="gradient" size="xl" asChild>
+            <Button
+              size="xl"
+              asChild
+              className="bg-gradient-to-r from-blue-600 to-blue-800 text-white hover:from-blue-500 hover:to-blue-700 transition-all"
+            >
               <Link to="/book-service">
                 Book a Service
-                <ArrowRight className="w-5 h-5 ml-2" />
+                <ArrowRight className="w-5 h-5 ml-2 text-white" />
               </Link>
             </Button>
 
-            <Button variant="whatsapp" size="xl" asChild>
+            <Button
+              size="xl"
+              asChild
+              className="bg-gradient-to-r from-blue-600 to-blue-800 text-white hover:from-blue-500 hover:to-blue-700 transition-all"
+            >
               <a
                 href="https://wa.me/919793541467"
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                <MessageCircle className="w-5 h-5 mr-2" />
+                <MessageCircle className="w-5 h-5 mr-2 text-white" />
                 Chat on WhatsApp
               </a>
             </Button>
 
-            <Button variant="outline" size="xl" asChild>
+            <Button
+              size="xl"
+              asChild
+              className="bg-gradient-to-r from-blue-600 to-blue-800 text-white hover:from-blue-500 hover:to-blue-700 transition-all"
+            >
               <a href="tel:+919793541467">
-                <Phone className="w-5 h-5 mr-2" />
+                <Phone className="w-5 h-5 mr-2 text-white" />
                 Call Now
               </a>
             </Button>
@@ -178,7 +193,7 @@ export function CTASection() {
                 whileHover={{ scale: 1.05 }}
                 className="text-center"
               >
-                <div className="text-3xl md:text-4xl font-display font-bold text-blue-400 mb-2">
+                <div className="text-3xl md:text-4xl font-bold text-blue-400 mb-2">
                   {stat.value}
                 </div>
                 <div className="text-sm text-gray-400">
