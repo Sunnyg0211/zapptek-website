@@ -15,7 +15,7 @@ const Index = () => {
 
       <ServicesSection />
       <AMCSection />
-      <TestimonialsSection />
+      <EnhancedTrustSection />
       <CTASection />
     </>
   );
