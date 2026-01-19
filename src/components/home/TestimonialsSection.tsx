@@ -1,6 +1,6 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { useEffect, useState } from "react";
-import { Star, Quote, Cpu, Wifi, ShieldCheck, Laptop } from "lucide-react";
+import { Star, Quote, Cpu, Wifi, ShieldCheck, Laptop, Play, X } from "lucide-react";
 
 const backgrounds = [
   "https://images.unsplash.com/photo-1518770660439-4636190af475?w=1200&h=800&fit=crop",
@@ -14,49 +14,58 @@ const caseStudies = [
     title: "Office Network Revival",
     category: "Corporate IT Support",
     content:
-      "A growing startup faced constant network downtime and slow systems. We restructured their office network and optimized devices. Productivity increased and downtime reduced by over 90%.",
+      "A growing startup faced constant network downtime and slow systems. We restructured their office network and optimized devices.",
     icon: Wifi,
+    video: "https://www.youtube.com/embed/tgbNymZ7vqY"
   },
   {
     title: "Critical Data Recovery",
     category: "Emergency IT Services",
     content:
-      "A local business lost access to important accounting data due to hardware failure. Our technicians recovered 100% of their critical files and restored operations within hours.",
+      "Recovered 100% critical files from crashed hard disk and restored business operations within hours.",
     icon: Cpu,
+    video: "https://www.youtube.com/embed/tgbNymZ7vqY"
   },
   {
     title: "Complete IT Maintenance",
     category: "AMC Success Story",
     content:
-      "Through our annual maintenance plan, a small company avoided system failures and received regular health checks, ensuring smooth operations all year.",
+      "Through our AMC plan, company avoided failures and received regular system health checks.",
     icon: ShieldCheck,
+    video: "https://www.youtube.com/embed/tgbNymZ7vqY"
   },
   {
     title: "Laptop Repair Turnaround",
     category: "Home User Support",
     content:
-      "A professional needed urgent laptop repair before an important meeting. We diagnosed and repaired the device same day, saving valuable time.",
+      "Urgent laptop repair delivered same day before client’s important meeting.",
     icon: Laptop,
+    video: "https://www.youtube.com/embed/tgbNymZ7vqY"
   },
   {
     title: "Security Upgrade Project",
     category: "Business Protection",
     content:
-      "Implemented antivirus, firewall and backup solutions for a small office, protecting them from cyber threats and data loss.",
+      "Installed security solutions and backup systems protecting from cyber threats.",
     icon: ShieldCheck,
+    video: "https://www.youtube.com/embed/tgbNymZ7vqY"
   },
   {
     title: "Printer & Device Setup",
     category: "Office Solutions",
     content:
-      "Installed and configured multiple printers and devices across departments with full network integration and support.",
+      "Configured multiple devices across departments with full network setup.",
     icon: Wifi,
-  },
+    video: "https://www.youtube.com/embed/tgbNymZ7vqY"
+  }
 ];
 
 export function TestimonialsSection() {
   const [index, setIndex] = useState(0);
   const [bgIndex, setBgIndex] = useState(0);
+
+  const [videoOpen, setVideoOpen] = useState(false);
+  const [currentVideo, setCurrentVideo] = useState("");
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -72,10 +81,15 @@ export function TestimonialsSection() {
     caseStudies[(index + 1) % caseStudies.length],
   ];
 
+  const openVideo = (url: string) => {
+    setCurrentVideo(url);
+    setVideoOpen(true);
+  };
+
   return (
     <section className="relative py-16 md:py-20 overflow-hidden">
 
-      {/* ===== BLURRED BACKGROUND IMAGE ===== */}
+      {/* BACKGROUND */}
       <div className="absolute inset-0 z-0">
         <AnimatePresence mode="wait">
           <motion.img
@@ -90,28 +104,27 @@ export function TestimonialsSection() {
           />
         </AnimatePresence>
 
-        {/* Color Overlay - keeps consistent theme */}
-        <div className="absolute inset-0 bg-gradient-to-br from-blue-900/70 via-indigo-900/70 to-purple-900/70" />
+        <div className="absolute inset-0 bg-gradient-to-br from-blue-100/80 via-purple-100/80 to-pink-100/80" />
       </div>
 
       <div className="container mx-auto px-4 relative z-10">
 
         {/* HEADER */}
         <div className="text-center mb-10">
-          <span className="inline-block px-3 py-1 rounded-full bg-white/10 text-white text-sm font-medium mb-3">
+          <span className="inline-block px-3 py-1 rounded-full bg-black/10 text-black text-sm font-medium mb-3">
             Success Stories
           </span>
 
-          <h2 className="text-2xl md:text-3xl font-bold mb-2 text-white">
-            Real Results from Real Work
+          <h2 className="text-2xl md:text-3xl font-bold mb-2 text-black">
+            Client Video Testimonials
           </h2>
 
-          <p className="text-white/80 max-w-2xl mx-auto">
-            Practical examples of how we solve IT challenges for businesses and individuals every day.
+          <p className="text-black/70 max-w-2xl mx-auto">
+            Watch how we solved real IT problems for real customers.
           </p>
         </div>
 
-        {/* TESTIMONIAL SLIDER */}
+        {/* SLIDER */}
         <div className="max-w-5xl mx-auto">
           <AnimatePresence mode="wait">
             <motion.div
@@ -125,13 +138,12 @@ export function TestimonialsSection() {
               {visibleTestimonials.map((item, i) => (
                 <div
                   key={i}
-                  className="bg-white/10 backdrop-blur-lg rounded-2xl p-6 border border-white/20 relative shadow-lg"
+                  className="bg-black/80 backdrop-blur-lg rounded-2xl p-6 border border-white/10 relative shadow-xl"
                 >
-                  <div className="absolute -top-3 right-5 w-8 h-8 rounded-full bg-white/20 flex items-center justify-center">
+                  <div className="absolute -top-3 right-5 w-8 h-8 rounded-full bg-white/10 flex items-center justify-center">
                     <Quote className="w-4 h-4 text-white" />
                   </div>
 
-                  {/* Stars */}
                   <div className="flex gap-1 mb-3">
                     {[...Array(5)].map((_, i) => (
                       <Star
@@ -145,7 +157,7 @@ export function TestimonialsSection() {
                     {item.title}
                   </h3>
 
-                  <p className="text-xs text-white/70 mb-2">
+                  <p className="text-xs text-white/60 mb-2">
                     {item.category}
                   </p>
 
@@ -153,45 +165,54 @@ export function TestimonialsSection() {
                     “{item.content}”
                   </p>
 
-                  <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center">
-                      <item.icon className="w-5 h-5 text-white" />
-                    </div>
-
-                    <div>
-                      <p className="text-xs text-white/70">
-                        Delivered by ZappTek Experts
-                      </p>
-                      <p className="text-[11px] text-white/60">
-                        Professional IT Solutions
-                      </p>
-                    </div>
-                  </div>
+                  <button
+                    onClick={() => openVideo(item.video)}
+                    className="flex items-center gap-2 px-4 py-2 bg-white/10 hover:bg-white/20 transition rounded-lg text-white text-sm"
+                  >
+                    <Play className="w-4 h-4" />
+                    Watch Video
+                  </button>
                 </div>
               ))}
             </motion.div>
           </AnimatePresence>
-
-          {/* DOT INDICATORS */}
-          <div className="flex justify-center gap-2 mt-6">
-            {Array.from({ length: caseStudies.length / 2 }).map((_, i) => (
-              <button
-                key={i}
-                onClick={() => {
-                  setIndex(i * 2);
-                  setBgIndex(i % backgrounds.length);
-                }}
-                className={`h-2 rounded-full transition-all ${
-                  index === i * 2
-                    ? "bg-white w-6"
-                    : "bg-white/50 w-2"
-                }`}
-              />
-            ))}
-          </div>
         </div>
 
       </div>
+
+      {/* VIDEO POPUP MODAL */}
+      <AnimatePresence>
+        {videoOpen && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4"
+          >
+            <motion.div
+              initial={{ scale: 0.9 }}
+              animate={{ scale: 1 }}
+              exit={{ scale: 0.9 }}
+              className="relative bg-black rounded-xl max-w-3xl w-full p-4"
+            >
+              <button
+                onClick={() => setVideoOpen(false)}
+                className="absolute -top-4 -right-4 bg-white text-black rounded-full p-2"
+              >
+                <X className="w-5 h-5" />
+              </button>
+
+              <div className="relative pb-[56.25%] h-0">
+                <iframe
+                  src={currentVideo}
+                  className="absolute top-0 left-0 w-full h-full rounded-lg"
+                  allowFullScreen
+                ></iframe>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </section>
   );
 }
