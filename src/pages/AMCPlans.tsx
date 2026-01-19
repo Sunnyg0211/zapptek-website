@@ -4,27 +4,44 @@ import { useEffect, useState } from "react";
 import { Check, Star, Zap, Crown, ArrowRight, Shield, Clock, Users } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
-const banners = [
+const categories = [
   {
-    title: "Professional IT Services",
-    text: "Complete computer and laptop repair services at your doorstep",
-    button: "View Services",
+    name: "Services",
+    button: "Explore Services",
     link: "/services",
-    image: "https://images.unsplash.com/photo-1581092160562-40aa08e78837?w=1200"
+    images: [
+      "https://images.unsplash.com/photo-1581092335397-9583eb92d232?w=1200",
+      "https://images.unsplash.com/photo-1518770660439-4636190af475?w=1200",
+      "https://images.unsplash.com/photo-1581092160562-40aa08e78837?w=1200",
+      "https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=1200",
+      "https://images.unsplash.com/photo-1556761175-5973dc0f32e7?w=1200"
+    ],
   },
+
   {
-    title: "Instant Repair Support",
-    text: "Fast, reliable and affordable device repair solutions",
+    name: "Repairs",
     button: "Book Repair",
     link: "/book-service",
-    image: "https://images.unsplash.com/photo-1581091870622-28a6c6f36e8f?w=1200"
+    images: [
+      "https://images.unsplash.com/photo-1581091870622-28a6c6f36e8f?w=1200",
+      "https://images.unsplash.com/photo-1563453392212-326f5e854473?w=1200",
+      "https://images.unsplash.com/photo-1517430816045-df4b7de11d1d?w=1200",
+      "https://images.unsplash.com/photo-1600267204091-5c1ab8b10c02?w=1200",
+      "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=1200"
+    ],
   },
+
   {
-    title: "AMC Plans for Everyone",
-    text: "Annual maintenance contracts for homes and businesses",
-    button: "Explore Plans",
+    name: "AMC Plans",
+    button: "View AMC Plans",
     link: "/amc-plans",
-    image: "https://images.unsplash.com/photo-1518770660439-4636190af475?w=1200"
+    images: [
+      "https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=1200",
+      "https://images.unsplash.com/photo-1531498860502-7c67cf02f657?w=1200",
+      "https://images.unsplash.com/photo-1542744094-24638eff58bb?w=1200",
+      "https://images.unsplash.com/photo-1499951360447-b19be8fe80f5?w=1200",
+      "https://images.unsplash.com/photo-1504384308090-c894fdcc538d?w=1200"
+    ],
   },
 ];
 
@@ -103,32 +120,36 @@ const benefits = [
 ];
 
 const AMCPlans = () => {
-  const [index, setIndex] = useState(0);
+  const [categoryIndex, setCategoryIndex] = useState(0);
+  const [imageIndex, setImageIndex] = useState(0);
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setIndex((prev) => (prev + 1) % banners.length);
+      setImageIndex((prev) => {
+        const max = categories[categoryIndex].images.length;
+        return (prev + 1) % max;
+      });
     }, 4000);
 
     return () => clearInterval(interval);
-  }, []);
+  }, [categoryIndex]);
 
   return (
     <div className="min-h-screen">
 
-      {/* BANNER SLIDER SECTION */}
-      <section className="relative h-[420px] overflow-hidden">
+      {/* CATEGORY IMAGE SLIDER */}
+      <section className="relative h-[460px] overflow-hidden">
 
         <AnimatePresence mode="wait">
           <motion.div
-            key={index}
+            key={`${categoryIndex}-${imageIndex}`}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             className="absolute inset-0"
           >
             <img
-              src={banners[index].image}
+              src={categories[categoryIndex].images[imageIndex]}
               className="w-full h-full object-cover"
             />
 
@@ -136,26 +157,48 @@ const AMCPlans = () => {
               <div className="text-center max-w-3xl px-4">
 
                 <h1 className="text-3xl md:text-4xl font-bold text-white mb-4">
-                  {banners[index].title}
+                  {categories[categoryIndex].name}
                 </h1>
 
                 <p className="text-gray-300 mb-6">
-                  {banners[index].text}
+                  Professional {categories[categoryIndex].name.toLowerCase()} solutions for homes and businesses
                 </p>
 
                 <Button
                   className="bg-gradient-to-r from-blue-600 to-blue-800 text-white"
                   asChild
                 >
-                  <Link to={banners[index].link}>
-                    {banners[index].button}
+                  <Link to={categories[categoryIndex].link}>
+                    {categories[categoryIndex].button}
                     <ArrowRight className="w-4 h-4 ml-2" />
                   </Link>
                 </Button>
+
+                {/* CATEGORY SWITCH */}
+                <div className="flex justify-center gap-3 mt-6">
+                  {categories.map((cat, i) => (
+                    <button
+                      key={i}
+                      onClick={() => {
+                        setCategoryIndex(i);
+                        setImageIndex(0);
+                      }}
+                      className={`px-4 py-2 rounded-full text-sm ${
+                        categoryIndex === i
+                          ? "bg-blue-600 text-white"
+                          : "bg-white/10 text-white"
+                      }`}
+                    >
+                      {cat.name}
+                    </button>
+                  ))}
+                </div>
+
               </div>
             </div>
           </motion.div>
         </AnimatePresence>
+
       </section>
 
       {/* PLANS SECTION */}
@@ -174,13 +217,6 @@ const AMCPlans = () => {
                 className="p-8 rounded-3xl border border-white/10 backdrop-blur-md 
                 bg-gradient-to-br from-black via-black/80 to-gray-900"
               >
-                {plan.popular && (
-                  <div className="text-center mb-3">
-                    <span className="px-3 py-1 rounded-full bg-blue-600 text-white text-xs">
-                      Most Popular
-                    </span>
-                  </div>
-                )}
 
                 <div className="w-14 h-14 rounded-xl bg-blue-600/20 flex items-center justify-center mb-4">
                   <plan.icon className="w-7 h-7 text-blue-400" />
@@ -224,39 +260,6 @@ const AMCPlans = () => {
             ))}
           </div>
 
-        </div>
-      </section>
-
-      {/* BENEFITS */}
-      <section className="py-20">
-        <div className="container mx-auto px-4 text-center">
-
-          <h2 className="text-3xl font-bold text-white mb-10">
-            Why Choose Our AMC Plans?
-          </h2>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto">
-            {benefits.map((b, i) => (
-              <motion.div
-                key={i}
-                whileHover={{ scale: 1.05 }}
-                className="p-6 rounded-2xl border border-white/10 
-                bg-gradient-to-br from-black via-black/80 to-gray-900"
-              >
-                <div className="w-14 h-14 mx-auto mb-4 rounded-xl bg-blue-600/20 flex items-center justify-center">
-                  <b.icon className="w-7 h-7 text-blue-400" />
-                </div>
-
-                <h3 className="text-lg font-bold text-white mb-2">
-                  {b.title}
-                </h3>
-
-                <p className="text-gray-400 text-sm">
-                  {b.description}
-                </p>
-              </motion.div>
-            ))}
-          </div>
         </div>
       </section>
 
