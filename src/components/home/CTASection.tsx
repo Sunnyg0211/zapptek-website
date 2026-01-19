@@ -95,7 +95,7 @@ export function CTASection() {
                 key={index}
                 whileHover={{ y: -6, scale: 1.02 }}
                 transition={{ duration: 0.3 }}
-                className="bg-gradient-to-br from-blue-500 to-indigo-500 text-white rounded-2xl p-5 text-left shadow-lg hover:shadow-2xl transition-all duration-300"
+                className="bg-white/10 backdrop-blur-lg border border-white/20 text-white text-white rounded-2xl p-5 text-left shadow-lg hover:shadow-2xl transition-all duration-300"
               >
                 <div className="w-10 h-10 rounded-xl bg-white/20 flex items-center justify-center mb-3">
                   <item.icon className="w-5 h-5 text-white" />
