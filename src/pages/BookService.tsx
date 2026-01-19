@@ -42,7 +42,7 @@ const serviceTypes = [
   { id: "pickup", label: "Pickup & Delivery", description: "We pick up and deliver" },
 ];
 
-/* ------------------ SLIDER CONTENT FOR BENEFITS ------------------ */
+/* ------------------ SLIDER CONTENT ------------------ */
 
 const slides = [
   {
@@ -64,8 +64,6 @@ const slides = [
     icon: ShieldCheck
   }
 ];
-
-/* ------------------ MAIN COMPONENT ------------------ */
 
 const BookService = () => {
   const [step, setStep] = useState(1);
@@ -106,9 +104,9 @@ const BookService = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-black">
 
-      {/* BENEFITS SLIDER SECTION */}
+      {/* SLIDER */}
       <section className="relative h-[380px] overflow-hidden">
         <AnimatePresence mode="wait">
           <motion.div
@@ -146,30 +144,26 @@ const BookService = () => {
         </AnimatePresence>
       </section>
 
-      {/* BOOKING FORM */}
+      {/* FORM */}
       <section className="py-16">
         <div className="container mx-auto px-4">
           <div className="max-w-3xl mx-auto">
 
-            {/* Progress Steps */}
+            {/* Progress */}
             <div className="flex items-center justify-center mb-12">
               {[1, 2, 3].map((s) => (
                 <div key={s} className="flex items-center">
                   <div
                     className={`w-10 h-10 rounded-full flex items-center justify-center font-semibold ${
                       step >= s
-                        ? "gradient-bg text-primary-foreground"
-                        : "bg-muted text-muted-foreground"
+                        ? "bg-gradient-to-r from-blue-600 to-blue-800 text-white"
+                        : "bg-white/10 text-gray-400"
                     }`}
                   >
                     {step > s ? <Check className="w-5 h-5" /> : s}
                   </div>
                   {s < 3 && (
-                    <div
-                      className={`w-16 md:w-24 h-1 ${
-                        step > s ? "bg-primary" : "bg-muted"
-                      }`}
-                    />
+                    <div className="w-16 md:w-24 h-1 bg-white/10" />
                   )}
                 </div>
               ))}
@@ -179,58 +173,66 @@ const BookService = () => {
               key={step}
               initial={{ opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}
-              className="bg-card rounded-3xl p-8 shadow-lg border border-border"
+              className="p-8 rounded-3xl border border-white/10 backdrop-blur-md bg-gradient-to-br from-black via-black/80 to-gray-900"
             >
 
               {/* STEP 1 */}
               {step === 1 && (
                 <div>
-                  <h2 className="text-2xl font-bold mb-6">
+                  <h2 className="text-2xl font-bold text-white mb-6">
                     What do you need help with?
                   </h2>
 
-                  <div className="mb-8">
-                    <Label>Select Device Type</Label>
+                  <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mt-4">
+                    {deviceTypes.map((device) => (
+                      <motion.button
+                        key={device.id}
+                        onClick={() => setSelectedDevice(device.id)}
+                        whileHover={{ scale: 1.03 }}
+                        className={`p-5 rounded-2xl border transition-all text-center ${
+                          selectedDevice === device.id
+                            ? "border-blue-600 bg-gradient-to-br from-black via-black/90 to-gray-900"
+                            : "border-white/10 bg-black/70 hover:border-blue-600/50"
+                        }`}
+                      >
+                        <div className="w-14 h-14 mx-auto mb-3 rounded-xl bg-blue-600/20 flex items-center justify-center">
+                          <device.icon className="w-7 h-7 text-blue-400" />
+                        </div>
 
-                    <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mt-4">
-                      {deviceTypes.map((device) => (
-                        <button
-                          key={device.id}
-                          onClick={() => setSelectedDevice(device.id)}
-                          className={`p-4 rounded-xl border-2 ${
-                            selectedDevice === device.id
-                              ? "border-primary bg-primary/5"
-                              : "border-border"
-                          }`}
-                        >
-                          <device.icon className="w-8 h-8 mx-auto mb-2" />
+                        <span className="text-sm text-white">
                           {device.label}
-                        </button>
-                      ))}
-                    </div>
+                        </span>
+                      </motion.button>
+                    ))}
                   </div>
 
-                  <div className="mb-8">
-                    <Label>Service Type</Label>
+                  <div className="mt-8">
+                    <Label className="text-white">Service Type</Label>
 
                     <RadioGroup
                       value={selectedService}
                       onValueChange={setSelectedService}
+                      className="mt-3"
                     >
                       {serviceTypes.map((service) => (
                         <label
                           key={service.id}
-                          className="flex items-center gap-3 p-3 border rounded-xl mt-2"
+                          className="flex items-center gap-3 p-4 border border-white/10 rounded-xl mt-2 bg-black/60 cursor-pointer"
                         >
                           <RadioGroupItem value={service.id} />
-                          {service.label}
+                          <div>
+                            <div className="text-white">{service.label}</div>
+                            <div className="text-gray-400 text-sm">
+                              {service.description}
+                            </div>
+                          </div>
                         </label>
                       ))}
                     </RadioGroup>
                   </div>
 
                   <Button
-                    className="w-full"
+                    className="w-full mt-6 bg-gradient-to-r from-blue-600 to-blue-800 text-white"
                     onClick={() => setStep(2)}
                     disabled={!selectedDevice || !selectedService}
                   >
@@ -243,14 +245,14 @@ const BookService = () => {
               {/* STEP 2 */}
               {step === 2 && (
                 <div>
-                  <h2 className="text-2xl font-bold mb-6">
+                  <h2 className="text-2xl font-bold text-white mb-6">
                     Describe the Issue
                   </h2>
 
-                  <Label>Problem Details</Label>
-                  <Textarea className="mt-2 mb-6" />
+                  <Label className="text-white">Problem Details</Label>
+                  <Textarea className="mt-2 mb-6 bg-black/50 border-white/10 text-white" />
 
-                  <Label>Upload Photos</Label>
+                  <Label className="text-white">Upload Photos</Label>
 
                   <div className="mt-3">
                     <input
@@ -262,7 +264,7 @@ const BookService = () => {
 
                     <label
                       htmlFor="fileInput"
-                      className="block border-2 border-dashed p-6 text-center cursor-pointer"
+                      className="block border-2 border-dashed border-white/10 p-6 text-center cursor-pointer text-gray-300"
                     >
                       <Upload className="mx-auto mb-2" />
                       Click to Browse Image
@@ -286,7 +288,7 @@ const BookService = () => {
                     </Button>
 
                     <Button
-                      className="flex-1"
+                      className="flex-1 bg-gradient-to-r from-blue-600 to-blue-800 text-white"
                       onClick={() => {
                         if (validateStep2()) setStep(3);
                       }}
@@ -300,22 +302,20 @@ const BookService = () => {
               {/* STEP 3 */}
               {step === 3 && (
                 <div>
-                  <h2 className="text-2xl font-bold mb-6">
+                  <h2 className="text-2xl font-bold text-white mb-6">
                     Your Contact Details
                   </h2>
 
-                  <Input placeholder="Full Name" className="mb-4" />
-                  <Input placeholder="Phone Number" className="mb-4" />
-                  <Input placeholder="Email Address" className="mb-4" />
+                  <Input placeholder="Full Name" className="mb-4 bg-black/50 text-white border-white/10" />
+                  <Input placeholder="Phone Number" className="mb-4 bg-black/50 text-white border-white/10" />
+                  <Input placeholder="Email Address" className="mb-4 bg-black/50 text-white border-white/10" />
 
-                  <div className="p-4 bg-muted rounded-xl">
+                  <div className="p-4 bg-black/60 rounded-xl text-gray-300">
                     <p>
-                      Device:{" "}
-                      {deviceTypes.find((d) => d.id === selectedDevice)?.label}
+                      Device: {deviceTypes.find((d) => d.id === selectedDevice)?.label}
                     </p>
                     <p>
-                      Service:{" "}
-                      {serviceTypes.find((s) => s.id === selectedService)?.label}
+                      Service: {serviceTypes.find((s) => s.id === selectedService)?.label}
                     </p>
                   </div>
 
@@ -324,7 +324,7 @@ const BookService = () => {
                       Back
                     </Button>
 
-                    <Button className="flex-1" asChild>
+                    <Button className="flex-1 bg-gradient-to-r from-blue-600 to-blue-800 text-white" asChild>
                       <Link to="/login">Submit Booking</Link>
                     </Button>
                   </div>
