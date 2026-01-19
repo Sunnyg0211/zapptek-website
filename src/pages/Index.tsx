@@ -15,7 +15,7 @@ const Index = () => {
 
       <ServicesSection />
       <AMCSection />
-      <EnhancedTrustSection />
+      <CTASection.tsx />
       <CTASection />
     </>
   );
