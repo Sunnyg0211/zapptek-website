@@ -13,7 +13,6 @@ import {
   Camera,
   Wifi,
   HardDrive,
-  Image as ImageIcon
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -41,15 +40,8 @@ const BookService = () => {
   const [selectedDevice, setSelectedDevice] = useState("");
   const [selectedService, setSelectedService] = useState("");
 
-  // NEW STATES FOR IMAGE UPLOAD
-  const [selectedImages, setSelectedImages] = useState<File[]>([]);
+  // SIMPLE FILE SELECT ONLY
   const fileInputRef = useRef<HTMLInputElement>(null);
-
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files) {
-      setSelectedImages(Array.from(e.target.files));
-    }
-  };
 
   const openFileBrowser = () => {
     fileInputRef.current?.click();
@@ -141,7 +133,7 @@ const BookService = () => {
                       />
                     </div>
 
-                    {/* WORKING IMAGE UPLOAD SECTION */}
+                    {/* WORKING IMAGE SELECT SECTION */}
                     <div>
                       <Label className="text-white">Upload Photos</Label>
 
@@ -150,7 +142,6 @@ const BookService = () => {
                         multiple
                         accept="image/*"
                         ref={fileInputRef}
-                        onChange={handleFileChange}
                         className="hidden"
                       />
 
@@ -160,33 +151,9 @@ const BookService = () => {
                       >
                         <Upload className="w-10 h-10 mx-auto mb-2" />
                         <p className="text-sm">
-                          Click to browse or upload images
-                        </p>
-                        <p className="text-xs mt-1">
-                          (Screenshots or photos of the issue)
+                          Click here to browse and select images
                         </p>
                       </div>
-
-                      {/* PREVIEW SECTION */}
-                      {selectedImages.length > 0 && (
-                        <div className="mt-4">
-                          <p className="text-sm text-white mb-2">
-                            Selected Images:
-                          </p>
-
-                          <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-                            {selectedImages.map((file, index) => (
-                              <div
-                                key={index}
-                                className="p-3 bg-black/40 border border-white/10 rounded-lg text-gray-300 text-xs flex items-center gap-2"
-                              >
-                                <ImageIcon className="w-4 h-4 text-blue-400" />
-                                {file.name}
-                              </div>
-                            ))}
-                          </div>
-                        </div>
-                      )}
                     </div>
 
                     {selectedService === "onsite" && (
