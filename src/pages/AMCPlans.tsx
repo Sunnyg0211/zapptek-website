@@ -1,38 +1,14 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { Check, Star, Zap, Crown, ArrowRight, Shield, Clock, Users } from "lucide-react";
+import { Check, Zap, Crown, ArrowRight, Shield, Clock, Users } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 const categories = [
   {
-    name: "Services",
-    button: "Explore Services",
-    link: "/services",
-    images: [
-      "https://images.unsplash.com/photo-1581092335397-9583eb92d232?w=1200",
-      "https://images.unsplash.com/photo-1518770660439-4636190af475?w=1200",
-      "https://images.unsplash.com/photo-1581092160562-40aa08e78837?w=1200",
-      "https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=1200",
-      "https://images.unsplash.com/photo-1556761175-5973dc0f32e7?w=1200"
-    ],
-  },
-
-  {
-    name: "Repairs",
-    button: "Book Repair",
-    link: "/book-service",
-    images: [
-      "https://images.unsplash.com/photo-1581091870622-28a6c6f36e8f?w=1200",
-      "https://images.unsplash.com/photo-1563453392212-326f5e854473?w=1200",
-      "https://images.unsplash.com/photo-1517430816045-df4b7de11d1d?w=1200",
-      "https://images.unsplash.com/photo-1600267204091-5c1ab8b10c02?w=1200",
-      "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=1200"
-    ],
-  },
-
-  {
     name: "AMC Plans",
+    heading: "Annual Maintenance Contracts",
+    text: "Complete IT care plans for homes and businesses",
     button: "View AMC Plans",
     link: "/amc-plans",
     images: [
@@ -41,6 +17,21 @@ const categories = [
       "https://images.unsplash.com/photo-1542744094-24638eff58bb?w=1200",
       "https://images.unsplash.com/photo-1499951360447-b19be8fe80f5?w=1200",
       "https://images.unsplash.com/photo-1504384308090-c894fdcc538d?w=1200"
+    ],
+  },
+
+  {
+    name: "Repairs",
+    heading: "Professional Repair Services",
+    text: "Fast, reliable and expert device repair solutions",
+    button: "Book Repair",
+    link: "/book-service",
+    images: [
+      "https://images.unsplash.com/photo-1581091870622-28a6c6f36e8f?w=1200",
+      "https://images.unsplash.com/photo-1563453392212-326f5e854473?w=1200",
+      "https://images.unsplash.com/photo-1517430816045-df4b7de11d1d?w=1200",
+      "https://images.unsplash.com/photo-1600267204091-5c1ab8b10c02?w=1200",
+      "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=1200"
     ],
   },
 ];
@@ -54,50 +45,39 @@ const plans = [
     description: "Perfect for home users with basic IT needs",
     features: [
       "2 On-site Service Visits",
-      "Remote Support (Business Hours)",
-      "Software Updates & Patches",
-      "Basic System Maintenance",
+      "Remote Support",
+      "Software Updates",
+      "System Maintenance",
       "Email Support",
-      "Response within 48 hours",
     ],
-    popular: false,
   },
   {
     name: "Professional",
-    icon: Star,
+    icon: Crown,
     price: "₹5,999",
     period: "/year",
-    description: "Ideal for small businesses and power users",
+    description: "Ideal for small businesses and offices",
     features: [
       "6 On-site Service Visits",
-      "Priority Remote Support",
-      "Software & Security Updates",
-      "Hardware Cleaning & Maintenance",
-      "Phone & Email Support",
-      "Response within 24 hours",
-      "10% Discount on Parts",
-      "Free Annual Health Check",
+      "Priority Support",
+      "Security Updates",
+      "Hardware Maintenance",
+      "Discount on Parts",
     ],
-    popular: true,
   },
   {
     name: "Enterprise",
-    icon: Crown,
+    icon: Shield,
     price: "₹12,999",
     period: "/year",
-    description: "Complete coverage for growing businesses",
+    description: "Complete coverage for organizations",
     features: [
-      "Unlimited Service Visits",
-      "24/7 Priority Support",
-      "Complete System Maintenance",
+      "Unlimited Visits",
+      "24/7 Support",
       "Network Management",
-      "Dedicated Account Manager",
-      "Response within 4 hours",
-      "20% Discount on Parts",
-      "Free Data Backup Setup",
-      "Security Audit Included",
+      "Dedicated Manager",
+      "Fast Response SLA",
     ],
-    popular: false,
   },
 ];
 
@@ -105,17 +85,17 @@ const benefits = [
   {
     icon: Shield,
     title: "Peace of Mind",
-    description: "Never worry about IT issues again with our comprehensive coverage.",
+    description: "Never worry about IT issues again.",
   },
   {
     icon: Clock,
     title: "Priority Response",
-    description: "Get faster response times with our AMC priority support system.",
+    description: "Faster support with AMC priority.",
   },
   {
     icon: Users,
     title: "Expert Technicians",
-    description: "Access to certified professionals for all your IT needs.",
+    description: "Certified professionals at your service.",
   },
 ];
 
@@ -135,17 +115,18 @@ const AMCPlans = () => {
   }, [categoryIndex]);
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen bg-black">
 
-      {/* CATEGORY IMAGE SLIDER */}
-      <section className="relative h-[460px] overflow-hidden">
+      {/* BIGGER ANIMATED SLIDER */}
+      <section className="relative h-[650px] overflow-hidden">
 
         <AnimatePresence mode="wait">
           <motion.div
             key={`${categoryIndex}-${imageIndex}`}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
+            initial={{ opacity: 0, x: 100 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: -100 }}
+            transition={{ duration: 0.8 }}
             className="absolute inset-0"
           >
             <img
@@ -153,29 +134,44 @@ const AMCPlans = () => {
               className="w-full h-full object-cover"
             />
 
-            <div className="absolute inset-0 bg-black/70 flex items-center justify-center">
-              <div className="text-center max-w-3xl px-4">
+            <div className="absolute inset-0 bg-black/75 flex items-center justify-center">
+              <div className="text-center max-w-4xl px-4">
 
-                <h1 className="text-3xl md:text-4xl font-bold text-white mb-4">
-                  {categories[categoryIndex].name}
-                </h1>
+                <motion.h1
+                  key={categories[categoryIndex].heading}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="text-4xl md:text-5xl font-bold text-white mb-4"
+                >
+                  {categories[categoryIndex].heading}
+                </motion.h1>
 
-                <p className="text-gray-300 mb-6">
-                  Professional {categories[categoryIndex].name.toLowerCase()} solutions for homes and businesses
+                <p className="text-gray-300 mb-6 text-lg">
+                  {categories[categoryIndex].text}
                 </p>
 
-                <Button
-                  className="bg-gradient-to-r from-blue-600 to-blue-800 text-white"
-                  asChild
-                >
-                  <Link to={categories[categoryIndex].link}>
-                    {categories[categoryIndex].button}
-                    <ArrowRight className="w-4 h-4 ml-2" />
-                  </Link>
-                </Button>
+                <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                  <Button
+                    className="bg-gradient-to-r from-blue-600 to-blue-800 text-white px-8 py-3"
+                    asChild
+                  >
+                    <Link to={categories[categoryIndex].link}>
+                      {categories[categoryIndex].button}
+                      <ArrowRight className="w-4 h-4 ml-2" />
+                    </Link>
+                  </Button>
+
+                  <Button
+                    variant="outline"
+                    className="border-white text-white"
+                    asChild
+                  >
+                    <Link to="/contact">Contact Us</Link>
+                  </Button>
+                </div>
 
                 {/* CATEGORY SWITCH */}
-                <div className="flex justify-center gap-3 mt-6">
+                <div className="flex justify-center gap-3 mt-8">
                   {categories.map((cat, i) => (
                     <button
                       key={i}
@@ -183,7 +179,7 @@ const AMCPlans = () => {
                         setCategoryIndex(i);
                         setImageIndex(0);
                       }}
-                      className={`px-4 py-2 rounded-full text-sm ${
+                      className={`px-5 py-2 rounded-full text-sm transition ${
                         categoryIndex === i
                           ? "bg-blue-600 text-white"
                           : "bg-white/10 text-white"
@@ -201,7 +197,7 @@ const AMCPlans = () => {
 
       </section>
 
-      {/* PLANS SECTION */}
+      {/* AMC PLANS SECTION */}
       <section className="py-20">
         <div className="container mx-auto px-4">
 
@@ -256,6 +252,39 @@ const AMCPlans = () => {
                   </Link>
                 </Button>
 
+              </motion.div>
+            ))}
+          </div>
+
+        </div>
+      </section>
+
+      {/* BENEFITS */}
+      <section className="py-20">
+        <div className="container mx-auto px-4 text-center">
+
+          <h2 className="text-3xl font-bold text-white mb-10">
+            Why Choose Our AMC Plans?
+          </h2>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto">
+            {benefits.map((benefit, index) => (
+              <motion.div
+                key={index}
+                whileHover={{ scale: 1.05 }}
+                className="p-6 bg-black/70 rounded-2xl border border-white/10"
+              >
+                <div className="w-14 h-14 mx-auto mb-4 rounded-xl bg-blue-600/20 flex items-center justify-center">
+                  <benefit.icon className="w-7 h-7 text-blue-400" />
+                </div>
+
+                <h3 className="text-lg font-bold text-white mb-2">
+                  {benefit.title}
+                </h3>
+
+                <p className="text-gray-400 text-sm">
+                  {benefit.description}
+                </p>
               </motion.div>
             ))}
           </div>
