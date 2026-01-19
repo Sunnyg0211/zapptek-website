@@ -47,17 +47,19 @@ const stats = [
 
 export function CTASection() {
   return (
-    <section className="py-20 md:py-28 relative overflow-hidden bg-gradient-to-br from-blue-50 via-white to-indigo-50">
+    <section className="py-20 md:py-28 relative overflow-hidden bg-black">
 
-      {/* Soft Background Effects */}
+      {/* Blurred Gradient Background */}
+      <div className="absolute inset-0 backdrop-blur-xl bg-black/80 z-0" />
+
       <motion.div
-        className="absolute top-10 left-10 w-80 h-80 rounded-full bg-blue-200/20 blur-3xl"
+        className="absolute top-10 left-10 w-96 h-96 rounded-full bg-blue-600/20 blur-3xl"
         animate={{ scale: [1, 1.2, 1], opacity: [0.3, 0.5, 0.3] }}
         transition={{ duration: 8, repeat: Infinity }}
       />
 
       <motion.div
-        className="absolute bottom-10 right-10 w-96 h-96 rounded-full bg-indigo-200/20 blur-3xl"
+        className="absolute bottom-10 right-10 w-96 h-96 rounded-full bg-indigo-600/20 blur-3xl"
         animate={{ scale: [1.1, 1, 1.1], opacity: [0.3, 0.5, 0.3] }}
         transition={{ duration: 10, repeat: Infinity }}
       />
@@ -69,7 +71,7 @@ export function CTASection() {
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="text-3xl md:text-4xl lg:text-5xl font-display font-bold text-foreground mb-6"
+            className="text-3xl md:text-4xl lg:text-5xl font-display font-bold text-white mb-6"
           >
             Reliable IT Support You Can Trust
           </motion.h2>
@@ -79,12 +81,12 @@ export function CTASection() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: 0.1 }}
-            className="text-lg md:text-xl text-muted-foreground mb-12 max-w-3xl mx-auto"
+            className="text-lg md:text-xl text-gray-400 mb-12 max-w-3xl mx-auto"
           >
             Professional IT services for home users, offices, and businesses — delivered on-site and remotely with transparency and expertise.
           </motion.p>
 
-          {/* CLICKABLE DARK CARDS */}
+          {/* DARK BLUR CLICKABLE CARDS */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -98,7 +100,14 @@ export function CTASection() {
                   whileHover={{ y: -8, scale: 1.03 }}
                   whileTap={{ scale: 0.98 }}
                   transition={{ duration: 0.3 }}
-                  className="bg-gray-900 text-white rounded-2xl p-6 text-left shadow-lg hover:shadow-2xl transition-all duration-300 cursor-pointer border border-gray-800"
+                  className="
+                    bg-black/60 backdrop-blur-lg
+                    text-white rounded-2xl p-6 text-left
+                    shadow-lg hover:shadow-2xl
+                    transition-all duration-300
+                    cursor-pointer
+                    border border-white/10
+                  "
                 >
                   <div className="w-12 h-12 rounded-xl bg-blue-600/20 flex items-center justify-center mb-4">
                     <item.icon className="w-6 h-6 text-blue-400" />
@@ -161,7 +170,7 @@ export function CTASection() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: 0.4 }}
-            className="grid grid-cols-2 md:grid-cols-4 gap-8 pt-12 border-t border-border"
+            className="grid grid-cols-2 md:grid-cols-4 gap-8 pt-12 border-t border-white/10"
           >
             {stats.map((stat, index) => (
               <motion.div
@@ -169,10 +178,10 @@ export function CTASection() {
                 whileHover={{ scale: 1.05 }}
                 className="text-center"
               >
-                <div className="text-3xl md:text-4xl font-display font-bold text-primary mb-2">
+                <div className="text-3xl md:text-4xl font-display font-bold text-blue-400 mb-2">
                   {stat.value}
                 </div>
-                <div className="text-sm text-muted-foreground">
+                <div className="text-sm text-gray-400">
                   {stat.label}
                 </div>
               </motion.div>
@@ -184,7 +193,7 @@ export function CTASection() {
             whileInView={{ opacity: 1 }}
             viewport={{ once: true }}
             transition={{ delay: 0.5 }}
-            className="mt-10 text-sm text-muted-foreground"
+            className="mt-10 text-sm text-gray-500"
           >
             Transparent pricing • Genuine spare parts • Professional service guarantee
           </motion.p>
