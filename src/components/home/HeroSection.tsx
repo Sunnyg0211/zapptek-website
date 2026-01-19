@@ -1,140 +1,244 @@
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
-import { ArrowRight, Shield, Clock, Headphones, Zap } from "lucide-react";
+import { useState, useEffect } from "react";
+import { ArrowRight, Wrench, ShoppingCart, Server, Shield } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
-const features = [
-  { icon: Shield, text: "Certified Experts" },
-  { icon: Clock, text: "24/7 Support" },
-  { icon: Headphones, text: "Remote Help" },
+type Slide = {
+  image: string;
+  title: string;
+  subtitle: string;
+  description: string;
+  buttonText: string;
+  link: string;
+};
+
+type CategorySlides = {
+  category: string;
+  icon: any;
+  slides: Slide[];
+};
+
+const heroData: CategorySlides[] = [
+  {
+    category: "IT Sales",
+    icon: ShoppingCart,
+    slides: [
+      {
+        image: "https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=1600&h=900&fit=crop",
+        title: "Premium Laptops Sale",
+        subtitle: "Best Deals of the Season",
+        description: "Top branded laptops at unbelievable prices with warranty support.",
+        buttonText: "Shop Laptops",
+        link: "/products",
+      },
+      {
+        image: "https://images.unsplash.com/photo-1587202372775-e229f172b9d7?w=1600&h=900&fit=crop",
+        title: "Printers & Scanners",
+        subtitle: "Office Essentials",
+        description: "High-performance printers for home and office use.",
+        buttonText: "View Printers",
+        link: "/products",
+      },
+      {
+        image: "https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=1600&h=900&fit=crop",
+        title: "Networking Equipment",
+        subtitle: "Build Better Connectivity",
+        description: "Routers, switches, and accessories for seamless internet.",
+        buttonText: "Explore Networking",
+        link: "/products",
+      },
+      {
+        image: "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?w=1600&h=900&fit=crop",
+        title: "CCTV Security Solutions",
+        subtitle: "Protect What Matters",
+        description: "Complete CCTV packages for homes and businesses.",
+        buttonText: "View CCTV Range",
+        link: "/products",
+      },
+    ],
+  },
+
+  {
+    category: "IT Services",
+    icon: Wrench,
+    slides: [
+      {
+        image: "https://images.unsplash.com/photo-1531492746076-161ca9bcad58?w=1600&h=900&fit=crop",
+        title: "Computer Repair Services",
+        subtitle: "Fast & Reliable",
+        description: "Expert on-site computer and laptop repair services.",
+        buttonText: "Book Repair",
+        link: "/book-service",
+      },
+      {
+        image: "https://images.unsplash.com/photo-1519389950473-47ba0277781c?w=1600&h=900&fit=crop",
+        title: "Office IT Support",
+        subtitle: "For Small Businesses",
+        description: "Dedicated IT support for your growing business.",
+        buttonText: "Get Support",
+        link: "/services",
+      },
+      {
+        image: "https://images.unsplash.com/photo-1581091870622-3b0c1f5f8b3d?w=1600&h=900&fit=crop",
+        title: "Data Recovery Services",
+        subtitle: "We Recover Your Data",
+        description: "Professional recovery from hard disks and laptops.",
+        buttonText: "Recover Now",
+        link: "/services",
+      },
+      {
+        image: "https://images.unsplash.com/photo-1560732488-6b0df240254a?w=1600&h=900&fit=crop",
+        title: "Home Visit Service",
+        subtitle: "At Your Doorstep",
+        description: "Technicians visit your location for instant solutions.",
+        buttonText: "Book Visit",
+        link: "/book-service",
+      },
+    ],
+  },
+
+  {
+    category: "AMC Plans",
+    icon: Shield,
+    slides: [
+      {
+        image: "https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=1600&h=900&fit=crop",
+        title: "Annual Maintenance",
+        subtitle: "For Businesses",
+        description: "Hassle-free IT maintenance plans for companies.",
+        buttonText: "View AMC Plans",
+        link: "/amc-plans",
+      },
+      {
+        image: "https://images.unsplash.com/photo-1504384308090-c894fdcc538d?w=1600&h=900&fit=crop",
+        title: "Corporate AMC",
+        subtitle: "Enterprise Support",
+        description: "Dedicated support for corporate infrastructure.",
+        buttonText: "Contact Sales",
+        link: "/contact",
+      },
+      {
+        image: "https://images.unsplash.com/photo-1556761175-4b46a572b786?w=1600&h=900&fit=crop",
+        title: "Priority Support",
+        subtitle: "Zero Downtime",
+        description: "24/7 priority support for AMC customers.",
+        buttonText: "Learn More",
+        link: "/amc-plans",
+      },
+      {
+        image: "https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=1600&h=900&fit=crop",
+        title: "Complete IT Care",
+        subtitle: "One Plan Solution",
+        description: "Hardware, software and network maintenance.",
+        buttonText: "Get Started",
+        link: "/amc-plans",
+      },
+    ],
+  },
 ];
 
 export function HeroSection() {
+  const [activeCategory, setActiveCategory] = useState(0);
+  const [currentSlide, setCurrentSlide] = useState(0);
+
+  const slides = heroData[activeCategory].slides;
+
+  useEffect(() => {
+    setCurrentSlide(0);
+  }, [activeCategory]);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentSlide((prev) => (prev + 1) % slides.length);
+    }, 3500);
+
+    return () => clearInterval(interval);
+  }, [slides]);
+
   return (
     <section className="relative min-h-[90vh] flex items-center overflow-hidden">
-      {/* Background */}
-      <div className="absolute inset-0 gradient-hero" />
-      
-      {/* Animated Gradient Orbs */}
-      <div className="absolute inset-0 overflow-hidden">
-        <motion.div
-          className="absolute -top-40 -right-40 w-96 h-96 rounded-full bg-primary/20 blur-3xl"
-          animate={{
-            x: [0, 50, 0],
-            y: [0, 30, 0],
-          }}
-          transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
-        />
-        <motion.div
-          className="absolute top-1/2 -left-40 w-80 h-80 rounded-full bg-accent/20 blur-3xl"
-          animate={{
-            x: [0, 30, 0],
-            y: [0, -50, 0],
-          }}
-          transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
-        />
+      {/* Category Navigation */}
+      <div className="absolute top-4 left-0 right-0 z-20 flex justify-center gap-3">
+        {heroData.map((cat, index) => (
+          <button
+            key={index}
+            onClick={() => setActiveCategory(index)}
+            className={`px-4 py-2 rounded-full flex items-center gap-2 text-sm transition-all ${
+              activeCategory === index
+                ? "bg-accent text-white"
+                : "bg-white/20 text-white"
+            }`}
+          >
+            <cat.icon className="w-4 h-4" />
+            {cat.category}
+          </button>
+        ))}
       </div>
 
-      {/* Grid Pattern Overlay */}
-      <div 
-        className="absolute inset-0 opacity-5"
-        style={{
-          backgroundImage: `linear-gradient(hsl(var(--primary-foreground)) 1px, transparent 1px),
-                           linear-gradient(90deg, hsl(var(--primary-foreground)) 1px, transparent 1px)`,
-          backgroundSize: '50px 50px'
-        }}
-      />
+      {/* Slides */}
+      <div className="absolute inset-0">
+        {slides.map((slide, index) => (
+          <motion.div
+            key={index}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: index === currentSlide ? 1 : 0 }}
+            transition={{ duration: 1 }}
+            className="absolute inset-0"
+          >
+            <img
+              src={slide.image}
+              className="w-full h-full object-cover"
+              alt={slide.title}
+            />
+
+            <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/50 to-transparent" />
+          </motion.div>
+        ))}
+      </div>
 
       <div className="container mx-auto px-4 relative z-10">
-        <div className="max-w-4xl">
-          {/* Badge */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary-foreground/10 border border-primary-foreground/20 mb-8"
-          >
-            <Zap className="w-4 h-4 text-accent" />
-            <span className="text-sm font-medium text-primary-foreground">
-              Trusted by Clients Across Multiple Cities
-            </span>
-          </motion.div>
+        <motion.div
+          key={currentSlide}
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8 }}
+          className="max-w-3xl"
+        >
+          <h1 className="text-4xl md:text-6xl font-bold text-white mb-3">
+            {slides[currentSlide].title}
+          </h1>
 
-          {/* Heading */}
-          <motion.h1
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.1 }}
-            className="text-4xl md:text-5xl lg:text-7xl font-display font-bold text-primary-foreground mb-6 leading-tight"
-          >
-            Expert Efforts, Timely Service
-            <br />
-            <span className="text-accent">– Delivered On-Site</span>
-          </motion.h1>
+          <h3 className="text-xl text-accent mb-3">
+            {slides[currentSlide].subtitle}
+          </h3>
 
-          {/* Description */}
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.2 }}
-            className="text-lg md:text-xl text-primary-foreground/70 mb-8 max-w-2xl"
-          >
-            Comprehensive IT services for homes and businesses—from computer repairs to network solutions—delivered fast, reliably, and affordably.
-          </motion.p>
+          <p className="text-white/80 mb-6">
+            {slides[currentSlide].description}
+          </p>
 
-          {/* CTA Buttons */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.3 }}
-            className="flex flex-col sm:flex-row gap-4 mb-12"
-          >
-            <Button variant="hero" size="lg" asChild>
-              <Link to="/book-service">
-                Book a Service
-                <ArrowRight className="w-5 h-5" />
-              </Link>
-            </Button>
-            <Button variant="outline-light" size="lg" asChild>
-              <Link to="/services">Explore Services</Link>
-            </Button>
-          </motion.div>
-
-          {/* Feature Pills */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.4 }}
-            className="flex flex-wrap gap-4"
-          >
-            {features.map((feature, index) => (
-              <div
-                key={index}
-                className="flex items-center gap-2 px-4 py-2 rounded-full bg-primary-foreground/5 border border-primary-foreground/10"
-              >
-                <feature.icon className="w-4 h-4 text-accent" />
-                <span className="text-sm font-medium text-primary-foreground/80">
-                  {feature.text}
-                </span>
-              </div>
-            ))}
-          </motion.div>
-        </div>
+          <Button variant="hero" size="lg" asChild>
+            <Link to={slides[currentSlide].link}>
+              {slides[currentSlide].buttonText}
+              <ArrowRight className="w-5 h-5 ml-2" />
+            </Link>
+          </Button>
+        </motion.div>
       </div>
 
-      {/* Floating Tech Elements */}
-      <div className="hidden lg:block absolute right-10 top-1/2 -translate-y-1/2">
-        <motion.div
-          animate={{ y: [-10, 10, -10] }}
-          transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-          className="relative"
-        >
-          <div className="w-64 h-64 rounded-3xl glass-card p-6 shadow-2xl">
-            <div className="w-full h-full rounded-2xl bg-gradient-to-br from-primary/20 to-accent/20 flex items-center justify-center">
-              <Zap className="w-20 h-20 text-accent" />
-            </div>
-          </div>
-        </motion.div>
+      {/* Dots */}
+      <div className="absolute bottom-6 left-0 right-0 flex justify-center gap-2 z-20">
+        {slides.map((_, i) => (
+          <button
+            key={i}
+            onClick={() => setCurrentSlide(i)}
+            className={`transition-all rounded-full ${
+              currentSlide === i
+                ? "w-8 h-2 bg-accent"
+                : "w-2 h-2 bg-white/50"
+            }`}
+          />
+        ))}
       </div>
     </section>
   );
