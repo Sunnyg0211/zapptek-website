@@ -89,7 +89,7 @@ export function Header() {
             <motion.div whileHover={{ scale: 1.05 }}>
               <Button
                 asChild
-                className="bg-gradient-to-r from-gray-700 via-black to-gray-900 text-white border border-white/20"
+                className="bg-gradient-to-r from-blue-600 to-blue-800 text-white hover:from-blue-500 hover:to-blue-700 transition-all"
               >
                 <Link to="/register">Get Started</Link>
               </Button>
@@ -142,7 +142,7 @@ export function Header() {
 
                 <Button
                   asChild
-                  className="w-full bg-gradient-to-r from-gray-700 to-black text-white"
+                  className="w-full bg-gradient-to-r from-blue-600 to-blue-800 text-white hover:from-blue-500 hover:to-blue-700 transition-all"
                 >
                   <Link to="/register">Get Started</Link>
                 </Button>
