@@ -83,6 +83,7 @@ export default function OnlineBookingBenefits() {
             <img
               src={slides[index].image}
               className="w-full h-full object-cover"
+              alt="Booking Slide"
             />
 
             <div className="absolute inset-0 bg-black/70 flex items-center">
@@ -92,9 +93,14 @@ export default function OnlineBookingBenefits() {
                   initial={{ y: 30, opacity: 0 }}
                   animate={{ y: 0, opacity: 1 }}
                 >
-                  const SlideIcon = slides[index].icon;
 
-                  <SlideIcon className="w-12 h-12 text-blue-400 mb-4" />
+                  {/* FIXED ICON RENDERING */}
+                  {(() => {
+                    const SlideIcon = slides[index].icon;
+                    return (
+                      <SlideIcon className="w-12 h-12 text-blue-400 mb-4" />
+                    );
+                  })()}
 
                   <h2 className="text-3xl md:text-4xl font-bold mb-4">
                     {slides[index].title}
