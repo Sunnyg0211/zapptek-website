@@ -14,7 +14,7 @@ const Login = () => {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const { signIn } = useAuth();
+  const { signIn, signInWithGoogle } = useAuth();
   const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -35,6 +35,17 @@ const Login = () => {
       toast.error(error.message || "Failed to sign in");
     } else {
       toast.success("Welcome back!");
+      navigate("/admin");
+    }
+  };
+
+  const handleGoogleLogin = async () => {
+    const { error } = await signInWithGoogle();
+
+    if (error) {
+      toast.error("Google sign-in failed");
+    } else {
+      toast.success("Signed in with Google!");
       navigate("/admin");
     }
   };
@@ -71,6 +82,24 @@ const Login = () => {
           <p className="text-gray-400 mb-8">
             Sign in to access your dashboard
           </p>
+
+          {/* GOOGLE LOGIN BUTTON */}
+          <Button
+            onClick={handleGoogleLogin}
+            className="w-full bg-white text-black hover:bg-gray-100 flex items-center justify-center gap-2 mb-4"
+          >
+            <img
+              src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg"
+              className="w-5 h-5"
+            />
+            Login with Google
+          </Button>
+
+          <div className="flex items-center gap-3 my-4">
+            <div className="flex-1 h-[1px] bg-white/20"></div>
+            <span className="text-gray-400 text-sm">OR</span>
+            <div className="flex-1 h-[1px] bg-white/20"></div>
+          </div>
 
           <form onSubmit={handleSubmit} className="space-y-4">
 
@@ -120,7 +149,6 @@ const Login = () => {
               </div>
             </div>
 
-            {/* FORGOT PASSWORD */}
             <div className="text-right">
               <Link
                 to="/forgot-password"
@@ -130,7 +158,6 @@ const Login = () => {
               </Link>
             </div>
 
-            {/* SUBMIT BUTTON */}
             <Button
               className="w-full bg-gradient-to-r from-blue-600 to-blue-800 text-white mt-6"
               disabled={loading}
@@ -154,7 +181,6 @@ const Login = () => {
       {/* RIGHT SIDE - BRAND SECTION (DARK THEME) */}
       <div className="hidden lg:flex flex-1 relative overflow-hidden items-center justify-center p-12">
 
-        {/* ANIMATED DARK BACKGROUND */}
         <motion.div
           className="absolute inset-0 -z-10"
           animate={{
