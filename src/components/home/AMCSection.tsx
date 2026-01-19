@@ -1,6 +1,13 @@
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
-import { Check, Star, Zap, Crown, Users, Home, Building2, Clock } from "lucide-react";
+import {
+  Check,
+  Home,
+  Building2,
+  Crown,
+  Users,
+  Clock
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 const plans = [
@@ -68,41 +75,44 @@ const plans = [
 
 export function AMCSection() {
   return (
-    <section className="py-20 md:py-28 bg-muted/30">
-      <div className="container mx-auto px-4">
-        
+    <section className="relative py-20 md:py-28 overflow-hidden">
+
+      {/* LIGHT GRADIENT BLUR BACKGROUND */}
+      <div className="absolute inset-0 bg-gradient-to-br from-blue-100 via-purple-100 to-pink-100" />
+
+      <motion.div
+        className="absolute top-10 left-10 w-96 h-96 rounded-full bg-blue-200/30 blur-3xl"
+        animate={{ scale: [1, 1.2, 1] }}
+        transition={{ duration: 8, repeat: Infinity }}
+      />
+
+      <motion.div
+        className="absolute bottom-10 right-10 w-96 h-96 rounded-full bg-purple-200/30 blur-3xl"
+        animate={{ scale: [1.1, 1, 1.1] }}
+        transition={{ duration: 10, repeat: Infinity }}
+      />
+
+      <div className="container mx-auto px-4 relative z-10">
+
         {/* HEADER */}
         <div className="text-center mb-16">
           <motion.span
             initial={{ opacity: 0, y: 10 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-accent/10 text-accent text-sm font-medium mb-4"
+            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-black/10 text-black text-sm font-medium mb-4"
           >
             <Users className="w-4 h-4" />
             Smart AMC Plans
           </motion.span>
 
-          <motion.h2
-            initial={{ opacity: 0, y: 10 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.1 }}
-            className="section-heading mb-4"
-          >
-            IT Maintenance for Every Need
+          <motion.h2 className="text-3xl md:text-4xl font-bold mb-4 text-black">
+            Professional IT Maintenance Plans
           </motion.h2>
 
-          <motion.p
-            initial={{ opacity: 0, y: 10 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.2 }}
-            className="section-subheading mx-auto"
-          >
-            Reliable, proactive and cost-effective IT support plans designed for
-            individuals, small businesses and large enterprises.
-          </motion.p>
+          <p className="text-black/70 max-w-2xl mx-auto">
+            Affordable, reliable and proactive IT support packages designed for
+            homes, offices and enterprises.
+          </p>
         </div>
 
         {/* PLANS GRID */}
@@ -110,90 +120,58 @@ export function AMCSection() {
           {plans.map((plan, index) => (
             <motion.div
               key={index}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: index * 0.1 }}
-              className={`relative rounded-3xl p-8 ${
+              whileHover={{ y: -8, scale: 1.02 }}
+              transition={{ duration: 0.3 }}
+              className={`relative rounded-3xl p-8 backdrop-blur-lg border border-white/10 shadow-xl cursor-pointer ${
                 plan.popular
-                  ? "bg-gradient-to-br from-primary to-primary/80 text-primary-foreground shadow-glow"
-                  : "bg-card border border-border shadow-lg"
+                  ? "bg-black text-white"
+                  : "bg-black/80 text-white"
               }`}
             >
               {plan.popular && (
-                <div className="absolute -top-4 left-1/2 -translate-x-1/2 px-4 py-1 rounded-full bg-accent text-accent-foreground text-sm font-semibold">
+                <div className="absolute -top-4 left-1/2 -translate-x-1/2 px-4 py-1 rounded-full bg-purple-500 text-white text-sm font-semibold">
                   Recommended
                 </div>
               )}
 
               {/* ICON */}
-              <div
-                className={`w-14 h-14 rounded-2xl flex items-center justify-center mb-4 ${
-                  plan.popular ? "bg-primary-foreground/20" : "bg-primary/10"
-                }`}
-              >
-                <plan.icon
-                  className={`w-7 h-7 ${
-                    plan.popular ? "text-primary-foreground" : "text-primary"
-                  }`}
-                />
+              <div className="w-14 h-14 rounded-2xl bg-white/10 flex items-center justify-center mb-4">
+                <plan.icon className="w-7 h-7 text-white" />
               </div>
 
-              {/* NAME */}
-              <h3 className="text-xl font-display font-bold mb-1">
-                {plan.name}
-              </h3>
+              <h3 className="text-xl font-bold mb-1">{plan.name}</h3>
 
-              {/* TARGET AUDIENCE */}
-              <div
-                className={`inline-block px-3 py-1 rounded-full text-xs mb-3 ${
-                  plan.popular
-                    ? "bg-primary-foreground/20 text-primary-foreground"
-                    : "bg-accent/10 text-accent"
-                }`}
-              >
+              <div className="inline-block px-3 py-1 rounded-full text-xs mb-3 bg-white/10">
                 Best for: {plan.audience}
               </div>
 
-              <p
-                className={`text-sm mb-4 ${
-                  plan.popular
-                    ? "text-primary-foreground/70"
-                    : "text-muted-foreground"
-                }`}
-              >
+              <p className="text-sm text-white/70 mb-4">
                 {plan.description}
               </p>
 
-              {/* RESPONSE TIME */}
-              <div className="flex items-center gap-2 mb-4 text-sm">
+              {/* RESPONSE */}
+              <div className="flex items-center gap-2 mb-4 text-sm text-white/80">
                 <Clock className="w-4 h-4" />
                 <span>{plan.response}</span>
               </div>
 
-              {/* PRICE BLOCK */}
+              {/* PRICE */}
               <div className="mb-6">
                 {plan.price ? (
                   <>
-                    <span className="text-4xl font-display font-bold">
+                    <span className="text-4xl font-bold">
                       {plan.price}
                     </span>
-                    <span
-                      className={
-                        plan.popular
-                          ? "text-primary-foreground/70"
-                          : "text-muted-foreground"
-                      }
-                    >
+                    <span className="text-white/60">
                       {plan.period}
                     </span>
                   </>
                 ) : (
                   <>
-                    <div className="text-2xl font-display font-bold text-primary mb-1">
+                    <div className="text-2xl font-bold mb-1">
                       Custom Pricing
                     </div>
-                    <div className="text-sm text-muted-foreground">
+                    <div className="text-sm text-white/60">
                       {plan.note}
                     </div>
                   </>
@@ -204,49 +182,39 @@ export function AMCSection() {
               <ul className="space-y-3 mb-8">
                 {plan.features.map((feature, i) => (
                   <li key={i} className="flex items-center gap-3">
-                    <div
-                      className={`w-5 h-5 rounded-full flex items-center justify-center ${
-                        plan.popular
-                          ? "bg-primary-foreground/20"
-                          : "bg-primary/10"
-                      }`}
-                    >
-                      <Check
-                        className={`w-3 h-3 ${
-                          plan.popular
-                            ? "text-primary-foreground"
-                            : "text-primary"
-                        }`}
-                      />
+                    <div className="w-5 h-5 rounded-full bg-white/10 flex items-center justify-center">
+                      <Check className="w-3 h-3 text-white" />
                     </div>
-                    <span
-                      className={`text-sm ${
-                        plan.popular
-                          ? "text-primary-foreground/90"
-                          : "text-foreground"
-                      }`}
-                    >
+                    <span className="text-sm text-white/90">
                       {feature}
                     </span>
                   </li>
                 ))}
               </ul>
 
-              {/* CTA */}
+              {/* CTA BUTTON */}
               {plan.price ? (
                 <Button
-                  variant={plan.popular ? "outline-light" : "gradient"}
-                  className="w-full"
+                  className="w-full bg-white text-black hover:bg-gray-200"
                   size="lg"
                   asChild
                 >
-                  <Link to="/amc-plans">Select {plan.name}</Link>
+                  <Link to="/amc-plans">
+                    Select {plan.name}
+                  </Link>
                 </Button>
               ) : (
-                <Button variant="gradient" className="w-full" size="lg" asChild>
-                  <Link to={plan.ctaLink}>{plan.ctaText}</Link>
+                <Button
+                  className="w-full bg-purple-500 text-white hover:bg-purple-600"
+                  size="lg"
+                  asChild
+                >
+                  <Link to={plan.ctaLink}>
+                    {plan.ctaText}
+                  </Link>
                 </Button>
               )}
+
             </motion.div>
           ))}
         </div>
