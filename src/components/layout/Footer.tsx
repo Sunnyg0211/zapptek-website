@@ -31,7 +31,7 @@ const socialLinks = [
 
 export function Footer() {
   return (
-    <footer className="relative overflow-hidden">
+    <footer className="relative overflow-hidden mt-10">
 
       {/* Animated Black Gradient Background */}
       <motion.div
@@ -51,64 +51,72 @@ export function Footer() {
         }}
       />
 
-      <div className="container mx-auto px-4 py-10 max-w-4xl relative z-10">
+      {/* HORIZONTAL BOX CONTAINER */}
+      <div className="max-w-5xl mx-auto px-4 py-6 relative z-10">
 
-        {/* Contact Action Buttons */}
-        <div className="flex flex-col md:flex-row items-center justify-center gap-4 mb-8">
+        <div className="border border-white/10 rounded-2xl bg-black/60 backdrop-blur-lg shadow-lg">
 
-          <a
-            href="tel:+919793541467"
-            className="flex items-center gap-2 px-6 py-2.5 rounded-full bg-gradient-to-r from-blue-600 to-blue-800 text-white hover:from-blue-500 hover:to-blue-700 transition"
-          >
-            <Phone className="w-4 h-4 text-white" />
-            Call Us
-          </a>
+          <div className="px-4 py-6">
 
-          <a
-            href="https://wa.me/919793541467"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex items-center gap-2 px-6 py-2.5 rounded-full bg-gradient-to-r from-blue-600 to-blue-800 text-white hover:from-blue-500 hover:to-blue-700 transition"
-          >
-            <MessageCircle className="w-4 h-4 text-white" />
-            WhatsApp
-          </a>
+            {/* Contact Action Buttons */}
+            <div className="flex flex-col md:flex-row items-center justify-center gap-4 mb-6">
 
-          <Link
-            to="/contact"
-            className="flex items-center gap-2 px-6 py-2.5 rounded-full border border-white/20 text-white hover:bg-white/10 transition"
-          >
-            Fill a Form
-          </Link>
-        </div>
+              <a
+                href="tel:+919793541467"
+                className="flex items-center gap-2 px-5 py-2 rounded-full bg-gradient-to-r from-blue-600 to-blue-800 text-white hover:from-blue-500 hover:to-blue-700 transition"
+              >
+                <Phone className="w-4 h-4 text-white" />
+                Call Us
+              </a>
 
-        {/* Address */}
-        <div className="flex justify-center text-center mb-6 text-sm text-gray-300">
-          <div className="flex items-center gap-2">
-            <MapPin className="w-4 h-4 text-white" />
-            Mumbai • Gorakhpur • Lucknow – India
+              <a
+                href="https://wa.me/919793541467"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-2 px-5 py-2 rounded-full bg-gradient-to-r from-blue-600 to-blue-800 text-white hover:from-blue-500 hover:to-blue-700 transition"
+              >
+                <MessageCircle className="w-4 h-4 text-white" />
+                WhatsApp
+              </a>
+
+              <Link
+                to="/contact"
+                className="flex items-center gap-2 px-5 py-2 rounded-full border border-white/20 text-white hover:bg-white/10 transition"
+              >
+                Fill a Form
+              </Link>
+            </div>
+
+            {/* Address */}
+            <div className="flex justify-center text-center mb-4 text-sm text-gray-300">
+              <div className="flex items-center gap-2">
+                <MapPin className="w-4 h-4 text-white" />
+                Mumbai • Gorakhpur • Lucknow – India
+              </div>
+            </div>
+
+            {/* Social Media */}
+            <div className="flex justify-center gap-3 mb-4">
+              {socialLinks.map((social) => (
+                <a
+                  key={social.label}
+                  href={social.href}
+                  aria-label={social.label}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={`w-9 h-9 rounded-full ${social.bg} text-white flex items-center justify-center hover:opacity-90 transition`}
+                >
+                  <social.icon className="w-4 h-4" />
+                </a>
+              ))}
+            </div>
+
+            {/* Copyright */}
+            <div className="text-center text-xs text-gray-400 border-t border-white/10 pt-3">
+              © {new Date().getFullYear()} ZappTek. All rights reserved.
+            </div>
+
           </div>
-        </div>
-
-        {/* Social Media with Original Colors */}
-        <div className="flex justify-center gap-3 mb-6">
-          {socialLinks.map((social) => (
-            <a
-              key={social.label}
-              href={social.href}
-              aria-label={social.label}
-              target="_blank"
-              rel="noopener noreferrer"
-              className={`w-10 h-10 rounded-full ${social.bg} text-white flex items-center justify-center hover:opacity-90 transition`}
-            >
-              <social.icon className="w-5 h-5" />
-            </a>
-          ))}
-        </div>
-
-        {/* Copyright */}
-        <div className="text-center text-sm text-gray-400 border-t border-white/10 pt-4">
-          © {new Date().getFullYear()} ZappTek. All rights reserved.
         </div>
 
       </div>
