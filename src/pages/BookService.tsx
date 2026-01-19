@@ -1,5 +1,5 @@
-import { useState, useRef } from "react";
-import { motion } from "framer-motion";
+import { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import { Link } from "react-router-dom";
 import {
   Calendar,
@@ -13,7 +13,11 @@ import {
   Camera,
   Wifi,
   HardDrive,
+  Trash2,
+  Mail,
+  Paperclip
 } from "lucide-react";
+
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -40,155 +44,300 @@ const BookService = () => {
   const [selectedDevice, setSelectedDevice] = useState("");
   const [selectedService, setSelectedService] = useState("");
 
-  // SIMPLE FILE SELECT ONLY
-  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [files, setFiles] = useState<File[]>([]);
+  const [previews, setPreviews] = useState<string[]>([]);
 
-  const openFileBrowser = () => {
-    fileInputRef.current?.click();
+  const [formData, setFormData] = useState({
+    name: "",
+    phone: "",
+    email: "",
+    issue: "",
+    address: "",
+  });
+
+  // IMAGE UPLOAD + PREVIEW
+  const handleFileChange = (e: any) => {
+    const selected = Array.from(e.target.files) as File[];
+
+    setFiles([...files, ...selected]);
+
+    const newPreviews = selected.map((file) =>
+      URL.createObjectURL(file)
+    );
+
+    setPreviews([...previews, ...newPreviews]);
+  };
+
+  const removeFile = (index: number) => {
+    const updatedFiles = files.filter((_, i) => i !== index);
+    const updatedPreviews = previews.filter((_, i) => i !== index);
+
+    setFiles(updatedFiles);
+    setPreviews(updatedPreviews);
+  };
+
+  // SIMULATED EMAIL TRIGGER (READY FOR API)
+  const sendConfirmationEmail = () => {
+    console.log("Email Sent To:", formData.email);
+
+    alert(
+      `Booking confirmation email sent to ${formData.email}`
+    );
+  };
+
+  const handleSubmit = () => {
+    sendConfirmationEmail();
+    alert("Booking submitted successfully!");
   };
 
   return (
     <div className="min-h-screen bg-black">
 
       {/* HERO SECTION */}
-      <section className="relative h-[450px] overflow-hidden flex items-center justify-center">
+      <section className="relative h-[450px] flex items-center justify-center overflow-hidden">
         <motion.div
           className="absolute inset-0 -z-10"
           animate={{
             backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"],
           }}
-          transition={{
-            duration: 10,
-            repeat: Infinity,
-            ease: "linear",
-          }}
+          transition={{ duration: 10, repeat: Infinity }}
           style={{
-            background:
-              "linear-gradient(270deg, #000000, #0f0f0f, #1a1a1a, #050505)",
+            background: "linear-gradient(270deg, #000000, #0f0f0f, #1a1a1a, #050505)",
             backgroundSize: "400% 400%",
           }}
         />
 
-        <div className="container mx-auto px-4 text-center relative z-10">
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="text-center"
+        >
           <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">
             Book a Service
           </h1>
 
-          <p className="text-gray-300 max-w-xl mx-auto">
-            Tell us your issue and schedule a professional service instantly
+          <p className="text-gray-300">
+            Schedule professional IT support in just a few steps
           </p>
-        </div>
+        </motion.div>
       </section>
 
       {/* FORM SECTION */}
       <section className="py-16">
-        <div className="container mx-auto px-4">
-          <div className="max-w-3xl mx-auto">
+        <div className="container mx-auto px-4 max-w-3xl">
 
-            {/* Progress Steps */}
-            <div className="flex items-center justify-center mb-12">
-              {[1, 2, 3].map((s) => (
-                <div key={s} className="flex items-center">
-                  <div
-                    className={`w-10 h-10 rounded-full flex items-center justify-center font-semibold ${
-                      step >= s
-                        ? "bg-blue-600 text-white"
-                        : "bg-white/10 text-gray-400"
-                    }`}
-                  >
-                    {step > s ? <Check className="w-5 h-5" /> : s}
-                  </div>
-                  {s < 3 && (
-                    <div
-                      className={`w-16 md:w-24 h-1 ${
-                        step > s ? "bg-blue-600" : "bg-white/10"
-                      }`}
-                    />
-                  )}
-                </div>
-              ))}
-            </div>
+          {/* STEPS */}
+          <div className="flex justify-center mb-10">
+            {[1, 2, 3].map((s) => (
+              <div key={s} className="flex items-center">
+                <motion.div
+                  animate={{ scale: step === s ? 1.2 : 1 }}
+                  className={`w-10 h-10 rounded-full flex items-center justify-center ${
+                    step >= s
+                      ? "bg-blue-600 text-white"
+                      : "bg-white/10 text-gray-400"
+                  }`}
+                >
+                  {step > s ? <Check /> : s}
+                </motion.div>
 
+                {s < 3 && (
+                  <div className="w-16 h-1 bg-white/10" />
+                )}
+              </div>
+            ))}
+          </div>
+
+          <AnimatePresence mode="wait">
             <motion.div
               key={step}
-              initial={{ opacity: 0, x: 20 }}
+              initial={{ opacity: 0, x: 40 }}
               animate={{ opacity: 1, x: 0 }}
-              className="p-8 rounded-3xl border border-white/10 backdrop-blur-md 
-              bg-gradient-to-br from-black via-black/80 to-gray-900"
+              exit={{ opacity: 0, x: -40 }}
+              className="p-8 rounded-3xl border border-white/10 bg-black/70"
             >
 
-              {/* STEP 2 - ISSUE DETAILS */}
-              {step === 2 && (
+              {/* STEP 1 */}
+              {step === 1 && (
                 <div>
-                  <h2 className="text-2xl font-bold text-white mb-6">
-                    Describe the Issue
+                  <h2 className="text-2xl text-white mb-6">
+                    Select Device & Service
                   </h2>
 
-                  <div className="space-y-6">
-                    <div>
-                      <Label className="text-white">Problem Details</Label>
-                      <Textarea
-                        placeholder="Describe your problem..."
-                        className="mt-2 bg-black/50 border-white/10 text-white"
-                      />
-                    </div>
-
-                    {/* WORKING IMAGE SELECT SECTION */}
-                    <div>
-                      <Label className="text-white">Upload Photos</Label>
-
-                      <input
-                        type="file"
-                        multiple
-                        accept="image/*"
-                        ref={fileInputRef}
-                        className="hidden"
-                      />
-
-                      <div
-                        onClick={openFileBrowser}
-                        className="mt-2 border-2 border-dashed border-white/10 rounded-xl p-8 text-center text-gray-400 cursor-pointer hover:border-blue-600 transition"
+                  <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-6">
+                    {deviceTypes.map((d) => (
+                      <motion.button
+                        whileHover={{ scale: 1.05 }}
+                        key={d.id}
+                        onClick={() => setSelectedDevice(d.id)}
+                        className={`p-4 rounded-xl border ${
+                          selectedDevice === d.id
+                            ? "border-blue-600"
+                            : "border-white/10"
+                        }`}
                       >
-                        <Upload className="w-10 h-10 mx-auto mb-2" />
-                        <p className="text-sm">
-                          Click here to browse and select images
-                        </p>
-                      </div>
-                    </div>
-
-                    {selectedService === "onsite" && (
-                      <div>
-                        <Label className="text-white">Address</Label>
-                        <Textarea
-                          placeholder="Enter your address"
-                          className="mt-2 bg-black/50 border-white/10 text-white"
-                        />
-                      </div>
-                    )}
+                        <d.icon className="mx-auto text-blue-400 mb-2" />
+                        <span className="text-white">{d.label}</span>
+                      </motion.button>
+                    ))}
                   </div>
 
-                  <div className="flex gap-4 mt-8">
-                    <Button
-                      variant="outline"
-                      className="border-white text-white"
-                      onClick={() => setStep(1)}
+                  <RadioGroup
+                    value={selectedService}
+                    onValueChange={setSelectedService}
+                  >
+                    {serviceTypes.map((s) => (
+                      <label
+                        key={s.id}
+                        className="flex gap-3 p-4 border border-white/10 rounded-xl mb-3"
+                      >
+                        <RadioGroupItem value={s.id} />
+                        <div>
+                          <p className="text-white">{s.label}</p>
+                          <p className="text-sm text-gray-400">{s.description}</p>
+                        </div>
+                      </label>
+                    ))}
+                  </RadioGroup>
+
+                  <Button
+                    className="w-full mt-4 bg-blue-600"
+                    onClick={() => setStep(2)}
+                    disabled={!selectedDevice || !selectedService}
+                  >
+                    Continue <ArrowRight className="ml-2" />
+                  </Button>
+                </div>
+              )}
+
+              {/* STEP 2 */}
+              {step === 2 && (
+                <div>
+                  <h2 className="text-2xl text-white mb-6">
+                    Describe Your Issue
+                  </h2>
+
+                  <Textarea
+                    placeholder="Explain your problem..."
+                    className="bg-black text-white mb-4"
+                    onChange={(e) =>
+                      setFormData({ ...formData, issue: e.target.value })
+                    }
+                  />
+
+                  {/* FILE UPLOAD */}
+                  <Label className="text-white">
+                    Upload Images / Files
+                  </Label>
+
+                  <div className="border-2 border-dashed p-6 text-center rounded-xl mt-2">
+                    <input
+                      type="file"
+                      multiple
+                      onChange={handleFileChange}
+                      className="hidden"
+                      id="fileInput"
+                    />
+
+                    <label
+                      htmlFor="fileInput"
+                      className="cursor-pointer text-gray-400"
                     >
-                      Back
-                    </Button>
+                      <Upload className="mx-auto mb-2" />
+                      Click to browse files
+                    </label>
+                  </div>
+
+                  {/* PREVIEWS */}
+                  <div className="grid grid-cols-3 gap-4 mt-4">
+                    {previews.map((img, i) => (
+                      <div key={i} className="relative">
+                        <img
+                          src={img}
+                          className="rounded-lg h-24 w-full object-cover"
+                        />
+
+                        <button
+                          onClick={() => removeFile(i)}
+                          className="absolute top-1 right-1 bg-red-600 p-1 rounded"
+                        >
+                          <Trash2 className="w-4 h-4 text-white" />
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+
+                  {selectedService === "onsite" && (
+                    <Textarea
+                      placeholder="Your Address"
+                      className="bg-black text-white mt-4"
+                      onChange={(e) =>
+                        setFormData({ ...formData, address: e.target.value })
+                      }
+                    />
+                  )}
+
+                  <div className="flex gap-3 mt-6">
+                    <Button onClick={() => setStep(1)}>Back</Button>
 
                     <Button
-                      className="flex-1 bg-gradient-to-r from-blue-600 to-blue-800 text-white"
+                      className="flex-1 bg-blue-600"
                       onClick={() => setStep(3)}
                     >
                       Continue
-                      <ArrowRight className="w-5 h-5 ml-2" />
                     </Button>
                   </div>
                 </div>
               )}
 
+              {/* STEP 3 */}
+              {step === 3 && (
+                <div>
+                  <h2 className="text-2xl text-white mb-6">
+                    Contact Details
+                  </h2>
+
+                  <Input
+                    placeholder="Name"
+                    className="bg-black text-white mb-3"
+                    onChange={(e) =>
+                      setFormData({ ...formData, name: e.target.value })
+                    }
+                  />
+
+                  <Input
+                    placeholder="Phone"
+                    className="bg-black text-white mb-3"
+                    onChange={(e) =>
+                      setFormData({ ...formData, phone: e.target.value })
+                    }
+                  />
+
+                  <Input
+                    placeholder="Email"
+                    className="bg-black text-white mb-3"
+                    onChange={(e) =>
+                      setFormData({ ...formData, email: e.target.value })
+                    }
+                  />
+
+                  {/* ATTACHMENT COUNT */}
+                  <div className="text-gray-300 flex items-center gap-2 mb-4">
+                    <Paperclip /> {files.length} attachments added
+                  </div>
+
+                  <Button
+                    className="w-full bg-green-600"
+                    onClick={handleSubmit}
+                  >
+                    Submit Booking <Mail className="ml-2" />
+                  </Button>
+                </div>
+              )}
+
             </motion.div>
-          </div>
+          </AnimatePresence>
+
         </div>
       </section>
     </div>
