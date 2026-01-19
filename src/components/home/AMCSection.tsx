@@ -1,57 +1,66 @@
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
-import { Check, Star, Zap, Crown } from "lucide-react";
+import { Check, Star, Zap, Crown, Users, Home, Building2, Clock } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 const plans = [
   {
-    name: "Basic",
-    icon: Zap,
+    name: "Basic Care",
+    icon: Home,
+    audience: "Home Users",
     price: "₹2,499",
     period: "/year",
-    description: "Perfect for home users",
+    description: "Essential maintenance for personal computers & laptops",
+    response: "48 Hours Response",
     features: [
-      "7 Service Visits",
-      "Remote Support",
-      "Software Updates",
-      "Basic Maintenance",
+      "7 On-Site Service Visits",
+      "Remote Technical Support",
+      "OS & Software Updates",
+      "Performance Optimization",
+      "Virus & Malware Cleanup",
       "Email Support",
     ],
     popular: false,
   },
   {
-    name: "Professional",
-    icon: Star,
+    name: "Professional Plus",
+    icon: Building2,
+    audience: "Small Business",
     price: "₹4,499",
     period: "/year",
-    description: "Ideal for small businesses",
+    description: "Complete IT support plan for startups & small offices",
+    response: "24 Hours Response",
     features: [
-      "12 Service Visits",
+      "12 On-Site Service Visits",
       "Priority Remote Support",
-      "Software & Security Updates",
-      "Hardware Cleaning",
+      "Hardware Cleaning & Checkups",
+      "Network Troubleshooting",
+      "Security & Backup Setup",
       "Phone & Email Support",
-      "10% Discount on Parts",
+      "10% Discount on Spare Parts",
     ],
     popular: true,
   },
   {
-    name: "Enterprise",
+    name: "Enterprise AMC",
     icon: Crown,
+    audience: "Corporate & Bulk",
     price: null,
     period: null,
-    description: "Custom AMC for Corporate & Bulk Requirements",
-    ctaText: "Get Best Pricing",
+    description: "Fully customized IT maintenance for organizations",
+    response: "Same Day Response",
+    ctaText: "Request Enterprise Quote",
     ctaLink: "/contact",
-    note: "Contact us for customized enterprise pricing",
+    note: "Tailored plans based on devices, users & locations",
     features: [
-      "Unlimited Service Visits",
-      "24/7 Priority Support",
-      "Complete Maintenance",
-      "Network Management",
+      "Unlimited On-Site Support",
+      "24/7 Priority Assistance",
       "Dedicated Account Manager",
-      "Custom SLA & Response Time",
-      "On-Site IT Support",
+      "Network & Server Management",
+      "Custom SLA Agreements",
+      "Multi-Location Support",
+      "IT Asset Management",
+      "Preventive Maintenance",
     ],
     popular: false,
   },
@@ -61,15 +70,17 @@ export function AMCSection() {
   return (
     <section className="py-20 md:py-28 bg-muted/30">
       <div className="container mx-auto px-4">
-        {/* Header */}
+        
+        {/* HEADER */}
         <div className="text-center mb-16">
           <motion.span
             initial={{ opacity: 0, y: 10 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="inline-block px-4 py-1.5 rounded-full bg-accent/10 text-accent text-sm font-medium mb-4"
+            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-accent/10 text-accent text-sm font-medium mb-4"
           >
-            AMC Plans
+            <Users className="w-4 h-4" />
+            Smart AMC Plans
           </motion.span>
 
           <motion.h2
@@ -79,7 +90,7 @@ export function AMCSection() {
             transition={{ delay: 0.1 }}
             className="section-heading mb-4"
           >
-            Annual Maintenance Contracts
+            IT Maintenance for Every Need
           </motion.h2>
 
           <motion.p
@@ -89,12 +100,13 @@ export function AMCSection() {
             transition={{ delay: 0.2 }}
             className="section-subheading mx-auto"
           >
-            Choose a plan that fits your needs and enjoy hassle-free IT maintenance all year round.
+            Reliable, proactive and cost-effective IT support plans designed for
+            individuals, small businesses and large enterprises.
           </motion.p>
         </div>
 
-        {/* Plans Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+        {/* PLANS GRID */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
           {plans.map((plan, index) => (
             <motion.div
               key={index}
@@ -110,12 +122,13 @@ export function AMCSection() {
             >
               {plan.popular && (
                 <div className="absolute -top-4 left-1/2 -translate-x-1/2 px-4 py-1 rounded-full bg-accent text-accent-foreground text-sm font-semibold">
-                  Most Popular
+                  Recommended
                 </div>
               )}
 
+              {/* ICON */}
               <div
-                className={`w-14 h-14 rounded-2xl flex items-center justify-center mb-6 ${
+                className={`w-14 h-14 rounded-2xl flex items-center justify-center mb-4 ${
                   plan.popular ? "bg-primary-foreground/20" : "bg-primary/10"
                 }`}
               >
@@ -126,12 +139,24 @@ export function AMCSection() {
                 />
               </div>
 
-              <h3 className="text-xl font-display font-bold mb-2">
+              {/* NAME */}
+              <h3 className="text-xl font-display font-bold mb-1">
                 {plan.name}
               </h3>
 
+              {/* TARGET AUDIENCE */}
+              <div
+                className={`inline-block px-3 py-1 rounded-full text-xs mb-3 ${
+                  plan.popular
+                    ? "bg-primary-foreground/20 text-primary-foreground"
+                    : "bg-accent/10 text-accent"
+                }`}
+              >
+                Best for: {plan.audience}
+              </div>
+
               <p
-                className={`text-sm mb-6 ${
+                className={`text-sm mb-4 ${
                   plan.popular
                     ? "text-primary-foreground/70"
                     : "text-muted-foreground"
@@ -140,7 +165,13 @@ export function AMCSection() {
                 {plan.description}
               </p>
 
-              {/* PRICE SECTION WITH CUSTOM LOGIC */}
+              {/* RESPONSE TIME */}
+              <div className="flex items-center gap-2 mb-4 text-sm">
+                <Clock className="w-4 h-4" />
+                <span>{plan.response}</span>
+              </div>
+
+              {/* PRICE BLOCK */}
               <div className="mb-6">
                 {plan.price ? (
                   <>
@@ -169,6 +200,7 @@ export function AMCSection() {
                 )}
               </div>
 
+              {/* FEATURES */}
               <ul className="space-y-3 mb-8">
                 {plan.features.map((feature, i) => (
                   <li key={i} className="flex items-center gap-3">
@@ -200,7 +232,7 @@ export function AMCSection() {
                 ))}
               </ul>
 
-              {/* BUTTON LOGIC */}
+              {/* CTA */}
               {plan.price ? (
                 <Button
                   variant={plan.popular ? "outline-light" : "gradient"}
@@ -208,15 +240,10 @@ export function AMCSection() {
                   size="lg"
                   asChild
                 >
-                  <Link to="/amc-plans">Choose {plan.name}</Link>
+                  <Link to="/amc-plans">Select {plan.name}</Link>
                 </Button>
               ) : (
-                <Button
-                  variant="gradient"
-                  className="w-full"
-                  size="lg"
-                  asChild
-                >
+                <Button variant="gradient" className="w-full" size="lg" asChild>
                   <Link to={plan.ctaLink}>{plan.ctaText}</Link>
                 </Button>
               )}
