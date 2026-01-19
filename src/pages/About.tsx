@@ -1,7 +1,29 @@
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { Award, ArrowRight, Zap, Target, Heart } from "lucide-react";
+import { Award, ArrowRight, Zap, Target, Heart, Users } from "lucide-react";
 import { Button } from "@/components/ui/button";
+
+const banners = [
+  {
+    title: "Who We Are",
+    text: "Your trusted IT partner for reliable technology solutions",
+    image:
+      "https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=1200",
+  },
+  {
+    title: "Our Mission",
+    text: "To make technology simple, secure and stress-free",
+    image:
+      "https://images.unsplash.com/photo-1504384308090-c894fdcc538d?w=1200",
+  },
+  {
+    title: "Expert Support",
+    text: "Professional IT services for homes and businesses",
+    image:
+      "https://images.unsplash.com/photo-1581092335397-9583eb92d232?w=1200",
+  },
+];
 
 const values = [
   {
@@ -25,52 +47,84 @@ const values = [
 ];
 
 const About = () => {
+  const [index, setIndex] = useState(0);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setIndex((prev) => (prev + 1) % banners.length);
+    }, 4000);
+
+    return () => clearInterval(interval);
+  }, []);
+
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen bg-black">
 
-      {/* HERO SECTION */}
-      <section className="relative py-20 md:py-28 overflow-hidden">
+      {/* TOP SLIDER */}
+      <section className="relative h-[650px] overflow-hidden">
 
-        {/* Animated Black Gradient */}
-        <motion.div
-          className="absolute inset-0 -z-10"
-          animate={{
-            backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"],
-          }}
-          transition={{
-            duration: 10,
-            repeat: Infinity,
-            ease: "linear",
-          }}
-          style={{
-            background:
-              "linear-gradient(270deg, #000000, #0f0f0f, #1a1a1a, #050505)",
-            backgroundSize: "400% 400%",
-          }}
-        />
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={index}
+            initial={{ opacity: 0, x: 100 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: -100 }}
+            transition={{ duration: 0.8 }}
+            className="absolute inset-0"
+          >
+            <img
+              src={banners[index].image}
+              className="w-full h-full object-cover"
+            />
 
-        <div className="container mx-auto px-4 relative z-10">
-          <div className="max-w-3xl mx-auto text-center">
+            <div className="absolute inset-0 bg-black/75 flex items-center justify-center">
+              <div className="text-center max-w-4xl px-4">
 
-            <motion.div className="flex items-center justify-center gap-2 mb-6">
-              <div className="w-12 h-12 rounded-xl bg-blue-600/20 flex items-center justify-center">
-                <Zap className="w-7 h-7 text-blue-400" />
+                <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">
+                  {banners[index].title}
+                </h1>
+
+                <p className="text-gray-300 mb-6 text-lg">
+                  {banners[index].text}
+                </p>
+
+                <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                  <Button
+                    className="bg-gradient-to-r from-blue-600 to-blue-800 text-white"
+                    asChild
+                  >
+                    <Link to="/services">
+                      Our Services
+                      <ArrowRight className="w-4 h-4 ml-2" />
+                    </Link>
+                  </Button>
+
+                  <Button
+                    variant="outline"
+                    className="border-white text-white"
+                    asChild
+                  >
+                    <Link to="/contact">Contact Us</Link>
+                  </Button>
+                </div>
+
+                {/* DOT INDICATORS */}
+                <div className="flex justify-center gap-2 mt-8">
+                  {banners.map((_, i) => (
+                    <button
+                      key={i}
+                      onClick={() => setIndex(i)}
+                      className={`w-3 h-3 rounded-full ${
+                        index === i ? "bg-blue-600" : "bg-white/30"
+                      }`}
+                    />
+                  ))}
+                </div>
+
               </div>
-
-              <span className="text-2xl font-bold text-white">
-                ZappTek
-              </span>
-            </motion.div>
-
-            <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">
-              About Us
-            </h1>
-
-            <p className="text-lg text-gray-300">
-              Your trusted technology partner delivering reliable, secure, and professional IT services for homes and businesses.
-            </p>
-          </div>
-        </div>
+            </div>
+          </motion.div>
+        </AnimatePresence>
       </section>
 
       {/* STORY SECTION */}
@@ -87,17 +141,17 @@ const About = () => {
             </h2>
           </div>
 
-          <div className="max-w-3xl mx-auto text-gray-300 space-y-5">
+          <div className="max-w-3xl mx-auto text-gray-300 space-y-5 text-center">
             <p>
               ZappTek was built with a simple goal – to provide dependable and honest IT services to individuals and businesses.
             </p>
 
             <p>
-              We believe technology should work for you, not against you. That’s why our focus is on delivering practical, affordable, and long-term solutions rather than quick temporary fixes.
+              We believe technology should work for you, not against you. That’s why our focus is on delivering practical, affordable, and long-term solutions.
             </p>
 
             <p>
-              From personal laptops to enterprise networks, we help our clients stay productive, secure, and stress-free with professional support they can rely on.
+              From personal laptops to enterprise networks, we help our clients stay productive, secure, and stress-free with professional support.
             </p>
           </div>
         </div>
@@ -120,7 +174,7 @@ const About = () => {
               <motion.div
                 key={index}
                 whileHover={{ scale: 1.05 }}
-                className="p-6 bg-black/70 border border-white/10 rounded-2xl"
+                className="p-6 bg-gradient-to-br from-black via-black/80 to-gray-900 border border-white/10 rounded-2xl"
               >
                 <div className="w-16 h-16 rounded-xl bg-blue-600/20 flex items-center justify-center mx-auto mb-4">
                   <value.icon className="w-8 h-8 text-blue-400" />
@@ -139,34 +193,45 @@ const About = () => {
         </div>
       </section>
 
-      {/* CTA SECTION */}
-      <section className="py-16 text-center">
-        <h2 className="text-2xl md:text-3xl font-bold text-white mb-4">
-          Let’s Simplify Your IT
-        </h2>
+      {/* TEAM STYLE CTA */}
+      <section className="py-16">
+        <div className="container mx-auto px-4 text-center">
 
-        <p className="text-gray-400 mb-8 max-w-xl mx-auto">
-          Whether you need support for a single device or complete business IT management, we’re here to help.
-        </p>
+          <div className="max-w-3xl mx-auto p-8 rounded-3xl border border-white/10 bg-gradient-to-br from-black via-black/80 to-gray-900">
 
-        <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <div className="w-16 h-16 mx-auto mb-4 rounded-xl bg-blue-600/20 flex items-center justify-center">
+              <Users className="w-8 h-8 text-blue-400" />
+            </div>
 
-          <Button
-            className="bg-gradient-to-r from-blue-600 to-blue-800 text-white hover:from-blue-500 hover:to-blue-700"
-            asChild
-          >
-            <Link to="/book-service">
-              Book a Service
-              <ArrowRight className="w-5 h-5 ml-2" />
-            </Link>
-          </Button>
+            <h2 className="text-2xl md:text-3xl font-bold text-white mb-4">
+              Let’s Simplify Your IT
+            </h2>
 
-          <Button
-            className="border border-white/20 text-white hover:bg-white/10"
-            asChild
-          >
-            <Link to="/contact">Contact Us</Link>
-          </Button>
+            <p className="text-gray-400 mb-8">
+              Whether you need support for a single device or complete business IT management, we’re here to help.
+            </p>
+
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Button
+                className="bg-gradient-to-r from-blue-600 to-blue-800 text-white"
+                asChild
+              >
+                <Link to="/book-service">
+                  Book a Service
+                  <ArrowRight className="w-5 h-5 ml-2" />
+                </Link>
+              </Button>
+
+              <Button
+                variant="outline"
+                className="border-white text-white"
+                asChild
+              >
+                <Link to="/contact">Contact Us</Link>
+              </Button>
+            </div>
+
+          </div>
 
         </div>
       </section>
