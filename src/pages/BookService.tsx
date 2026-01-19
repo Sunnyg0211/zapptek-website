@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import {
@@ -13,6 +13,7 @@ import {
   Camera,
   Wifi,
   HardDrive,
+  Image as ImageIcon
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -40,12 +41,25 @@ const BookService = () => {
   const [selectedDevice, setSelectedDevice] = useState("");
   const [selectedService, setSelectedService] = useState("");
 
+  // NEW STATES FOR IMAGE UPLOAD
+  const [selectedImages, setSelectedImages] = useState<File[]>([]);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files) {
+      setSelectedImages(Array.from(e.target.files));
+    }
+  };
+
+  const openFileBrowser = () => {
+    fileInputRef.current?.click();
+  };
+
   return (
     <div className="min-h-screen bg-black">
 
-      {/* HERO SECTION WITH ANIMATED GRADIENT */}
+      {/* HERO SECTION */}
       <section className="relative h-[450px] overflow-hidden flex items-center justify-center">
-
         <motion.div
           className="absolute inset-0 -z-10"
           animate={{
@@ -111,84 +125,7 @@ const BookService = () => {
               bg-gradient-to-br from-black via-black/80 to-gray-900"
             >
 
-              {/* STEP 1 */}
-              {step === 1 && (
-                <div>
-                  <h2 className="text-2xl font-bold text-white mb-6">
-                    What do you need help with?
-                  </h2>
-
-                  <div className="mb-8">
-                    <Label className="text-white mb-4 block">
-                      Select Device Type
-                    </Label>
-
-                    <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                      {deviceTypes.map((device) => (
-                        <button
-                          key={device.id}
-                          onClick={() => setSelectedDevice(device.id)}
-                          className={`p-4 rounded-xl border transition-all ${
-                            selectedDevice === device.id
-                              ? "border-blue-600 bg-blue-600/10"
-                              : "border-white/10 hover:border-blue-600/50"
-                          }`}
-                        >
-                          <device.icon className="w-8 h-8 mx-auto mb-2 text-blue-400" />
-                          <span className="text-sm text-white">
-                            {device.label}
-                          </span>
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-
-                  <div className="mb-8">
-                    <Label className="text-white mb-4 block">
-                      Service Type
-                    </Label>
-
-                    <RadioGroup
-                      value={selectedService}
-                      onValueChange={setSelectedService}
-                    >
-                      <div className="space-y-3">
-                        {serviceTypes.map((service) => (
-                          <label
-                            key={service.id}
-                            className={`flex items-center gap-4 p-4 rounded-xl border cursor-pointer ${
-                              selectedService === service.id
-                                ? "border-blue-600 bg-blue-600/10"
-                                : "border-white/10"
-                            }`}
-                          >
-                            <RadioGroupItem value={service.id} />
-                            <div>
-                              <div className="text-white">
-                                {service.label}
-                              </div>
-                              <div className="text-sm text-gray-400">
-                                {service.description}
-                              </div>
-                            </div>
-                          </label>
-                        ))}
-                      </div>
-                    </RadioGroup>
-                  </div>
-
-                  <Button
-                    className="w-full bg-gradient-to-r from-blue-600 to-blue-800 text-white"
-                    onClick={() => setStep(2)}
-                    disabled={!selectedDevice || !selectedService}
-                  >
-                    Continue
-                    <ArrowRight className="w-5 h-5 ml-2" />
-                  </Button>
-                </div>
-              )}
-
-              {/* STEP 2 */}
+              {/* STEP 2 - ISSUE DETAILS */}
               {step === 2 && (
                 <div>
                   <h2 className="text-2xl font-bold text-white mb-6">
@@ -204,12 +141,52 @@ const BookService = () => {
                       />
                     </div>
 
+                    {/* WORKING IMAGE UPLOAD SECTION */}
                     <div>
                       <Label className="text-white">Upload Photos</Label>
-                      <div className="mt-2 border-2 border-dashed border-white/10 rounded-xl p-8 text-center text-gray-400">
+
+                      <input
+                        type="file"
+                        multiple
+                        accept="image/*"
+                        ref={fileInputRef}
+                        onChange={handleFileChange}
+                        className="hidden"
+                      />
+
+                      <div
+                        onClick={openFileBrowser}
+                        className="mt-2 border-2 border-dashed border-white/10 rounded-xl p-8 text-center text-gray-400 cursor-pointer hover:border-blue-600 transition"
+                      >
                         <Upload className="w-10 h-10 mx-auto mb-2" />
-                        Optional attachments
+                        <p className="text-sm">
+                          Click to browse or upload images
+                        </p>
+                        <p className="text-xs mt-1">
+                          (Screenshots or photos of the issue)
+                        </p>
                       </div>
+
+                      {/* PREVIEW SECTION */}
+                      {selectedImages.length > 0 && (
+                        <div className="mt-4">
+                          <p className="text-sm text-white mb-2">
+                            Selected Images:
+                          </p>
+
+                          <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+                            {selectedImages.map((file, index) => (
+                              <div
+                                key={index}
+                                className="p-3 bg-black/40 border border-white/10 rounded-lg text-gray-300 text-xs flex items-center gap-2"
+                              >
+                                <ImageIcon className="w-4 h-4 text-blue-400" />
+                                {file.name}
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      )}
                     </div>
 
                     {selectedService === "onsite" && (
@@ -238,63 +215,6 @@ const BookService = () => {
                     >
                       Continue
                       <ArrowRight className="w-5 h-5 ml-2" />
-                    </Button>
-                  </div>
-                </div>
-              )}
-
-              {/* STEP 3 */}
-              {step === 3 && (
-                <div>
-                  <h2 className="text-2xl font-bold text-white mb-6">
-                    Your Contact Details
-                  </h2>
-
-                  <div className="space-y-6">
-                    <Input
-                      placeholder="Full Name"
-                      className="bg-black/50 border-white/10 text-white"
-                    />
-
-                    <Input
-                      placeholder="Phone Number"
-                      className="bg-black/50 border-white/10 text-white"
-                    />
-
-                    <Input
-                      placeholder="Email"
-                      className="bg-black/50 border-white/10 text-white"
-                    />
-
-                    <div className="p-4 bg-black/40 rounded-xl text-gray-300">
-                      <p>
-                        Device:{" "}
-                        {deviceTypes.find((d) => d.id === selectedDevice)?.label}
-                      </p>
-                      <p>
-                        Service:{" "}
-                        {serviceTypes.find((s) => s.id === selectedService)?.label}
-                      </p>
-                    </div>
-                  </div>
-
-                  <div className="flex gap-4 mt-8">
-                    <Button
-                      variant="outline"
-                      className="border-white text-white"
-                      onClick={() => setStep(2)}
-                    >
-                      Back
-                    </Button>
-
-                    <Button
-                      className="flex-1 bg-gradient-to-r from-blue-600 to-blue-800 text-white"
-                      asChild
-                    >
-                      <Link to="/login">
-                        Submit Booking
-                        <ArrowRight className="w-5 h-5 ml-2" />
-                      </Link>
                     </Button>
                   </div>
                 </div>
