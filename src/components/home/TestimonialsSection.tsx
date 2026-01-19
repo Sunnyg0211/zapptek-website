@@ -2,6 +2,13 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useEffect, useState } from "react";
 import { Star, Quote, Cpu, Wifi, ShieldCheck, Laptop } from "lucide-react";
 
+const backgrounds = [
+  "https://images.unsplash.com/photo-1518770660439-4636190af475?w=1200&h=800&fit=crop",
+  "https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=1200&h=800&fit=crop",
+  "https://images.unsplash.com/photo-1531297484001-80022131f5a1?w=1200&h=800&fit=crop",
+  "https://images.unsplash.com/photo-1504384308090-c894fdcc538d?w=1200&h=800&fit=crop"
+];
+
 const caseStudies = [
   {
     title: "Office Network Revival",
@@ -49,57 +56,62 @@ const caseStudies = [
 
 export function TestimonialsSection() {
   const [index, setIndex] = useState(0);
+  const [bgIndex, setBgIndex] = useState(0);
 
-  // Auto slide logic (6 seconds)
   useEffect(() => {
     const interval = setInterval(() => {
       setIndex((prev) => (prev + 2) % caseStudies.length);
+      setBgIndex((prev) => (prev + 1) % backgrounds.length);
     }, 6000);
 
     return () => clearInterval(interval);
   }, []);
 
-  // Get two testimonials at a time
   const visibleTestimonials = [
     caseStudies[index],
     caseStudies[(index + 1) % caseStudies.length],
   ];
 
   return (
-    <section className="py-16 md:py-20 bg-background">
-      <div className="container mx-auto px-4">
+    <section className="relative py-16 md:py-20 overflow-hidden">
+
+      {/* ===== BLURRED BACKGROUND IMAGE ===== */}
+      <div className="absolute inset-0 z-0">
+        <AnimatePresence mode="wait">
+          <motion.img
+            key={bgIndex}
+            src={backgrounds[bgIndex]}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 1 }}
+            className="w-full h-full object-cover blur-xl scale-110"
+            alt="IT Background"
+          />
+        </AnimatePresence>
+
+        {/* Color Overlay - keeps consistent theme */}
+        <div className="absolute inset-0 bg-gradient-to-br from-blue-900/70 via-indigo-900/70 to-purple-900/70" />
+      </div>
+
+      <div className="container mx-auto px-4 relative z-10">
 
         {/* HEADER */}
         <div className="text-center mb-10">
-          <motion.span
-            initial={{ opacity: 0, y: 10 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="inline-block px-3 py-1 rounded-full bg-primary/10 text-primary text-sm font-medium mb-3"
-          >
+          <span className="inline-block px-3 py-1 rounded-full bg-white/10 text-white text-sm font-medium mb-3">
             Success Stories
-          </motion.span>
+          </span>
 
-          <motion.h2
-            initial={{ opacity: 0, y: 10 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="text-2xl md:text-3xl font-bold mb-2"
-          >
+          <h2 className="text-2xl md:text-3xl font-bold mb-2 text-white">
             Real Results from Real Work
-          </motion.h2>
+          </h2>
 
-          <motion.p
-            initial={{ opacity: 0, y: 10 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="text-muted-foreground max-w-2xl mx-auto"
-          >
+          <p className="text-white/80 max-w-2xl mx-auto">
             Practical examples of how we solve IT challenges for businesses and individuals every day.
-          </motion.p>
+          </p>
         </div>
 
-        {/* SLIDER AREA */}
+        {/* TESTIMONIAL SLIDER */}
         <div className="max-w-5xl mx-auto">
           <AnimatePresence mode="wait">
             <motion.div
@@ -113,9 +125,9 @@ export function TestimonialsSection() {
               {visibleTestimonials.map((item, i) => (
                 <div
                   key={i}
-                  className="bg-card rounded-2xl p-6 shadow border border-border/50 relative"
+                  className="bg-white/10 backdrop-blur-lg rounded-2xl p-6 border border-white/20 relative shadow-lg"
                 >
-                  <div className="absolute -top-3 right-5 w-8 h-8 rounded-full bg-primary flex items-center justify-center">
+                  <div className="absolute -top-3 right-5 w-8 h-8 rounded-full bg-white/20 flex items-center justify-center">
                     <Quote className="w-4 h-4 text-white" />
                   </div>
 
@@ -124,33 +136,33 @@ export function TestimonialsSection() {
                     {[...Array(5)].map((_, i) => (
                       <Star
                         key={i}
-                        className="w-4 h-4 fill-accent text-accent"
+                        className="w-4 h-4 fill-yellow-400 text-yellow-400"
                       />
                     ))}
                   </div>
 
-                  <h3 className="font-semibold mb-1 text-foreground">
+                  <h3 className="font-semibold mb-1 text-white">
                     {item.title}
                   </h3>
 
-                  <p className="text-xs text-primary mb-2">
+                  <p className="text-xs text-white/70 mb-2">
                     {item.category}
                   </p>
 
-                  <p className="text-sm text-muted-foreground mb-4 leading-relaxed">
+                  <p className="text-sm text-white/80 mb-4 leading-relaxed">
                     “{item.content}”
                   </p>
 
                   <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
-                      <item.icon className="w-5 h-5 text-primary" />
+                    <div className="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center">
+                      <item.icon className="w-5 h-5 text-white" />
                     </div>
 
                     <div>
-                      <p className="text-xs text-muted-foreground">
+                      <p className="text-xs text-white/70">
                         Delivered by ZappTek Experts
                       </p>
-                      <p className="text-[11px] text-muted-foreground">
+                      <p className="text-[11px] text-white/60">
                         Professional IT Solutions
                       </p>
                     </div>
@@ -165,11 +177,14 @@ export function TestimonialsSection() {
             {Array.from({ length: caseStudies.length / 2 }).map((_, i) => (
               <button
                 key={i}
-                onClick={() => setIndex(i * 2)}
+                onClick={() => {
+                  setIndex(i * 2);
+                  setBgIndex(i % backgrounds.length);
+                }}
                 className={`h-2 rounded-full transition-all ${
                   index === i * 2
-                    ? "bg-primary w-6"
-                    : "bg-muted w-2"
+                    ? "bg-white w-6"
+                    : "bg-white/50 w-2"
                 }`}
               />
             ))}
