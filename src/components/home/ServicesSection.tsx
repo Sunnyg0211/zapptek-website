@@ -18,49 +18,41 @@ const services = [
     icon: Monitor,
     title: "Desktop Repair",
     description: "Complete desktop computer repair, upgrade, and maintenance services.",
-    color: "from-blue-500 to-blue-600",
   },
   {
     icon: Laptop,
     title: "Laptop Service",
     description: "Screen replacement, keyboard repair, battery replacement, and more.",
-    color: "from-cyan-500 to-cyan-600",
   },
   {
     icon: Wifi,
     title: "Network Solutions",
     description: "WiFi setup, router configuration, and network troubleshooting.",
-    color: "from-indigo-500 to-indigo-600",
   },
   {
     icon: Camera,
     title: "CCTV Installation",
     description: "Professional CCTV camera installation and setup for security.",
-    color: "from-purple-500 to-purple-600",
   },
   {
     icon: HardDrive,
     title: "Data Recovery",
     description: "Recover lost data from hard drives, SSDs, and memory cards.",
-    color: "from-pink-500 to-pink-600",
   },
   {
     icon: Printer,
     title: "Printer Service",
     description: "Printer repair, cartridge refilling, and maintenance services.",
-    color: "from-orange-500 to-orange-600",
   },
   {
     icon: Server,
     title: "Server Management",
     description: "Server setup, maintenance, and cloud infrastructure solutions.",
-    color: "from-teal-500 to-teal-600",
   },
   {
     icon: Shield,
     title: "Virus Removal",
     description: "Malware removal, antivirus installation, and security hardening.",
-    color: "from-red-500 to-red-600",
   },
 ];
 
@@ -85,7 +77,26 @@ const itemVariants = {
 
 export function ServicesSection() {
   return (
-    <section className="py-20 md:py-28 bg-background">
+    <section className="relative py-20 md:py-28 overflow-hidden">
+
+      {/* Animated Black Gradient Background */}
+      <motion.div
+        className="absolute inset-0 -z-10"
+        animate={{
+          backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"],
+        }}
+        transition={{
+          duration: 10,
+          repeat: Infinity,
+          ease: "linear",
+        }}
+        style={{
+          background:
+            "linear-gradient(270deg, #000000, #0f0f0f, #1a1a1a, #050505)",
+          backgroundSize: "400% 400%",
+        }}
+      />
+
       <div className="container mx-auto px-4">
         {/* Header */}
         <div className="text-center mb-16">
@@ -93,25 +104,27 @@ export function ServicesSection() {
             initial={{ opacity: 0, y: 10 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="inline-block px-4 py-1.5 rounded-full bg-primary/10 text-primary text-sm font-medium mb-4"
+            className="inline-block px-4 py-1.5 rounded-full bg-white/10 text-white text-sm font-medium mb-4"
           >
             Our Services
           </motion.span>
+
           <motion.h2
             initial={{ opacity: 0, y: 10 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: 0.1 }}
-            className="section-heading mb-4"
+            className="text-3xl md:text-4xl font-bold text-white mb-4"
           >
             Complete IT Solutions
           </motion.h2>
+
           <motion.p
             initial={{ opacity: 0, y: 10 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: 0.2 }}
-            className="section-subheading mx-auto"
+            className="text-gray-300 mx-auto max-w-2xl"
           >
             From repairs to installations, we provide comprehensive IT services tailored to your needs.
           </motion.p>
@@ -129,15 +142,18 @@ export function ServicesSection() {
             <motion.div
               key={index}
               variants={itemVariants}
-              className="service-card group cursor-pointer"
+              whileHover={{ scale: 1.05 }}
+              className="p-6 rounded-2xl border border-white/10 bg-black/40 backdrop-blur-md hover:bg-black/60 transition-all duration-300 cursor-pointer group"
             >
-              <div className={`w-14 h-14 rounded-2xl bg-gradient-to-br ${service.color} flex items-center justify-center mb-5 group-hover:scale-110 transition-transform duration-300`}>
-                <service.icon className="w-7 h-7 text-primary-foreground" />
+              <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-gray-700 to-black flex items-center justify-center mb-5 group-hover:scale-110 transition-transform duration-300">
+                <service.icon className="w-7 h-7 text-white" />
               </div>
-              <h3 className="text-lg font-display font-semibold mb-2 group-hover:text-primary transition-colors">
+
+              <h3 className="text-lg font-semibold mb-2 text-white group-hover:text-gray-300 transition-colors">
                 {service.title}
               </h3>
-              <p className="text-muted-foreground text-sm leading-relaxed">
+
+              <p className="text-gray-400 text-sm leading-relaxed">
                 {service.description}
               </p>
             </motion.div>
@@ -151,12 +167,18 @@ export function ServicesSection() {
           viewport={{ once: true }}
           className="text-center mt-12"
         >
-          <Button variant="gradient" size="lg" asChild>
-            <Link to="/services">
-              View All Services
-              <ArrowRight className="w-5 h-5" />
-            </Link>
-          </Button>
+          <motion.div whileHover={{ scale: 1.05 }}>
+            <Button
+              size="lg"
+              asChild
+              className="bg-gradient-to-r from-gray-700 to-black text-white border border-white/20"
+            >
+              <Link to="/services">
+                View All Services
+                <ArrowRight className="w-5 h-5 ml-2" />
+              </Link>
+            </Button>
+          </motion.div>
         </motion.div>
       </div>
     </section>
