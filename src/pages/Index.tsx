@@ -3,7 +3,7 @@ import { FeaturedProductsSection } from "@/components/home/FeaturedProductsSecti
 import { ServicesSection } from "@/components/home/ServicesSection";
 import { AMCSection } from "@/components/home/AMCSection";
 import { TestimonialsSection } from "@/components/home/TestimonialsSection";
-import { CTASection } from "@/components/home/CTASection";
+import { CTASection } from "@/components/home/EnhancedTrustSection";
 
 const Index = () => {
   return (
@@ -15,8 +15,8 @@ const Index = () => {
 
       <ServicesSection />
       <AMCSection />
-      <CTASection />
-      <CTASection />
+      <EnhancedTrustSection />
+      <EnhancedTrustSection />
     </>
   );
 };
