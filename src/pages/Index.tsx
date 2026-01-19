@@ -3,19 +3,22 @@ import { FeaturedProductsSection } from "@/components/home/FeaturedProductsSecti
 import { ServicesSection } from "@/components/home/ServicesSection";
 import { AMCSection } from "@/components/home/AMCSection";
 import { TestimonialsSection } from "@/components/home/TestimonialsSection";
-import { CTASection } from "@/components/home/EnhancedTrustSection";
+import { EnhancedTrustSection } from "@/components/home/EnhancedTrustSection";
 
 const Index = () => {
   return (
     <>
       <HeroSection />
 
-      {/* NEW – Products will appear right after hero banner */}
+      {/* Products will appear right after hero banner */}
       <FeaturedProductsSection />
 
       <ServicesSection />
+
       <AMCSection />
-      <EnhancedTrustSection />
+
+      <TestimonialsSection />
+
       <EnhancedTrustSection />
     </>
   );
