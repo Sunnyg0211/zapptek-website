@@ -1,7 +1,19 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
-import { Calendar, MapPin, Upload, Check, ArrowRight, Monitor, Laptop, Printer, Camera, Wifi, HardDrive } from "lucide-react";
+import {
+  Calendar,
+  MapPin,
+  Upload,
+  Check,
+  ArrowRight,
+  Monitor,
+  Laptop,
+  Printer,
+  Camera,
+  Wifi,
+  HardDrive,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -29,34 +41,44 @@ const BookService = () => {
   const [selectedService, setSelectedService] = useState("");
 
   return (
-    <div className="min-h-screen bg-background">
-      {/* Hero Section */}
-      <section className="py-16 md:py-20 gradient-hero relative overflow-hidden">
-        <div className="container mx-auto px-4 relative z-10">
-          <div className="max-w-2xl mx-auto text-center">
-            <motion.h1
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="text-3xl md:text-4xl lg:text-5xl font-display font-bold text-primary-foreground mb-4"
-            >
-              Book a Service
-            </motion.h1>
-            <motion.p
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.1 }}
-              className="text-lg text-primary-foreground/70"
-            >
-              Fill out the form below and our team will get back to you shortly.
-            </motion.p>
-          </div>
+    <div className="min-h-screen bg-black">
+
+      {/* HERO SECTION WITH ANIMATED GRADIENT */}
+      <section className="relative h-[450px] overflow-hidden flex items-center justify-center">
+
+        <motion.div
+          className="absolute inset-0 -z-10"
+          animate={{
+            backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"],
+          }}
+          transition={{
+            duration: 10,
+            repeat: Infinity,
+            ease: "linear",
+          }}
+          style={{
+            background:
+              "linear-gradient(270deg, #000000, #0f0f0f, #1a1a1a, #050505)",
+            backgroundSize: "400% 400%",
+          }}
+        />
+
+        <div className="container mx-auto px-4 text-center relative z-10">
+          <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">
+            Book a Service
+          </h1>
+
+          <p className="text-gray-300 max-w-xl mx-auto">
+            Tell us your issue and schedule a professional service instantly
+          </p>
         </div>
       </section>
 
-      {/* Booking Form */}
+      {/* FORM SECTION */}
       <section className="py-16">
         <div className="container mx-auto px-4">
           <div className="max-w-3xl mx-auto">
+
             {/* Progress Steps */}
             <div className="flex items-center justify-center mb-12">
               {[1, 2, 3].map((s) => (
@@ -64,8 +86,8 @@ const BookService = () => {
                   <div
                     className={`w-10 h-10 rounded-full flex items-center justify-center font-semibold ${
                       step >= s
-                        ? "gradient-bg text-primary-foreground"
-                        : "bg-muted text-muted-foreground"
+                        ? "bg-blue-600 text-white"
+                        : "bg-white/10 text-gray-400"
                     }`}
                   >
                     {step > s ? <Check className="w-5 h-5" /> : s}
@@ -73,7 +95,7 @@ const BookService = () => {
                   {s < 3 && (
                     <div
                       className={`w-16 md:w-24 h-1 ${
-                        step > s ? "bg-primary" : "bg-muted"
+                        step > s ? "bg-blue-600" : "bg-white/10"
                       }`}
                     />
                   )}
@@ -85,34 +107,35 @@ const BookService = () => {
               key={step}
               initial={{ opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}
-              className="bg-card rounded-3xl p-8 shadow-lg border border-border"
+              className="p-8 rounded-3xl border border-white/10 backdrop-blur-md 
+              bg-gradient-to-br from-black via-black/80 to-gray-900"
             >
-              {/* Step 1: Select Device & Service Type */}
+
+              {/* STEP 1 */}
               {step === 1 && (
                 <div>
-                  <h2 className="text-2xl font-display font-bold mb-6">
+                  <h2 className="text-2xl font-bold text-white mb-6">
                     What do you need help with?
                   </h2>
 
                   <div className="mb-8">
-                    <Label className="text-base font-semibold mb-4 block">Select Device Type</Label>
+                    <Label className="text-white mb-4 block">
+                      Select Device Type
+                    </Label>
+
                     <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
                       {deviceTypes.map((device) => (
                         <button
                           key={device.id}
                           onClick={() => setSelectedDevice(device.id)}
-                          className={`p-4 rounded-xl border-2 transition-all duration-200 ${
+                          className={`p-4 rounded-xl border transition-all ${
                             selectedDevice === device.id
-                              ? "border-primary bg-primary/5"
-                              : "border-border hover:border-primary/50"
+                              ? "border-blue-600 bg-blue-600/10"
+                              : "border-white/10 hover:border-blue-600/50"
                           }`}
                         >
-                          <device.icon className={`w-8 h-8 mx-auto mb-2 ${
-                            selectedDevice === device.id ? "text-primary" : "text-muted-foreground"
-                          }`} />
-                          <span className={`text-sm font-medium ${
-                            selectedDevice === device.id ? "text-primary" : "text-foreground"
-                          }`}>
+                          <device.icon className="w-8 h-8 mx-auto mb-2 text-blue-400" />
+                          <span className="text-sm text-white">
                             {device.label}
                           </span>
                         </button>
@@ -121,22 +144,32 @@ const BookService = () => {
                   </div>
 
                   <div className="mb-8">
-                    <Label className="text-base font-semibold mb-4 block">Service Type</Label>
-                    <RadioGroup value={selectedService} onValueChange={setSelectedService}>
+                    <Label className="text-white mb-4 block">
+                      Service Type
+                    </Label>
+
+                    <RadioGroup
+                      value={selectedService}
+                      onValueChange={setSelectedService}
+                    >
                       <div className="space-y-3">
                         {serviceTypes.map((service) => (
                           <label
                             key={service.id}
-                            className={`flex items-center gap-4 p-4 rounded-xl border-2 cursor-pointer transition-all duration-200 ${
+                            className={`flex items-center gap-4 p-4 rounded-xl border cursor-pointer ${
                               selectedService === service.id
-                                ? "border-primary bg-primary/5"
-                                : "border-border hover:border-primary/50"
+                                ? "border-blue-600 bg-blue-600/10"
+                                : "border-white/10"
                             }`}
                           >
                             <RadioGroupItem value={service.id} />
                             <div>
-                              <div className="font-medium">{service.label}</div>
-                              <div className="text-sm text-muted-foreground">{service.description}</div>
+                              <div className="text-white">
+                                {service.label}
+                              </div>
+                              <div className="text-sm text-gray-400">
+                                {service.description}
+                              </div>
                             </div>
                           </label>
                         ))}
@@ -145,150 +178,128 @@ const BookService = () => {
                   </div>
 
                   <Button
-                    variant="gradient"
-                    size="lg"
-                    className="w-full"
+                    className="w-full bg-gradient-to-r from-blue-600 to-blue-800 text-white"
                     onClick={() => setStep(2)}
                     disabled={!selectedDevice || !selectedService}
                   >
                     Continue
-                    <ArrowRight className="w-5 h-5" />
+                    <ArrowRight className="w-5 h-5 ml-2" />
                   </Button>
                 </div>
               )}
 
-              {/* Step 2: Issue Details */}
+              {/* STEP 2 */}
               {step === 2 && (
                 <div>
-                  <h2 className="text-2xl font-display font-bold mb-6">
+                  <h2 className="text-2xl font-bold text-white mb-6">
                     Describe the Issue
                   </h2>
 
                   <div className="space-y-6">
                     <div>
-                      <Label htmlFor="issue">What's the problem?</Label>
+                      <Label className="text-white">Problem Details</Label>
                       <Textarea
-                        id="issue"
-                        placeholder="Describe the issue you're facing..."
-                        className="mt-2 min-h-[120px]"
+                        placeholder="Describe your problem..."
+                        className="mt-2 bg-black/50 border-white/10 text-white"
                       />
                     </div>
 
                     <div>
-                      <Label>Upload Photos (Optional)</Label>
-                      <div className="mt-2 border-2 border-dashed border-border rounded-xl p-8 text-center hover:border-primary/50 transition-colors cursor-pointer">
-                        <Upload className="w-10 h-10 mx-auto text-muted-foreground mb-3" />
-                        <p className="text-sm text-muted-foreground">
-                          Drag & drop images or click to browse
-                        </p>
-                      </div>
-                    </div>
-
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <div>
-                        <Label htmlFor="date">Preferred Date</Label>
-                        <div className="relative mt-2">
-                          <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
-                          <Input id="date" type="date" className="pl-10" />
-                        </div>
-                      </div>
-                      <div>
-                        <Label htmlFor="time">Preferred Time</Label>
-                        <Input id="time" type="time" className="mt-2" />
+                      <Label className="text-white">Upload Photos</Label>
+                      <div className="mt-2 border-2 border-dashed border-white/10 rounded-xl p-8 text-center text-gray-400">
+                        <Upload className="w-10 h-10 mx-auto mb-2" />
+                        Optional attachments
                       </div>
                     </div>
 
                     {selectedService === "onsite" && (
                       <div>
-                        <Label htmlFor="address">Service Address</Label>
-                        <div className="relative mt-2">
-                          <MapPin className="absolute left-3 top-3 w-5 h-5 text-muted-foreground" />
-                          <Textarea
-                            id="address"
-                            placeholder="Enter your complete address..."
-                            className="pl-10"
-                          />
-                        </div>
+                        <Label className="text-white">Address</Label>
+                        <Textarea
+                          placeholder="Enter your address"
+                          className="mt-2 bg-black/50 border-white/10 text-white"
+                        />
                       </div>
                     )}
                   </div>
 
                   <div className="flex gap-4 mt-8">
-                    <Button variant="outline" size="lg" onClick={() => setStep(1)}>
+                    <Button
+                      variant="outline"
+                      className="border-white text-white"
+                      onClick={() => setStep(1)}
+                    >
                       Back
                     </Button>
+
                     <Button
-                      variant="gradient"
-                      size="lg"
-                      className="flex-1"
+                      className="flex-1 bg-gradient-to-r from-blue-600 to-blue-800 text-white"
                       onClick={() => setStep(3)}
                     >
                       Continue
-                      <ArrowRight className="w-5 h-5" />
+                      <ArrowRight className="w-5 h-5 ml-2" />
                     </Button>
                   </div>
                 </div>
               )}
 
-              {/* Step 3: Contact Details */}
+              {/* STEP 3 */}
               {step === 3 && (
                 <div>
-                  <h2 className="text-2xl font-display font-bold mb-6">
+                  <h2 className="text-2xl font-bold text-white mb-6">
                     Your Contact Details
                   </h2>
 
                   <div className="space-y-6">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <div>
-                        <Label htmlFor="name">Full Name</Label>
-                        <Input id="name" placeholder="Input name" className="mt-2" />
-                      </div>
-                      <div>
-                        <Label htmlFor="phone">Phone Number</Label>
-                        <Input id="phone" placeholder="Input number" className="mt-2" />
-                      </div>
-                    </div>
+                    <Input
+                      placeholder="Full Name"
+                      className="bg-black/50 border-white/10 text-white"
+                    />
 
-                    <div>
-                      <Label htmlFor="email">Email Address</Label>
-                      <Input id="email" type="email" placeholder="user@domain.com" className="mt-2" />
-                    </div>
+                    <Input
+                      placeholder="Phone Number"
+                      className="bg-black/50 border-white/10 text-white"
+                    />
 
-                    <div className="p-4 bg-muted/50 rounded-xl">
-                      <h4 className="font-semibold mb-2">Booking Summary</h4>
-                      <div className="text-sm text-muted-foreground space-y-1">
-                        <p>Device: {deviceTypes.find(d => d.id === selectedDevice)?.label}</p>
-                        <p>Service: {serviceTypes.find(s => s.id === selectedService)?.label}</p>
-                      </div>
+                    <Input
+                      placeholder="Email"
+                      className="bg-black/50 border-white/10 text-white"
+                    />
+
+                    <div className="p-4 bg-black/40 rounded-xl text-gray-300">
+                      <p>
+                        Device:{" "}
+                        {deviceTypes.find((d) => d.id === selectedDevice)?.label}
+                      </p>
+                      <p>
+                        Service:{" "}
+                        {serviceTypes.find((s) => s.id === selectedService)?.label}
+                      </p>
                     </div>
                   </div>
 
                   <div className="flex gap-4 mt-8">
-                    <Button variant="outline" size="lg" onClick={() => setStep(2)}>
+                    <Button
+                      variant="outline"
+                      className="border-white text-white"
+                      onClick={() => setStep(2)}
+                    >
                       Back
                     </Button>
+
                     <Button
-                      variant="gradient"
-                      size="lg"
-                      className="flex-1"
+                      className="flex-1 bg-gradient-to-r from-blue-600 to-blue-800 text-white"
                       asChild
                     >
                       <Link to="/login">
                         Submit Booking
-                        <ArrowRight className="w-5 h-5" />
+                        <ArrowRight className="w-5 h-5 ml-2" />
                       </Link>
                     </Button>
                   </div>
-
-                  <p className="text-sm text-muted-foreground text-center mt-4">
-                    Already have an account?{" "}
-                    <Link to="/login" className="text-primary hover:underline">
-                      Login
-                    </Link>{" "}
-                    to track your bookings.
-                  </p>
                 </div>
               )}
+
             </motion.div>
           </div>
         </div>
