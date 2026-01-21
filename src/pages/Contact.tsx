@@ -209,25 +209,34 @@ const Contact = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
               <div>
                 <Label className="text-white">Name</Label>
-                <Input placeholder="Your Name" className="mt-2" />
+                <Input
+                  placeholder="Your Name"
+                  className="mt-2 bg-gray-800 border-gray-600 text-white placeholder:text-gray-400 focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+                />
               </div>
 
               <div>
                 <Label className="text-white">Phone</Label>
-                <Input placeholder="Your Number" className="mt-2" />
+                <Input
+                  placeholder="Your Number"
+                  className="mt-2 bg-gray-800 border-gray-600 text-white placeholder:text-gray-400 focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+                />
               </div>
             </div>
 
             <div className="mb-4">
               <Label className="text-white">Email</Label>
-              <Input placeholder="Your Email" className="mt-2" />
+              <Input
+                placeholder="Your Email"
+                className="mt-2 bg-gray-800 border-gray-600 text-white placeholder:text-gray-400 focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+              />
             </div>
 
-            <div className="mb-4">
+            <div className="mb-6">
               <Label className="text-white">Message</Label>
               <Textarea
                 placeholder="Write your message..."
-                className="mt-2 min-h-[120px]"
+                className="mt-2 min-h-[120px] bg-gray-800 border-gray-600 text-white placeholder:text-gray-400 focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
               />
             </div>
 
@@ -235,40 +244,6 @@ const Contact = () => {
               <Send className="w-4 h-4 mr-2" />
               Send Message
             </Button>
-
-          </div>
-        </div>
-      </section>
-
-      {/* ===== TRUST SECTION ===== */}
-      <section className="py-20 bg-black/50">
-        <div className="container mx-auto px-4 text-center">
-
-          <h2 className="text-3xl font-bold text-white mb-10">
-            Why Contact ZappTek?
-          </h2>
-
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-
-            {trustPoints.map((item, i) => (
-              <motion.div
-                key={i}
-                whileHover={{ scale: 1.05 }}
-                className="p-6 bg-black/70 border border-white/10 rounded-2xl"
-              >
-                <div className="w-14 h-14 bg-blue-600/20 rounded-xl flex items-center justify-center mx-auto mb-3">
-                  <item.icon className="w-7 h-7 text-blue-400" />
-                </div>
-
-                <h4 className="text-lg font-semibold text-white mb-2">
-                  {item.title}
-                </h4>
-
-                <p className="text-gray-400 text-sm">
-                  {item.desc}
-                </p>
-              </motion.div>
-            ))}
 
           </div>
         </div>

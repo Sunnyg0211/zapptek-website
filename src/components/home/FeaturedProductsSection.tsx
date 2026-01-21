@@ -106,7 +106,7 @@ export function FeaturedProductsSection() {
                   </Link>
 
                   <div className="flex items-center gap-2 my-2 text-white">
-                    <Star className="w-4 h-4 text-yellow-500" />
+                    <Star className="w-4 h-4 text-blue-400" />
                     <span className="text-sm">
                       {product.rating || 4.5}
                     </span>
@@ -127,7 +127,7 @@ export function FeaturedProductsSection() {
 
                     <Button
                       asChild
-                      className="bg-white/10 text-white hover:bg-white/20 border border-white/20"
+                      className="bg-gradient-to-r from-blue-600 to-blue-800 text-white hover:from-blue-500 hover:to-blue-700 transition-all"
                     >
                       <Link to={`/buy-now/${product.id}`}>
                         Buy Now

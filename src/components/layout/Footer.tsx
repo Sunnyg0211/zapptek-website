@@ -1,32 +1,24 @@
 import { useState } from "react";
 import { ContactPopup } from "@/components/ContactPopup";
-import { Phone, MessageCircle, MapPin, Facebook, Twitter, Linkedin, Instagram } from "lucide-react";
+import {
+  Phone,
+  MessageCircle,
+  MapPin,
+  Linkedin,
+  Facebook
+} from "lucide-react";
 import { motion } from "framer-motion";
 
 const socialLinks = [
   {
-    icon: Facebook,
-    href: "https://facebook.com",
-    label: "Facebook",
-    bg: "bg-[#1877F2]",
-  },
-  {
-    icon: Twitter,
-    href: "https://twitter.com",
-    label: "Twitter",
-    bg: "bg-[#1DA1F2]",
-  },
-  {
     icon: Linkedin,
     href: "https://linkedin.com",
     label: "LinkedIn",
-    bg: "bg-[#0A66C2]",
   },
   {
-    icon: Instagram,
-    href: "https://instagram.com",
-    label: "Instagram",
-    bg: "bg-[#E4405F]",
+    icon: Facebook,
+    href: "https://facebook.com",
+    label: "Facebook",
   },
 ];
 
@@ -34,73 +26,87 @@ export function Footer() {
   const [openForm, setOpenForm] = useState(false);
 
   return (
-    <footer className="relative overflow-hidden mt-10">
+    <footer className="relative mt-14">
 
-      {/* Animated Black Gradient Background */}
+      {/* Animated Dark Gradient Background */}
       <motion.div
         className="absolute inset-0 -z-10"
         animate={{
           backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"],
         }}
         transition={{
-          duration: 10,
+          duration: 12,
           repeat: Infinity,
           ease: "linear",
         }}
         style={{
           background:
-            "linear-gradient(270deg, #000000, #0f0f0f, #1a1a1a, #050505)",
+            "linear-gradient(270deg, #000000, #0d1117, #0a0f1c, #000000)",
           backgroundSize: "400% 400%",
         }}
       />
 
-      {/* HORIZONTAL BOX CONTAINER */}
-      <div className="max-w-5xl mx-auto px-4 py-6 relative z-10">
+      <div className="max-w-6xl mx-auto px-4 py-8 relative z-10">
 
-        <div className="border border-white/10 rounded-2xl bg-black/60 backdrop-blur-lg shadow-lg">
+        <div className="rounded-2xl border border-white/10 bg-black/60 backdrop-blur-lg shadow-xl">
 
-          <div className="px-4 py-6">
+          <div className="px-6 py-8">
 
-            {/* Contact Action Buttons */}
+            {/* ACTION BUTTONS */}
             <div className="flex flex-col md:flex-row items-center justify-center gap-4 mb-6">
 
               <a
                 href="tel:+919793541467"
-                className="flex items-center gap-2 px-5 py-2 rounded-full bg-gradient-to-r from-blue-600 to-blue-800 text-white hover:from-blue-500 hover:to-blue-700 transition"
+                className="
+                  flex items-center gap-2 px-6 py-2.5 rounded-full
+                  bg-gradient-to-r from-blue-600 to-blue-800
+                  text-white text-sm font-medium
+                  hover:from-blue-500 hover:to-blue-700
+                  transition
+                "
               >
-                <Phone className="w-4 h-4 text-white" />
-                Call Us
+                <Phone className="w-4 h-4" />
+                Call Support
               </a>
 
               <a
                 href="https://wa.me/919793541467"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-2 px-5 py-2 rounded-full bg-gradient-to-r from-blue-600 to-blue-800 text-white hover:from-blue-500 hover:to-blue-700 transition"
+                className="
+                  flex items-center gap-2 px-6 py-2.5 rounded-full
+                  bg-gradient-to-r from-blue-600 to-blue-800
+                  text-white text-sm font-medium
+                  hover:from-blue-500 hover:to-blue-700
+                  transition
+                "
               >
-                <MessageCircle className="w-4 h-4 text-white" />
-                WhatsApp
+                <MessageCircle className="w-4 h-4" />
+                WhatsApp Support
               </a>
 
-              {/* OPEN CONTACT POPUP INSTEAD OF NAVIGATION */}
               <button
                 onClick={() => setOpenForm(true)}
-                className="flex items-center gap-2 px-5 py-2 rounded-full border border-white/20 text-white hover:bg-white/10 transition"
+                className="
+                  flex items-center gap-2 px-6 py-2.5 rounded-full
+                  border border-white/20 text-white text-sm font-medium
+                  hover:bg-white/10 transition
+                "
               >
-                Fill a Form
+                Contact Form
               </button>
             </div>
 
-            {/* Address */}
-            <div className="flex justify-center text-center mb-4 text-sm text-gray-300">
+            {/* LOCATION */}
+            <div className="flex justify-center text-center mb-5 text-sm text-gray-400">
               <div className="flex items-center gap-2">
-                <MapPin className="w-4 h-4 text-white" />
-                Mumbai • Gorakhpur • Lucknow – India
+                <MapPin className="w-4 h-4 text-blue-400" />
+                Mumbai • Gorakhpur • Lucknow — India
               </div>
             </div>
 
-            {/* Social Media */}
-            <div className="flex justify-center gap-3 mb-4">
+            {/* SOCIAL LINKS */}
+            <div className="flex justify-center gap-3 mb-5">
               {socialLinks.map((social) => (
                 <a
                   key={social.label}
@@ -108,24 +114,31 @@ export function Footer() {
                   aria-label={social.label}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className={`w-9 h-9 rounded-full ${social.bg} text-white flex items-center justify-center hover:opacity-90 transition`}
+                  className="
+                    w-9 h-9 rounded-full
+                    bg-white/5 border border-white/10
+                    flex items-center justify-center
+                    text-gray-300
+                    hover:text-white hover:border-blue-500
+                    hover:shadow-[0_0_12px_rgba(37,99,235,0.6)]
+                    transition
+                  "
                 >
                   <social.icon className="w-4 h-4" />
                 </a>
               ))}
             </div>
 
-            {/* Copyright */}
-            <div className="text-center text-xs text-gray-400 border-t border-white/10 pt-3">
-              © {new Date().getFullYear()} ZappTek. All rights reserved.
+            {/* COPYRIGHT */}
+            <div className="text-center text-xs text-gray-500 border-t border-white/10 pt-4">
+              © {new Date().getFullYear()} ZappTek Technologies. All rights reserved.
             </div>
 
           </div>
         </div>
-
       </div>
 
-      {/* CONTACT FORM POPUP COMPONENT */}
+      {/* CONTACT FORM POPUP */}
       <ContactPopup open={openForm} onClose={() => setOpenForm(false)} />
 
     </footer>

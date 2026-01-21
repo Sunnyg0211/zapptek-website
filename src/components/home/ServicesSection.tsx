@@ -60,9 +60,7 @@ const containerVariants = {
   hidden: { opacity: 0 },
   visible: {
     opacity: 1,
-    transition: {
-      staggerChildren: 0.1,
-    },
+    transition: { staggerChildren: 0.1 },
   },
 };
 
@@ -98,13 +96,14 @@ export function ServicesSection() {
       />
 
       <div className="container mx-auto px-4">
+
         {/* Header */}
         <div className="text-center mb-16">
           <motion.span
             initial={{ opacity: 0, y: 10 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="inline-block px-4 py-1.5 rounded-full bg-white/10 text-white text-sm font-medium mb-4"
+            className="inline-block px-4 py-1.5 rounded-full bg-blue-600/20 text-blue-400 text-sm font-medium mb-4"
           >
             Our Services
           </motion.span>
@@ -145,11 +144,11 @@ export function ServicesSection() {
               whileHover={{ scale: 1.05 }}
               className="p-6 rounded-2xl border border-white/10 bg-black/40 backdrop-blur-md hover:bg-black/60 transition-all duration-300 cursor-pointer group"
             >
-              <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-gray-700 to-black flex items-center justify-center mb-5 group-hover:scale-110 transition-transform duration-300">
-                <service.icon className="w-7 h-7 text-white" />
+              <div className="w-14 h-14 rounded-xl bg-blue-600/20 flex items-center justify-center mb-5 group-hover:scale-110 transition-transform duration-300">
+                <service.icon className="w-7 h-7 text-blue-400" />
               </div>
 
-              <h3 className="text-lg font-semibold mb-2 text-white group-hover:text-gray-300 transition-colors">
+              <h3 className="text-lg font-semibold mb-2 text-white group-hover:text-blue-400 transition-colors">
                 {service.title}
               </h3>
 
@@ -160,26 +159,25 @@ export function ServicesSection() {
           ))}
         </motion.div>
 
-        {/* CTA BUTTON WITH BLUE GRADIENT */}
+        {/* CTA Button */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           className="text-center mt-12"
         >
-          <motion.div whileHover={{ scale: 1.05 }}>
-            <Button
-              size="lg"
-              asChild
-              className="bg-gradient-to-r from-blue-600 to-blue-800 text-white border border-white/20 hover:from-blue-500 hover:to-blue-700 transition-all"
-            >
-              <Link to="/services">
-                View All Services
-                <ArrowRight className="w-5 h-5 ml-2 text-white" />
-              </Link>
-            </Button>
-          </motion.div>
+          <Button
+            size="lg"
+            asChild
+            className="bg-gradient-to-r from-blue-600 to-blue-800 text-white hover:from-blue-500 hover:to-blue-700 transition-all"
+          >
+            <Link to="/services">
+              View All Services
+              <ArrowRight className="w-5 h-5 ml-2 text-white" />
+            </Link>
+          </Button>
         </motion.div>
+
       </div>
     </section>
   );

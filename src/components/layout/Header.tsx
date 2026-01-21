@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import { Menu, X, Zap } from "lucide-react";
+import { Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 const navItems = [
@@ -42,14 +42,15 @@ export function Header() {
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-16 md:h-20">
 
-          {/* Logo */}
-          <Link to="/" className="flex items-center gap-2 group">
-            <motion.div
-              whileHover={{ scale: 1.1 }}
-              className="w-10 h-10 rounded-xl bg-gradient-to-r from-gray-800 to-black flex items-center justify-center shadow-lg"
-            >
-              <Zap className="w-6 h-6 text-white" />
-            </motion.div>
+          {/* LOGO SECTION - UPDATED */}
+          <Link to="/" className="flex items-center gap-3 group">
+            
+            <motion.img
+              whileHover={{ scale: 1.05 }}
+              src="/logo_main.png"
+              alt="ZappTek Logo"
+              className="w-10 h-10 object-contain"
+            />
 
             <span className="text-xl md:text-2xl font-bold text-white">
               <span className="text-white">Zapp</span>

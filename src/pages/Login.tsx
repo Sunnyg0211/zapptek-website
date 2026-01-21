@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useAuth } from "@/hooks/useAuth";
+import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 
 const Login = () => {
@@ -14,7 +15,7 @@ const Login = () => {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const { signIn, signInWithGoogle } = useAuth();
+  const { signIn } = useAuth();
   const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -29,39 +30,46 @@ const Login = () => {
 
     const { error } = await signIn(email, password);
 
+    if (error) {
+      setLoading(false);
+      toast.error(error.message || "Failed to sign in");
+      return;
+    }
+
+    // Check if user email is verified
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+
     setLoading(false);
 
-    if (error) {
-      toast.error(error.message || "Failed to sign in");
-    } else {
-      toast.success("Welcome back!");
-      navigate("/admin");
+    if (!user) {
+      toast.error("Login failed. Please try again.");
+      return;
     }
-  };
 
-  const handleGoogleLogin = async () => {
-    const { error } = await signInWithGoogle();
+    if (!user.email_confirmed_at) {
+      toast.error(
+        "Your email is not verified. Please verify your email before logging in."
+      );
 
-    if (error) {
-      toast.error("Google sign-in failed");
-    } else {
-      toast.success("Signed in with Google!");
-      navigate("/admin");
+      await supabase.auth.signOut();
+      return;
     }
+
+    toast.success("Welcome back!");
+    navigate("/admin");
   };
 
   return (
     <div className="min-h-screen flex">
-
-      {/* LEFT SIDE - LOGIN SECTION (WHITE BACKGROUND) */}
+      {/* LEFT SIDE - LOGIN SECTION */}
       <div className="flex-1 flex items-center justify-center p-8 bg-white">
-
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           className="w-full max-w-md bg-black text-white p-8 rounded-3xl shadow-2xl"
         >
-
           {/* LOGO + NAME */}
           <Link to="/" className="flex items-center gap-3 mb-8">
             <img
@@ -70,39 +78,16 @@ const Login = () => {
               className="w-12 h-12 object-contain"
             />
 
-            <span className="text-2xl font-bold text-white">
-              ZappTek
-            </span>
+            <span className="text-2xl font-bold text-white">ZappTek</span>
           </Link>
 
-          <h1 className="text-3xl font-bold mb-2 text-white">
-            Welcome back
-          </h1>
+          <h1 className="text-3xl font-bold mb-2 text-white">Welcome back</h1>
 
           <p className="text-gray-400 mb-8">
             Sign in to access your dashboard
           </p>
 
-          {/* GOOGLE LOGIN BUTTON */}
-          <Button
-            onClick={handleGoogleLogin}
-            className="w-full bg-white text-black hover:bg-gray-100 flex items-center justify-center gap-2 mb-4"
-          >
-            <img
-              src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg"
-              className="w-5 h-5"
-            />
-            Login with Google
-          </Button>
-
-          <div className="flex items-center gap-3 my-4">
-            <div className="flex-1 h-[1px] bg-white/20"></div>
-            <span className="text-gray-400 text-sm">OR</span>
-            <div className="flex-1 h-[1px] bg-white/20"></div>
-          </div>
-
           <form onSubmit={handleSubmit} className="space-y-4">
-
             {/* EMAIL */}
             <div>
               <Label className="text-white">Email Address</Label>
@@ -165,7 +150,6 @@ const Login = () => {
               {loading ? "Signing in..." : "Sign In"}
               <ArrowRight className="w-5 h-5 ml-2" />
             </Button>
-
           </form>
 
           <p className="text-center text-gray-400 mt-6">
@@ -174,13 +158,11 @@ const Login = () => {
               Create account
             </Link>
           </p>
-
         </motion.div>
       </div>
 
-      {/* RIGHT SIDE - BRAND SECTION (DARK THEME) */}
+      {/* RIGHT SIDE - BRAND SECTION */}
       <div className="hidden lg:flex flex-1 relative overflow-hidden items-center justify-center p-12">
-
         <motion.div
           className="absolute inset-0 -z-10"
           animate={{
@@ -220,7 +202,6 @@ const Login = () => {
           </p>
         </motion.div>
       </div>
-
     </div>
   );
 };

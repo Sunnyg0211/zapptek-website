@@ -32,13 +32,16 @@ export default function CustomerLayout() {
   const [mobileOpen, setMobileOpen] = useState(false);
 
   const Sidebar = ({ mobile = false }: { mobile?: boolean }) => (
-    <div className={cn("flex h-full flex-col", mobile && "pt-4")}>
-      <div className="px-6 py-4">
+    <div className={cn("flex h-full flex-col bg-black text-white", mobile && "pt-4")}>
+      {/* LOGO */}
+      <div className="px-6 py-4 border-b border-white/10">
         <Link to="/" className="flex items-center gap-2">
-          <Shield className="h-8 w-8 text-primary" />
+          <Shield className="h-8 w-8 text-blue-500" />
           <span className="text-xl font-bold">MyAccount</span>
         </Link>
       </div>
+
+      {/* NAVIGATION */}
       <ScrollArea className="flex-1 px-3">
         <nav className="space-y-1 py-4">
           {navigation.map((item) => {
@@ -49,38 +52,49 @@ export default function CustomerLayout() {
                 to={item.href}
                 onClick={() => mobile && setMobileOpen(false)}
                 className={cn(
-                  "flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors",
+                  "flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-all",
                   isActive
-                    ? "bg-primary text-primary-foreground"
-                    : "text-muted-foreground hover:bg-muted hover:text-foreground"
+                    ? "bg-blue-600 text-white shadow"
+                    : "text-gray-400 hover:bg-white/10 hover:text-white"
                 )}
               >
-                <item.icon className="h-5 w-5" />
+                <item.icon className="h-5 w-5 text-blue-400" />
                 {item.name}
               </Link>
             );
           })}
         </nav>
       </ScrollArea>
-      <div className="border-t p-4">
+
+      {/* FOOTER */}
+      <div className="border-t border-white/10 p-4">
         <div className="mb-3 px-3">
-          <p className="text-sm font-medium truncate">{user?.email}</p>
-          <p className="text-xs text-muted-foreground capitalize">{role || "customer"}</p>
+          <p className="text-sm font-medium truncate text-white">
+            {user?.email}
+          </p>
+          <p className="text-xs text-gray-400 capitalize">
+            {role || "customer"}
+          </p>
         </div>
+
         {role === "admin" && (
           <Link to="/admin">
-            <Button variant="outline" className="w-full mb-2" size="sm">
+            <Button
+              size="sm"
+              className="w-full mb-2 bg-gradient-to-r from-blue-600 to-blue-800 text-white"
+            >
               <LayoutDashboard className="mr-2 h-4 w-4" />
               Admin Panel
             </Button>
           </Link>
         )}
+
         <Button
           variant="ghost"
-          className="w-full justify-start text-muted-foreground"
+          className="w-full justify-start text-gray-400 hover:text-white hover:bg-white/10"
           onClick={signOut}
         >
-          <LogOut className="mr-2 h-4 w-4" />
+          <LogOut className="mr-2 h-4 w-4 text-blue-400" />
           Sign Out
         </Button>
       </div>
@@ -88,33 +102,35 @@ export default function CustomerLayout() {
   );
 
   return (
-    <div className="flex min-h-screen bg-background">
-      {/* Desktop Sidebar */}
-      <aside className="hidden w-64 border-r bg-card lg:block">
+    <div className="flex min-h-screen bg-gray-100">
+      {/* DESKTOP SIDEBAR */}
+      <aside className="hidden w-64 lg:block">
         <Sidebar />
       </aside>
 
-      {/* Mobile Header & Sidebar */}
+      {/* MAIN AREA */}
       <div className="flex flex-1 flex-col">
-        <header className="sticky top-0 z-40 flex h-16 items-center gap-4 border-b bg-card px-4 lg:hidden">
+        {/* MOBILE HEADER */}
+        <header className="sticky top-0 z-40 flex h-16 items-center gap-4 border-b bg-black px-4 lg:hidden">
           <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
             <SheetTrigger asChild>
               <Button variant="ghost" size="icon">
-                <Menu className="h-6 w-6" />
+                <Menu className="h-6 w-6 text-blue-400" />
               </Button>
             </SheetTrigger>
-            <SheetContent side="left" className="w-64 p-0">
+            <SheetContent side="left" className="w-64 p-0 bg-black">
               <Sidebar mobile />
             </SheetContent>
           </Sheet>
+
           <Link to="/" className="flex items-center gap-2">
-            <Shield className="h-6 w-6 text-primary" />
-            <span className="font-bold">MyAccount</span>
+            <Shield className="h-6 w-6 text-blue-500" />
+            <span className="font-bold text-white">MyAccount</span>
           </Link>
         </header>
 
-        {/* Main Content */}
-        <main className="flex-1 p-4 lg:p-6">
+        {/* CONTENT */}
+        <main className="flex-1 p-4 lg:p-6 bg-gray-100">
           <Outlet />
         </main>
       </div>

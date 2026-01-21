@@ -1,15 +1,33 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Mail, ArrowLeft, Send } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
+import { supabase } from "@/integrations/supabase/client";
 
 const ForgotPassword = () => {
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
+
+  const navigate = useNavigate();
+
+  // If user is already logged in, redirect them
+  useEffect(() => {
+    const checkUser = async () => {
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
+
+      if (session) {
+        navigate("/dashboard");
+      }
+    };
+
+    checkUser();
+  }, [navigate]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -21,11 +39,27 @@ const ForgotPassword = () => {
 
     setLoading(true);
 
-    // Simulated API Call (Replace with Supabase logic)
-    setTimeout(() => {
-      setLoading(false);
-      toast.success("Password reset link sent to your email!");
-    }, 1500);
+    try {
+      const { error } = await supabase.auth.resetPasswordForEmail(email, {
+        redirectTo: `${window.location.origin}/reset-password`,
+      });
+
+      if (error) {
+        throw error;
+      }
+
+      toast.success(
+        "Password reset link has been sent to your email!"
+      );
+
+      setEmail("");
+    } catch (error: any) {
+      toast.error(
+        error.message || "Failed to send reset email. Please try again."
+      );
+    }
+
+    setLoading(false);
   };
 
   return (

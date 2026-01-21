@@ -77,17 +77,11 @@ export function AMCSection() {
   return (
     <section className="relative py-20 md:py-28 overflow-hidden">
 
-      {/* ANIMATED BLACK GRADIENT BACKGROUND */}
+      {/* ANIMATED DARK BACKGROUND */}
       <motion.div
         className="absolute inset-0 -z-10"
-        animate={{
-          backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"],
-        }}
-        transition={{
-          duration: 10,
-          repeat: Infinity,
-          ease: "linear",
-        }}
+        animate={{ backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"] }}
+        transition={{ duration: 10, repeat: Infinity, ease: "linear" }}
         style={{
           background:
             "linear-gradient(270deg, #000000, #0f0f0f, #1a1a1a, #050505)",
@@ -102,15 +96,15 @@ export function AMCSection() {
           <motion.span
             initial={{ opacity: 0, y: 10 }}
             whileInView={{ opacity: 1, y: 0 }}
-            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/10 text-white text-sm font-medium mb-4"
+            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-blue-600/20 text-blue-400 text-sm font-medium mb-4"
           >
-            <Users className="w-4 h-4" />
+            <Users className="w-4 h-4 text-blue-400" />
             Smart AMC Plans
           </motion.span>
 
-          <motion.h2 className="text-3xl md:text-4xl font-bold mb-4 text-white">
+          <h2 className="text-3xl md:text-4xl font-bold mb-4 text-white">
             Professional IT Maintenance Plans
-          </motion.h2>
+          </h2>
 
           <p className="text-gray-300 max-w-2xl mx-auto">
             Affordable, reliable and proactive IT support packages designed for
@@ -125,28 +119,24 @@ export function AMCSection() {
               key={index}
               whileHover={{ y: -8, scale: 1.02 }}
               transition={{ duration: 0.3 }}
-              className={`relative rounded-3xl p-8 backdrop-blur-lg border border-white/10 shadow-xl cursor-pointer ${
-                plan.popular
-                  ? "bg-black text-white"
-                  : "bg-black/80 text-white"
-              }`}
+              className="relative rounded-3xl p-8 bg-black/80 backdrop-blur-lg border border-white/10 shadow-xl"
             >
               {plan.popular && (
-                <div className="absolute -top-4 left-1/2 -translate-x-1/2 px-4 py-1 rounded-full bg-blue-600 text-white text-sm font-semibold">
+                <div className="absolute -top-4 left-1/2 -translate-x-1/2 px-4 py-1 rounded-full bg-blue-600 text-white text-sm font-semibold shadow-lg">
                   Recommended
                 </div>
               )}
 
               {/* ICON */}
-              <div className="w-14 h-14 rounded-2xl bg-white/10 flex items-center justify-center mb-4">
-                <plan.icon className="w-7 h-7 text-white" />
+              <div className="w-14 h-14 rounded-2xl bg-blue-600/20 flex items-center justify-center mb-4">
+                <plan.icon className="w-7 h-7 text-blue-400" />
               </div>
 
               <h3 className="text-xl font-bold mb-1 text-white">
                 {plan.name}
               </h3>
 
-              <div className="inline-block px-3 py-1 rounded-full text-xs mb-3 bg-white/10 text-white">
+              <div className="inline-block px-3 py-1 rounded-full text-xs mb-3 bg-blue-600/20 text-blue-400">
                 Best for: {plan.audience}
               </div>
 
@@ -156,7 +146,7 @@ export function AMCSection() {
 
               {/* RESPONSE */}
               <div className="flex items-center gap-2 mb-4 text-sm text-gray-300">
-                <Clock className="w-4 h-4" />
+                <Clock className="w-4 h-4 text-blue-400" />
                 <span>{plan.response}</span>
               </div>
 
@@ -167,9 +157,7 @@ export function AMCSection() {
                     <span className="text-4xl font-bold text-white">
                       {plan.price}
                     </span>
-                    <span className="text-gray-400">
-                      {plan.period}
-                    </span>
+                    <span className="text-gray-400">{plan.period}</span>
                   </>
                 ) : (
                   <>
@@ -187,8 +175,8 @@ export function AMCSection() {
               <ul className="space-y-3 mb-8">
                 {plan.features.map((feature, i) => (
                   <li key={i} className="flex items-center gap-3">
-                    <div className="w-5 h-5 rounded-full bg-white/10 flex items-center justify-center">
-                      <Check className="w-3 h-3 text-white" />
+                    <div className="w-5 h-5 rounded-full bg-blue-600/20 flex items-center justify-center">
+                      <Check className="w-3 h-3 text-blue-400" />
                     </div>
                     <span className="text-sm text-gray-300">
                       {feature}
@@ -197,28 +185,16 @@ export function AMCSection() {
                 ))}
               </ul>
 
-              {/* CTA BUTTONS WITH BLUE GRADIENT */}
-              {plan.price ? (
-                <Button
-                  className="w-full bg-gradient-to-r from-blue-600 to-blue-800 text-white hover:from-blue-500 hover:to-blue-700 transition-all"
-                  size="lg"
-                  asChild
-                >
-                  <Link to="/amc-plans">
-                    Select {plan.name}
-                  </Link>
-                </Button>
-              ) : (
-                <Button
-                  className="w-full bg-gradient-to-r from-blue-600 to-blue-800 text-white hover:from-blue-500 hover:to-blue-700 transition-all"
-                  size="lg"
-                  asChild
-                >
-                  <Link to={plan.ctaLink}>
-                    {plan.ctaText}
-                  </Link>
-                </Button>
-              )}
+              {/* CTA */}
+              <Button
+                className="w-full bg-gradient-to-r from-blue-600 to-blue-800 text-white hover:from-blue-500 hover:to-blue-700 transition-all"
+                size="lg"
+                asChild
+              >
+                <Link to={plan.ctaLink || "/amc-plans"}>
+                  {plan.ctaText || `Select ${plan.name}`}
+                </Link>
+              </Button>
 
             </motion.div>
           ))}

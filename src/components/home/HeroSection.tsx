@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
-import { ArrowRight, Wrench, ShoppingCart, Server, Shield } from "lucide-react";
+import { ArrowRight, Wrench, ShoppingCart, Shield } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 type Slide = {
@@ -158,7 +158,8 @@ export function HeroSection() {
 
   return (
     <section className="relative min-h-[90vh] flex items-center overflow-hidden">
-      {/* Category Navigation */}
+
+      {/* CATEGORY NAV */}
       <div className="absolute top-4 left-0 right-0 z-20 flex justify-center gap-3">
         {heroData.map((cat, index) => (
           <button
@@ -166,17 +167,17 @@ export function HeroSection() {
             onClick={() => setActiveCategory(index)}
             className={`px-4 py-2 rounded-full flex items-center gap-2 text-sm transition-all ${
               activeCategory === index
-                ? "bg-accent text-white"
-                : "bg-white/20 text-white"
+                ? "bg-blue-600 text-white"
+                : "bg-white/20 text-white hover:bg-blue-600/30"
             }`}
           >
-            <cat.icon className="w-4 h-4" />
+            <cat.icon className="w-4 h-4 text-blue-400" />
             {cat.category}
           </button>
         ))}
       </div>
 
-      {/* Slides */}
+      {/* SLIDES */}
       <div className="absolute inset-0">
         {slides.map((slide, index) => (
           <motion.div
@@ -191,12 +192,12 @@ export function HeroSection() {
               className="w-full h-full object-cover"
               alt={slide.title}
             />
-
             <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/50 to-transparent" />
           </motion.div>
         ))}
       </div>
 
+      {/* CONTENT */}
       <div className="container mx-auto px-4 relative z-10">
         <motion.div
           key={currentSlide}
@@ -209,7 +210,7 @@ export function HeroSection() {
             {slides[currentSlide].title}
           </h1>
 
-          <h3 className="text-xl text-accent mb-3">
+          <h3 className="text-xl text-blue-400 mb-3">
             {slides[currentSlide].subtitle}
           </h3>
 
@@ -217,16 +218,20 @@ export function HeroSection() {
             {slides[currentSlide].description}
           </p>
 
-          <Button variant="hero" size="lg" asChild>
+          <Button
+            size="lg"
+            asChild
+            className="bg-gradient-to-r from-blue-600 to-blue-800 text-white hover:from-blue-500 hover:to-blue-700 transition-all"
+          >
             <Link to={slides[currentSlide].link}>
               {slides[currentSlide].buttonText}
-              <ArrowRight className="w-5 h-5 ml-2" />
+              <ArrowRight className="w-5 h-5 ml-2 text-white" />
             </Link>
           </Button>
         </motion.div>
       </div>
 
-      {/* Dots */}
+      {/* DOTS */}
       <div className="absolute bottom-6 left-0 right-0 flex justify-center gap-2 z-20">
         {slides.map((_, i) => (
           <button
@@ -234,7 +239,7 @@ export function HeroSection() {
             onClick={() => setCurrentSlide(i)}
             className={`transition-all rounded-full ${
               currentSlide === i
-                ? "w-8 h-2 bg-accent"
+                ? "w-8 h-2 bg-blue-600"
                 : "w-2 h-2 bg-white/50"
             }`}
           />

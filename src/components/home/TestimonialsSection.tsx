@@ -9,7 +9,7 @@ const caseStudies = [
     content:
       "A growing startup faced constant network downtime and slow systems. We restructured their office network and optimized devices.",
     icon: Wifi,
-    video: "https://www.youtube.com/embed/tgbNymZ7vqY"
+    video: "https://www.youtube.com/embed/tgbNymZ7vqY",
   },
   {
     title: "Critical Data Recovery",
@@ -17,7 +17,7 @@ const caseStudies = [
     content:
       "Recovered 100% critical files from crashed hard disk and restored business operations within hours.",
     icon: Cpu,
-    video: "https://www.youtube.com/embed/tgbNymZ7vqY"
+    video: "https://www.youtube.com/embed/tgbNymZ7vqY",
   },
   {
     title: "Complete IT Maintenance",
@@ -25,7 +25,7 @@ const caseStudies = [
     content:
       "Through our AMC plan, company avoided failures and received regular system health checks.",
     icon: ShieldCheck,
-    video: "https://www.youtube.com/embed/tgbNymZ7vqY"
+    video: "https://www.youtube.com/embed/tgbNymZ7vqY",
   },
   {
     title: "Laptop Repair Turnaround",
@@ -33,7 +33,7 @@ const caseStudies = [
     content:
       "Urgent laptop repair delivered same day before client’s important meeting.",
     icon: Laptop,
-    video: "https://www.youtube.com/embed/tgbNymZ7vqY"
+    video: "https://www.youtube.com/embed/tgbNymZ7vqY",
   },
   {
     title: "Security Upgrade Project",
@@ -41,7 +41,7 @@ const caseStudies = [
     content:
       "Installed security solutions and backup systems protecting from cyber threats.",
     icon: ShieldCheck,
-    video: "https://www.youtube.com/embed/tgbNymZ7vqY"
+    video: "https://www.youtube.com/embed/tgbNymZ7vqY",
   },
   {
     title: "Printer & Device Setup",
@@ -49,8 +49,8 @@ const caseStudies = [
     content:
       "Configured multiple devices across departments with full network setup.",
     icon: Wifi,
-    video: "https://www.youtube.com/embed/tgbNymZ7vqY"
-  }
+    video: "https://www.youtube.com/embed/tgbNymZ7vqY",
+  },
 ];
 
 export function TestimonialsSection() {
@@ -78,8 +78,7 @@ export function TestimonialsSection() {
 
   return (
     <section className="relative py-16 md:py-20 overflow-hidden">
-
-      {/* ANIMATED BLACK GRADIENT BACKGROUND */}
+      {/* Animated Black Gradient Background */}
       <motion.div
         className="absolute inset-0 -z-10"
         animate={{
@@ -98,10 +97,9 @@ export function TestimonialsSection() {
       />
 
       <div className="container mx-auto px-4 relative z-10">
-
-        {/* HEADER */}
+        {/* Header */}
         <div className="text-center mb-10">
-          <span className="inline-block px-3 py-1 rounded-full bg-white/10 text-white text-sm font-medium mb-3">
+          <span className="inline-block px-3 py-1 rounded-full bg-blue-600/20 text-blue-400 text-sm font-medium mb-3">
             Success Stories
           </span>
 
@@ -114,7 +112,7 @@ export function TestimonialsSection() {
           </p>
         </div>
 
-        {/* SLIDER */}
+        {/* Slider */}
         <div className="max-w-5xl mx-auto">
           <AnimatePresence mode="wait">
             <motion.div
@@ -130,8 +128,8 @@ export function TestimonialsSection() {
                   key={i}
                   className="bg-black/70 backdrop-blur-lg rounded-2xl p-6 border border-white/10 relative shadow-xl"
                 >
-                  <div className="absolute -top-3 right-5 w-8 h-8 rounded-full bg-white/10 flex items-center justify-center">
-                    <Quote className="w-4 h-4 text-white" />
+                  <div className="absolute -top-3 right-5 w-8 h-8 rounded-full bg-blue-600/20 flex items-center justify-center">
+                    <Quote className="w-4 h-4 text-blue-400" />
                   </div>
 
                   <div className="flex gap-1 mb-3">
@@ -159,7 +157,7 @@ export function TestimonialsSection() {
                     onClick={() => openVideo(item.video)}
                     className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-blue-600 to-blue-800 hover:from-blue-500 hover:to-blue-700 transition rounded-lg text-white text-sm"
                   >
-                    <Play className="w-4 h-4" />
+                    <Play className="w-4 h-4 text-white" />
                     Watch Video
                   </button>
                 </div>
@@ -167,10 +165,9 @@ export function TestimonialsSection() {
             </motion.div>
           </AnimatePresence>
         </div>
-
       </div>
 
-      {/* VIDEO POPUP MODAL */}
+      {/* Video Modal */}
       <AnimatePresence>
         {videoOpen && (
           <motion.div
@@ -187,7 +184,7 @@ export function TestimonialsSection() {
             >
               <button
                 onClick={() => setVideoOpen(false)}
-                className="absolute -top-4 -right-4 bg-white text-black rounded-full p-2"
+                className="absolute -top-4 -right-4 bg-blue-600 text-white rounded-full p-2"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -197,7 +194,7 @@ export function TestimonialsSection() {
                   src={currentVideo}
                   className="absolute top-0 left-0 w-full h-full rounded-lg"
                   allowFullScreen
-                ></iframe>
+                />
               </div>
             </motion.div>
           </motion.div>

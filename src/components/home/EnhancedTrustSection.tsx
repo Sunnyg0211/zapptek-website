@@ -62,7 +62,7 @@ export default function EnhancedTrustSection() {
   }, []);
 
   return (
-    <section className="py-20 md:py-28 relative overflow-hidden bg-gradient-to-br from-blue-50 via-white to-purple-50">
+    <section className="py-20 md:py-28 relative overflow-hidden bg-gradient-to-br from-blue-50 via-white to-blue-100">
       <div className="container mx-auto px-4 relative z-10">
         <div className="max-w-6xl mx-auto text-center">
 
@@ -77,9 +77,9 @@ export default function EnhancedTrustSection() {
 
           {/* GOOGLE RATING BADGE */}
           <div className="mb-10">
-            <div className="inline-flex items-center gap-2 bg-white px-6 py-3 rounded-xl shadow">
-              <Star className="text-yellow-500 w-5 h-5" />
-              <span className="font-semibold">
+            <div className="inline-flex items-center gap-2 bg-white px-6 py-3 rounded-xl shadow border border-blue-100">
+              <Star className="text-blue-600 w-5 h-5" />
+              <span className="font-semibold text-blue-700">
                 Google Rating: {rating} / 5
               </span>
             </div>
@@ -91,7 +91,7 @@ export default function EnhancedTrustSection() {
               <motion.div
                 key={i}
                 whileHover={{ scale: 1.04 }}
-                className="bg-white rounded-2xl p-6 shadow border text-left"
+                className="bg-white rounded-2xl p-6 shadow border border-blue-100 text-left"
               >
                 <div className="font-semibold mb-2">
                   {r.author_name}
@@ -119,7 +119,7 @@ export default function EnhancedTrustSection() {
                 key={v.id}
                 whileHover={{ scale: 1.05 }}
                 onClick={() => setSelectedVideo(v)}
-                className="cursor-pointer bg-white rounded-2xl overflow-hidden shadow"
+                className="cursor-pointer bg-white rounded-2xl overflow-hidden shadow border border-blue-100"
               >
                 <img
                   src={v.thumbnail}
@@ -155,20 +155,28 @@ export default function EnhancedTrustSection() {
 
           {/* CTA BUTTONS */}
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button variant="gradient" size="lg" asChild>
+            <Button
+              size="lg"
+              asChild
+              className="bg-gradient-to-r from-blue-600 to-blue-800 text-white hover:from-blue-500 hover:to-blue-700"
+            >
               <a href="tel:+919793541467">
-                <Phone className="w-5 h-5" />
+                <Phone className="w-5 h-5 mr-2 text-white" />
                 Call Now
               </a>
             </Button>
 
-            <Button variant="whatsapp" size="lg" asChild>
+            <Button
+              size="lg"
+              asChild
+              className="bg-gradient-to-r from-blue-600 to-blue-800 text-white hover:from-blue-500 hover:to-blue-700"
+            >
               <a
                 href="https://wa.me/919793541467"
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                <MessageCircle className="w-5 h-5" />
+                <MessageCircle className="w-5 h-5 mr-2 text-white" />
                 WhatsApp Us
               </a>
             </Button>
@@ -182,12 +190,12 @@ export default function EnhancedTrustSection() {
         <Modal
           isOpen={true}
           onRequestClose={() => setSelectedVideo(null)}
-          className="bg-white p-4 rounded-2xl max-w-3xl mx-auto mt-20"
+          className="bg-white p-4 rounded-2xl max-w-3xl mx-auto mt-20 outline-none"
           overlayClassName="fixed inset-0 bg-black/60 flex items-center justify-center"
         >
           <div className="flex justify-end mb-2">
             <button onClick={() => setSelectedVideo(null)}>
-              <X className="w-6 h-6" />
+              <X className="w-6 h-6 text-blue-600" />
             </button>
           </div>
 
