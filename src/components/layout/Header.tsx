@@ -139,3 +139,57 @@ export function Header() {
       <AnimatePresence>
         {isOpen && (
           <motion.div
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: "auto" }}
+            exit={{ opacity: 0, height: 0 }}
+            className="lg:hidden bg-black/95 border-t border-white/10"
+          >
+            <nav className="px-4 py-4 flex flex-col gap-2">
+              {navItems.map((item) => (
+                <Link
+                  key={item.path}
+                  to={item.path}
+                  onClick={() => setIsOpen(false)}
+                  className="px-4 py-3 rounded-lg text-white hover:bg-white/10"
+                >
+                  {item.name}
+                </Link>
+              ))}
+
+              {!loading && user && (
+                <>
+                  <Link
+                    to={dashboardPath}
+                    onClick={() => setIsOpen(false)}
+                    className="px-4 py-3 rounded-lg text-white bg-white/10"
+                  >
+                    Dashboard
+                  </Link>
+
+                  <Button
+                    variant="destructive"
+                    onClick={handleLogout}
+                    className="mt-2"
+                  >
+                    Logout
+                  </Button>
+                </>
+              )}
+
+              {!loading && !user && (
+                <>
+                  <Link to="/login" className="px-4 py-3 text-white">
+                    Login
+                  </Link>
+                  <Link to="/register" className="px-4 py-3 text-white">
+                    Get Started
+                  </Link>
+                </>
+              )}
+            </nav>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </header>
+  );
+}
