@@ -1,8 +1,9 @@
-import { useState } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { supabase } from "@/integrations/supabase/client";
 
 const navItems = [
   { name: "Home", path: "/" },
@@ -16,11 +17,37 @@ const navItems = [
 
 export function Header() {
   const [isOpen, setIsOpen] = useState(false);
+  const [user, setUser] = useState<any>(null);
+
   const location = useLocation();
+  const navigate = useNavigate();
+
+  // ✅ AUTH STATE LISTENER (CRITICAL FIX)
+  useEffect(() => {
+    // Get session on load
+    supabase.auth.getSession().then(({ data }) => {
+      setUser(data.session?.user ?? null);
+    });
+
+    // Listen for login/logout changes
+    const { data: listener } = supabase.auth.onAuthStateChange(
+      (_event, session) => {
+        setUser(session?.user ?? null);
+      }
+    );
+
+    return () => {
+      listener.subscription.unsubscribe();
+    };
+  }, []);
+
+  const handleLogout = async () => {
+    await supabase.auth.signOut();
+    navigate("/");
+  };
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 overflow-hidden border-b border-white/10">
-
       {/* Animated Gradient Background */}
       <motion.div
         className="absolute inset-0 -z-10"
@@ -41,19 +68,16 @@ export function Header() {
 
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-16 md:h-20">
-
-          {/* LOGO SECTION - UPDATED */}
+          {/* LOGO */}
           <Link to="/" className="flex items-center gap-3 group">
-            
             <motion.img
               whileHover={{ scale: 1.05 }}
               src="/logo_main.png"
               alt="ZappTek Logo"
               className="w-10 h-10 object-contain"
             />
-
             <span className="text-xl md:text-2xl font-bold text-white">
-              <span className="text-white">Zapp</span>
+              <span>Zapp</span>
               <span className="text-gray-300">Tek</span>
             </span>
           </Link>
@@ -64,7 +88,7 @@ export function Header() {
               <Link
                 key={item.path}
                 to={item.path}
-                className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 text-white ${
+                className={`px-4 py-2 rounded-lg text-sm font-medium transition-all text-white ${
                   location.pathname === item.path
                     ? "bg-white/20"
                     : "hover:bg-white/10"
@@ -75,34 +99,51 @@ export function Header() {
             ))}
           </nav>
 
-          {/* Auth Buttons */}
+          {/* AUTH BUTTONS (FIXED) */}
           <div className="hidden md:flex items-center gap-3">
-            <motion.div whileHover={{ scale: 1.05 }}>
-              <Button
-                variant="ghost"
-                asChild
-                className="text-white hover:bg-white/10"
-              >
-                <Link to="/login">Login</Link>
-              </Button>
-            </motion.div>
+            {user ? (
+              <>
+                <Button
+                  onClick={() => navigate("/dashboard")}
+                  className="bg-blue-600 hover:bg-blue-700 text-white"
+                >
+                  Dashboard
+                </Button>
 
-            <motion.div whileHover={{ scale: 1.05 }}>
-              <Button
-                asChild
-                className="bg-gradient-to-r from-blue-600 to-blue-800 text-white hover:from-blue-500 hover:to-blue-700 transition-all"
-              >
-                <Link to="/register">Get Started</Link>
-              </Button>
-            </motion.div>
+                <Button
+                  variant="outline"
+                  onClick={handleLogout}
+                  className="text-white border-white/20"
+                >
+                  Logout
+                </Button>
+              </>
+            ) : (
+              <>
+                <Button
+                  variant="ghost"
+                  asChild
+                  className="text-white hover:bg-white/10"
+                >
+                  <Link to="/login">Login</Link>
+                </Button>
+
+                <Button
+                  asChild
+                  className="bg-gradient-to-r from-blue-600 to-blue-800 text-white"
+                >
+                  <Link to="/register">Get Started</Link>
+                </Button>
+              </>
+            )}
           </div>
 
           {/* Mobile Menu Button */}
           <button
             onClick={() => setIsOpen(!isOpen)}
-            className="lg:hidden p-2 rounded-lg text-white hover:bg-white/10 transition-colors"
+            className="lg:hidden p-2 rounded-lg text-white hover:bg-white/10"
           >
-            {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+            {isOpen ? <X /> : <Menu />}
           </button>
         </div>
       </div>
@@ -122,31 +163,32 @@ export function Header() {
                   key={item.path}
                   to={item.path}
                   onClick={() => setIsOpen(false)}
-                  className={`px-4 py-3 rounded-lg text-sm font-medium transition-all duration-200 text-white ${
-                    location.pathname === item.path
-                      ? "bg-white/20"
-                      : "hover:bg-white/10"
-                  }`}
+                  className="px-4 py-3 rounded-lg text-white hover:bg-white/10"
                 >
                   {item.name}
                 </Link>
               ))}
 
               <div className="flex flex-col gap-2 mt-4 pt-4 border-t border-white/10">
-                <Button
-                  variant="outline"
-                  asChild
-                  className="w-full text-white border-white/20"
-                >
-                  <Link to="/login">Login</Link>
-                </Button>
-
-                <Button
-                  asChild
-                  className="w-full bg-gradient-to-r from-blue-600 to-blue-800 text-white hover:from-blue-500 hover:to-blue-700 transition-all"
-                >
-                  <Link to="/register">Get Started</Link>
-                </Button>
+                {user ? (
+                  <>
+                    <Button onClick={() => navigate("/dashboard")}>
+                      Dashboard
+                    </Button>
+                    <Button variant="outline" onClick={handleLogout}>
+                      Logout
+                    </Button>
+                  </>
+                ) : (
+                  <>
+                    <Button variant="outline" asChild>
+                      <Link to="/login">Login</Link>
+                    </Button>
+                    <Button asChild>
+                      <Link to="/register">Get Started</Link>
+                    </Button>
+                  </>
+                )}
               </div>
             </nav>
           </motion.div>
