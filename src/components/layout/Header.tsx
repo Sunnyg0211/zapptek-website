@@ -22,7 +22,7 @@ export function Header() {
 
   const { user, role, signOut, loading } = useAuth();
 
-  // 🎯 Decide dashboard path automatically
+  // 🔐 Role-based dashboard routing
   const dashboardPath =
     role === "admin"
       ? "/admin"
@@ -37,12 +37,10 @@ export function Header() {
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 border-b border-white/10 overflow-hidden">
-      {/* Animated Background */}
+      {/* Animated background */}
       <motion.div
         className="absolute inset-0 -z-10"
-        animate={{
-          backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"],
-        }}
+        animate={{ backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"] }}
         transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
         style={{
           background:
@@ -83,7 +81,7 @@ export function Header() {
             ))}
           </nav>
 
-          {/* AUTH / DASHBOARD */}
+          {/* AUTH / DASHBOARD BUTTONS */}
           {!loading && (
             <div className="hidden md:flex items-center gap-3">
               {!user ? (
@@ -94,17 +92,17 @@ export function Header() {
 
                   <Button
                     asChild
-                    className="bg-gradient-to-r from-blue-600 to-blue-800"
+                    className="bg-gradient-to-r from-blue-600 to-blue-800 text-white"
                   >
                     <Link to="/register">Get Started</Link>
                   </Button>
                 </>
               ) : (
                 <>
+                  {/* 🔵 DASHBOARD BUTTON */}
                   <Button
                     asChild
-                    variant="ghost"
-                    className="text-white flex gap-2"
+                    className="bg-gradient-to-r from-blue-600 to-blue-800 text-white flex gap-2"
                   >
                     <Link to={dashboardPath}>
                       <LayoutDashboard className="w-4 h-4" />
@@ -112,10 +110,11 @@ export function Header() {
                     </Link>
                   </Button>
 
+                  {/* ⚪ LOGOUT BUTTON */}
                   <Button
-                    variant="destructive"
+                    variant="outline"
                     onClick={handleLogout}
-                    className="flex gap-2"
+                    className="text-white border-white/30 hover:bg-white/10 flex gap-2"
                   >
                     <LogOut className="w-4 h-4" />
                     Logout
@@ -161,15 +160,15 @@ export function Header() {
                   <Link
                     to={dashboardPath}
                     onClick={() => setIsOpen(false)}
-                    className="px-4 py-3 rounded-lg text-white bg-white/10"
+                    className="px-4 py-3 rounded-lg bg-blue-700 text-white"
                   >
                     Dashboard
                   </Link>
 
                   <Button
-                    variant="destructive"
+                    variant="outline"
                     onClick={handleLogout}
-                    className="mt-2"
+                    className="mt-2 text-white border-white/30"
                   >
                     Logout
                   </Button>
