@@ -33,7 +33,7 @@ const heroData: CategorySlides[] = [
         link: "/products",
       },
       {
-        image: "https://images.unsplash.com/photo-1587202372775-e229f172b9d7?w=1600&h=900&fit=crop",
+        image: "https://images.ctfassets.net/ao073xfdpkqn/1G7Ea59vo1IEqlrbgQTcvN/f860db8d073b97ae800b1a3506db858e/xbs-print-banner-1200x440.jpg?fm=avif",
         title: "Printers & Scanners",
         subtitle: "Office Essentials",
         description: "High-performance printers for home and office use.",
@@ -49,7 +49,7 @@ const heroData: CategorySlides[] = [
         link: "/products",
       },
       {
-        image: "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?w=1600&h=900&fit=crop",
+        image: "https://www.techno-cure.com/wp-content/uploads/2019/05/service-banner.jpg",
         title: "CCTV Security Solutions",
         subtitle: "Protect What Matters",
         description: "Complete CCTV packages for homes and businesses.",
