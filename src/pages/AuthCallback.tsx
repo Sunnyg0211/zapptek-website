@@ -5,18 +5,17 @@ import { toast } from "sonner";
 import { motion } from "framer-motion";
 import { CheckCircle, XCircle, Loader2 } from "lucide-react";
 
+type Status = "loading" | "success" | "error";
+
 const AuthCallback = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-
-  const [status, setStatus] = useState<
-    "loading" | "success" | "error"
-  >("loading");
+  const [status, setStatus] = useState<Status>("loading");
 
   useEffect(() => {
     const handleAuth = async () => {
       try {
-        // Get access token from URL (magic link flow)
+        // 1️⃣ Handle magic link / OAuth session
         const accessToken = searchParams.get("access_token");
         const refreshToken = searchParams.get("refresh_token");
 
@@ -25,27 +24,45 @@ const AuthCallback = () => {
             access_token: accessToken,
             refresh_token: refreshToken,
           });
-
           if (error) throw error;
-
-          setStatus("success");
-          toast.success("Email verified successfully!");
-          setTimeout(() => navigate("/login"), 2000);
-          return;
         }
 
-        // Fallback - check session directly
-        const { data, error } = await supabase.auth.getSession();
+        // 2️⃣ Get active session
+        const { data: sessionData, error: sessionError } =
+          await supabase.auth.getSession();
 
-        if (error) throw error;
-
-        if (data.session) {
-          setStatus("success");
-          toast.success("Authentication successful!");
-          setTimeout(() => navigate("/login"), 2000);
-        } else {
-          throw new Error("Invalid or expired link");
+        if (sessionError || !sessionData.session) {
+          throw new Error("Invalid or expired authentication session");
         }
+
+        const userId = sessionData.session.user.id;
+
+        // 3️⃣ Fetch user role (default = customer)
+        const { data: roleData, error: roleError } = await supabase
+          .from("user_roles")
+          .select("role")
+          .eq("user_id", userId)
+          .single();
+
+        if (roleError) {
+          console.warn("Role not found, defaulting to customer");
+        }
+
+        const role = roleData?.role || "customer";
+
+        setStatus("success");
+        toast.success("Login successful!");
+
+        // 4️⃣ Role-based redirect
+        setTimeout(() => {
+          if (role === "admin") {
+            navigate("/admin");
+          } else if (role === "staff") {
+            navigate("/staff");
+          } else {
+            navigate("/"); // customer
+          }
+        }, 1500);
       } catch (err: any) {
         console.error("Auth callback error:", err);
         setStatus("error");
@@ -67,10 +84,10 @@ const AuthCallback = () => {
           <>
             <Loader2 className="w-12 h-12 mx-auto animate-spin text-blue-500 mb-4" />
             <h2 className="text-xl font-semibold mb-2">
-              Verifying your account...
+              Signing you in...
             </h2>
             <p className="text-gray-400">
-              Please wait while we authenticate your request
+              Please wait while we complete authentication
             </p>
           </>
         )}
@@ -79,10 +96,10 @@ const AuthCallback = () => {
           <>
             <CheckCircle className="w-12 h-12 mx-auto text-green-500 mb-4" />
             <h2 className="text-xl font-semibold mb-2">
-              Verification Successful!
+              Login Successful
             </h2>
             <p className="text-gray-400">
-              Your account has been verified. Redirecting to login...
+              Redirecting you to your dashboard...
             </p>
           </>
         )}
@@ -91,17 +108,17 @@ const AuthCallback = () => {
           <>
             <XCircle className="w-12 h-12 mx-auto text-red-500 mb-4" />
             <h2 className="text-xl font-semibold mb-2">
-              Verification Failed
+              Authentication Failed
             </h2>
             <p className="text-gray-400 mb-4">
-              The verification link is invalid or expired.
+              The login link is invalid or expired.
             </p>
 
             <button
-              onClick={() => navigate("/register")}
+              onClick={() => navigate("/login")}
               className="bg-blue-600 px-4 py-2 rounded-lg hover:bg-blue-700 transition"
             >
-              Back to Register
+              Back to Login
             </button>
           </>
         )}
