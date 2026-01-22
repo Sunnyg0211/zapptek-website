@@ -22,7 +22,6 @@ export function Header() {
 
   const { user, role, signOut, loading } = useAuth();
 
-  // 🔐 Role-based dashboard routing
   const dashboardPath =
     role === "admin"
       ? "/admin"
@@ -37,7 +36,7 @@ export function Header() {
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 border-b border-white/10 overflow-hidden">
-      {/* Animated background */}
+      {/* Background */}
       <motion.div
         className="absolute inset-0 -z-10"
         animate={{ backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"] }}
@@ -51,7 +50,7 @@ export function Header() {
 
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-16 md:h-20">
-          {/* LOGO */}
+          {/* Logo */}
           <Link to="/" className="flex items-center gap-3">
             <motion.img
               whileHover={{ scale: 1.05 }}
@@ -64,13 +63,13 @@ export function Header() {
             </span>
           </Link>
 
-          {/* DESKTOP NAV */}
+          {/* Desktop Nav */}
           <nav className="hidden lg:flex items-center gap-1">
             {navItems.map((item) => (
               <Link
                 key={item.path}
                 to={item.path}
-                className={`px-4 py-2 rounded-lg text-sm font-medium transition text-white ${
+                className={`px-4 py-2 rounded-lg text-sm font-medium text-white transition ${
                   location.pathname === item.path
                     ? "bg-white/20"
                     : "hover:bg-white/10"
@@ -81,15 +80,20 @@ export function Header() {
             ))}
           </nav>
 
-          {/* AUTH / DASHBOARD BUTTONS */}
+          {/* Auth Buttons */}
           {!loading && (
             <div className="hidden md:flex items-center gap-3">
               {!user ? (
                 <>
-                  <Button variant="ghost" asChild className="text-white">
+                  {/* ⚪ LOGIN BUTTON (FIXED) */}
+                  <Button
+                    asChild
+                    className="bg-white text-black hover:bg-gray-100"
+                  >
                     <Link to="/login">Login</Link>
                   </Button>
 
+                  {/* 🔵 GET STARTED */}
                   <Button
                     asChild
                     className="bg-gradient-to-r from-blue-600 to-blue-800 text-white"
@@ -99,7 +103,7 @@ export function Header() {
                 </>
               ) : (
                 <>
-                  {/* 🔵 DASHBOARD BUTTON */}
+                  {/* 🔵 DASHBOARD */}
                   <Button
                     asChild
                     className="bg-gradient-to-r from-blue-600 to-blue-800 text-white flex gap-2"
@@ -110,7 +114,7 @@ export function Header() {
                     </Link>
                   </Button>
 
-                  {/* ⚪ LOGOUT BUTTON */}
+                  {/* ⚪ LOGOUT */}
                   <Button
                     variant="outline"
                     onClick={handleLogout}
@@ -124,7 +128,7 @@ export function Header() {
             </div>
           )}
 
-          {/* MOBILE MENU BUTTON */}
+          {/* Mobile Toggle */}
           <button
             onClick={() => setIsOpen(!isOpen)}
             className="lg:hidden p-2 text-white"
@@ -134,7 +138,7 @@ export function Header() {
         </div>
       </div>
 
-      {/* MOBILE MENU */}
+      {/* Mobile Menu */}
       <AnimatePresence>
         {isOpen && (
           <motion.div
@@ -159,7 +163,6 @@ export function Header() {
                 <>
                   <Link
                     to={dashboardPath}
-                    onClick={() => setIsOpen(false)}
                     className="px-4 py-3 rounded-lg bg-blue-700 text-white"
                   >
                     Dashboard
@@ -177,10 +180,16 @@ export function Header() {
 
               {!loading && !user && (
                 <>
-                  <Link to="/login" className="px-4 py-3 text-white">
+                  <Link
+                    to="/login"
+                    className="px-4 py-3 rounded-lg bg-white text-black"
+                  >
                     Login
                   </Link>
-                  <Link to="/register" className="px-4 py-3 text-white">
+                  <Link
+                    to="/register"
+                    className="px-4 py-3 rounded-lg bg-blue-700 text-white"
+                  >
                     Get Started
                   </Link>
                 </>
