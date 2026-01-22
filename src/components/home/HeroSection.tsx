@@ -41,7 +41,7 @@ const heroData: CategorySlides[] = [
         link: "/products",
       },
       {
-        image: "https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=1600&h=900&fit=crop",
+        image: "https://as2.ftcdn.net/v2/jpg/06/52/85/77/1000_F_652857744_hsKmrKct8jbTTYh9c1uWOL3PIibU2K6g.jpg",
         title: "Networking Equipment",
         subtitle: "Build Better Connectivity",
         description: "Routers, switches, and accessories for seamless internet.",
