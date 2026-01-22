@@ -1,19 +1,34 @@
-import { useState, useEffect, createContext, useContext, ReactNode } from 'react';
-import { User, Session } from '@supabase/supabase-js';
-import { supabase } from '@/integrations/supabase/client';
-import { useNavigate } from 'react-router-dom';
-import { toast } from 'sonner';
+import {
+  useState,
+  useEffect,
+  createContext,
+  useContext,
+  ReactNode,
+} from "react";
+import { User, Session } from "@supabase/supabase-js";
+import { supabase } from "@/integrations/supabase/client";
+import { useNavigate } from "react-router-dom";
+import { toast } from "sonner";
 
-type AppRole = 'admin' | 'staff' | 'customer';
+export type AppRole = "admin" | "staff" | "customer";
 
 interface AuthContextType {
   user: User | null;
   session: Session | null;
   role: AppRole | null;
   loading: boolean;
-  signIn: (email: string, password: string) => Promise<{ error: Error | null }>;
-  signUp: (email: string, password: string, fullName: string, phone?: string) => Promise<{ error: Error | null }>;
+  signIn: (
+    email: string,
+    password: string
+  ) => Promise<{ error: Error | null }>;
+  signUp: (
+    email: string,
+    password: string,
+    fullName: string,
+    phone?: string
+  ) => Promise<{ error: Error | null }>;
   signOut: () => Promise<void>;
+  refreshRole: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -24,31 +39,58 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [role, setRole] = useState<AppRole | null>(null);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    // Set up auth state listener FIRST
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      (event, session) => {
-        setSession(session);
-        setUser(session?.user ?? null);
-        
-        // Defer role fetching with setTimeout to prevent deadlock
-        if (session?.user) {
-          setTimeout(() => {
-            fetchUserRole(session.user.id);
-          }, 0);
-        } else {
-          setRole(null);
-          setLoading(false);
-        }
-      }
-    );
+  // 🔐 Fetch role from DB
+  const fetchUserRole = async (userId: string) => {
+    try {
+      const { data, error } = await supabase
+        .from("user_roles")
+        .select("role")
+        .eq("user_id", userId)
+        .maybeSingle();
 
-    // THEN check for existing session
-    supabase.auth.getSession().then(({ data: { session } }) => {
+      if (error) {
+        console.error("Role fetch error:", error);
+        setRole("customer");
+      } else {
+        setRole((data?.role as AppRole) || "customer");
+      }
+    } catch (err) {
+      console.error("Role fetch failed:", err);
+      setRole("customer");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // 🔁 Force role refresh (used after DB role change)
+  const refreshRole = async () => {
+    if (!user) return;
+    setLoading(true);
+    await fetchUserRole(user.id);
+  };
+
+  // 🔄 Auth listener + initial session
+  useEffect(() => {
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
       setSession(session);
       setUser(session?.user ?? null);
+
       if (session?.user) {
         fetchUserRole(session.user.id);
+      } else {
+        setRole(null);
+        setLoading(false);
+      }
+    });
+
+    supabase.auth.getSession().then(({ data }) => {
+      setSession(data.session);
+      setUser(data.session?.user ?? null);
+
+      if (data.session?.user) {
+        fetchUserRole(data.session.user.id);
       } else {
         setLoading(false);
       }
@@ -57,28 +99,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     return () => subscription.unsubscribe();
   }, []);
 
-  const fetchUserRole = async (userId: string) => {
-    try {
-      const { data, error } = await supabase
-        .from('user_roles')
-        .select('role')
-        .eq('user_id', userId)
-        .maybeSingle();
-
-      if (error) {
-        console.error('Error fetching role:', error);
-        setRole('customer');
-      } else {
-        setRole((data?.role as AppRole) || 'customer');
-      }
-    } catch (err) {
-      console.error('Error fetching role:', err);
-      setRole('customer');
-    } finally {
-      setLoading(false);
-    }
-  };
-
+  // 🔑 Email/password login
   const signIn = async (email: string, password: string) => {
     try {
       const { error } = await supabase.auth.signInWithPassword({
@@ -92,10 +113,16 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
-  const signUp = async (email: string, password: string, fullName: string, phone?: string) => {
+  // 🆕 Sign up
+  const signUp = async (
+    email: string,
+    password: string,
+    fullName: string,
+    phone?: string
+  ) => {
     try {
-      const redirectUrl = `${window.location.origin}/`;
-      
+      const redirectUrl = `${window.location.origin}/auth/callback`;
+
       const { error } = await supabase.auth.signUp({
         email,
         password,
@@ -103,10 +130,11 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
           emailRedirectTo: redirectUrl,
           data: {
             full_name: fullName,
-            phone: phone,
+            phone,
           },
         },
       });
+
       if (error) throw error;
       return { error: null };
     } catch (error) {
@@ -114,6 +142,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
+  // 🚪 Logout
   const signOut = async () => {
     await supabase.auth.signOut();
     setUser(null);
@@ -122,37 +151,50 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ user, session, role, loading, signIn, signUp, signOut }}>
+    <AuthContext.Provider
+      value={{
+        user,
+        session,
+        role,
+        loading,
+        signIn,
+        signUp,
+        signOut,
+        refreshRole,
+      }}
+    >
       {children}
     </AuthContext.Provider>
   );
 };
 
+// 🧠 Hook
 export const useAuth = () => {
   const context = useContext(AuthContext);
-  if (context === undefined) {
-    throw new Error('useAuth must be used within an AuthProvider');
+  if (!context) {
+    throw new Error("useAuth must be used within AuthProvider");
   }
   return context;
 };
 
-// Helper hook for role-based routing
+// 🔐 Role-based route guard
 export const useRequireAuth = (requiredRole?: AppRole) => {
   const { user, role, loading } = useAuth();
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (!loading) {
-      if (!user) {
-        navigate('/login');
-      } else if (requiredRole && role !== requiredRole && role !== 'admin') {
-        // Admin can access everything
-        toast.error('You do not have permission to access this page');
-        navigate('/');
-      }
+    if (loading) return;
+
+    if (!user) {
+      navigate("/login");
+      return;
+    }
+
+    if (requiredRole && role !== requiredRole) {
+      toast.error("You are not authorized to access this page");
+      navigate("/");
     }
   }, [user, role, loading, requiredRole, navigate]);
 
   return { user, role, loading };
 };
-
