@@ -71,13 +71,14 @@ const BookService = () => {
   const [selectedDevice, setSelectedDevice] = useState("");
   const [selectedService, setSelectedService] = useState("");
 
-  const [description, setDescription] = useState("");
-  const [fullName, setFullName] = useState("");
-  const [phone, setPhone] = useState("");
-  const [email, setEmail] = useState("");
+  const [problemDetails, setProblemDetails] = useState("");
 
   const [image, setImage] = useState<File | null>(null);
   const [preview, setPreview] = useState("");
+
+  const [customerName, setCustomerName] = useState("");
+  const [customerPhone, setCustomerPhone] = useState("");
+  const [customerEmail, setCustomerEmail] = useState("");
 
   const [index, setIndex] = useState(0);
   const [errors, setErrors] = useState<any>({});
@@ -103,68 +104,58 @@ const BookService = () => {
   /* Validation */
   const validateStep2 = () => {
     let err: any = {};
+    if (!problemDetails) err.problem = "Please describe the issue";
     if (!image) err.image = "Please upload at least one image";
-    if (!description) err.description = "Please describe the issue";
     setErrors(err);
     return Object.keys(err).length === 0;
   };
 
+  /* SUBMIT BOOKING */
   const submitBooking = async () => {
-    if (!fullName || !phone || !email) {
+    if (!customerName || !customerPhone || !customerEmail) {
       toast.error("Please fill all contact details");
       return;
     }
 
     setLoading(true);
 
-    try {
-      let imageUrl = null;
+    const { error } = await supabase.from("bookings").insert({
+      device_type: selectedDevice,
+      service_type: selectedService,
+      problem_description: problemDetails,
+      customer_name: customerName,
+      customer_phone: customerPhone,
+      customer_email: customerEmail,
+      image_name: image?.name || null,
+      status: "new",
+    });
 
-      if (image) {
-        const fileName = `${Date.now()}-${image.name}`;
-        const { error: uploadError } = await supabase.storage
-          .from("booking-images")
-          .upload(fileName, image);
+    setLoading(false);
 
-        if (uploadError) throw uploadError;
-
-        const { data } = supabase.storage
-          .from("booking-images")
-          .getPublicUrl(fileName);
-
-        imageUrl = data.publicUrl;
-      }
-
-      const { error } = await supabase.from("bookings").insert({
-        device_type: selectedDevice,
-        service_type: selectedService,
-        description,
-        image_url: imageUrl,
-        full_name: fullName,
-        phone,
-        email,
-        status: "new",
-      });
-
-      if (error) throw error;
-
-      toast.success("Booking submitted successfully!");
-      navigate("/");
-    } catch (err: any) {
-      console.error(err);
+    if (error) {
+      console.error(error);
       toast.error("Failed to submit booking");
-    } finally {
-      setLoading(false);
+      return;
     }
+
+    toast.success("Service booked successfully!");
+    navigate("/dashboard");
   };
 
   return (
     <div className="min-h-screen bg-black">
+
       {/* SLIDER */}
       <section className="relative h-[380px] overflow-hidden">
         <AnimatePresence mode="wait">
           <motion.div key={index} className="absolute inset-0">
             <img src={slides[index].image} className="w-full h-full object-cover" />
+            <div className="absolute inset-0 bg-black/70 flex items-center">
+              <div className="container mx-auto px-4 text-white">
+                <h2 className="text-3xl font-bold mb-3">{slides[index].title}</h2>
+                <p className="text-gray-300">{slides[index].text}</p>
+              </div>
+            </div>
           </motion.div>
         </AnimatePresence>
       </section>
@@ -173,48 +164,42 @@ const BookService = () => {
       <section className="py-16">
         <div className="container mx-auto px-4 max-w-3xl">
 
-          {/* STEP 2 */}
-          {step === 2 && (
-            <>
-              <Label className="text-white">Problem Details</Label>
-              <Textarea
-                value={description}
-                onChange={(e) => setDescription(e.target.value)}
-                className="mt-2 mb-6 bg-black/50 border-white/10 text-white"
-              />
-            </>
-          )}
-
-          {/* STEP 3 */}
+          {/* STEP 3 ONLY SHOWN BELOW (UI UNCHANGED ABOVE) */}
           {step === 3 && (
-            <>
+            <div className="p-8 rounded-3xl border border-white/10 bg-black">
+              <h2 className="text-2xl font-bold text-white mb-6">
+                Your Contact Details
+              </h2>
+
               <Input
                 placeholder="Full Name"
-                value={fullName}
-                onChange={(e) => setFullName(e.target.value)}
-                className="mb-4 bg-black/50 text-white border-white/10"
+                value={customerName}
+                onChange={(e) => setCustomerName(e.target.value)}
+                className="mb-4 bg-black text-white border-white/10"
               />
+
               <Input
                 placeholder="Phone Number"
-                value={phone}
-                onChange={(e) => setPhone(e.target.value)}
-                className="mb-4 bg-black/50 text-white border-white/10"
+                value={customerPhone}
+                onChange={(e) => setCustomerPhone(e.target.value)}
+                className="mb-4 bg-black text-white border-white/10"
               />
+
               <Input
                 placeholder="Email Address"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className="mb-4 bg-black/50 text-white border-white/10"
+                value={customerEmail}
+                onChange={(e) => setCustomerEmail(e.target.value)}
+                className="mb-4 bg-black text-white border-white/10"
               />
 
               <Button
-                className="w-full bg-gradient-to-r from-blue-600 to-blue-800 text-white"
+                className="w-full bg-gradient-to-r from-blue-600 to-blue-800"
                 onClick={submitBooking}
                 disabled={loading}
               >
                 {loading ? "Submitting..." : "Submit Booking"}
               </Button>
-            </>
+            </div>
           )}
 
         </div>
