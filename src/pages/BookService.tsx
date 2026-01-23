@@ -12,7 +12,7 @@ import {
   Wifi,
   HardDrive,
   Clock,
-  ShieldCheck
+  ShieldCheck,
 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -46,19 +46,22 @@ const slides = [
   {
     title: "Book Service Anytime",
     text: "Schedule IT support 24/7",
-    image: "https://images.unsplash.com/photo-1556740738-b6a63e27c4df?w=1200",
+    image:
+      "https://images.unsplash.com/photo-1556740738-b6a63e27c4df?w=1200",
     icon: Calendar,
   },
   {
     title: "Faster Response",
     text: "Quick technician assignment",
-    image: "https://images.unsplash.com/photo-1517430816045-df4b7de4a7d5?w=1200",
+    image:
+      "https://images.unsplash.com/photo-1517430816045-df4b7de4a7d5?w=1200",
     icon: Clock,
   },
   {
     title: "Secure & Reliable",
     text: "Handled securely",
-    image: "https://images.unsplash.com/photo-1519389950473-47ba0277781c?w=1200",
+    image:
+      "https://images.unsplash.com/photo-1519389950473-47ba0277781c?w=1200",
     icon: ShieldCheck,
   },
 ];
@@ -82,9 +85,12 @@ const BookService = () => {
     city: "",
   });
 
-  /* Slider */
+  /* Slider auto play */
   useEffect(() => {
-    const i = setInterval(() => setIndex((p) => (p + 1) % slides.length), 4000);
+    const i = setInterval(
+      () => setIndex((p) => (p + 1) % slides.length),
+      4000
+    );
     return () => clearInterval(i);
   }, []);
 
@@ -99,14 +105,25 @@ const BookService = () => {
   /* Submit booking */
   const submitBooking = async () => {
     try {
-      let imageUrl = null;
+      if (
+        !form.fullName ||
+        !form.phone ||
+        !form.email ||
+        !form.address ||
+        !form.city
+      ) {
+        toast.error("Please fill all details");
+        return;
+      }
+
+      let imageUrl: string | null = null;
 
       if (image) {
-        const fileName = `${Date.now()}-${image.name}`;
+        const fileName = `booking-${Date.now()}-${image.name}`;
 
         const { error: uploadError } = await supabase.storage
           .from("booking-images")
-          .upload(fileName, image);
+          .upload(fileName, image, { upsert: true });
 
         if (uploadError) throw uploadError;
 
@@ -127,12 +144,25 @@ const BookService = () => {
         service_type: selectedService,
         description,
         image_url: imageUrl,
+        status: "pending",
       });
 
       if (error) throw error;
 
       toast.success("Service booked successfully!");
       setStep(1);
+      setForm({
+        fullName: "",
+        phone: "",
+        email: "",
+        address: "",
+        city: "",
+      });
+      setSelectedDevice("");
+      setSelectedService("");
+      setDescription("");
+      setImage(null);
+      setPreview("");
     } catch (err: any) {
       toast.error(err.message || "Booking failed");
     }
@@ -140,7 +170,6 @@ const BookService = () => {
 
   return (
     <div className="min-h-screen bg-black">
-
       {/* SLIDER */}
       <section className="relative h-[380px] overflow-hidden">
         <AnimatePresence mode="wait">
@@ -158,11 +187,12 @@ const BookService = () => {
       {/* FORM */}
       <section className="py-16">
         <div className="max-w-3xl mx-auto p-6 bg-gradient-to-br from-black to-gray-900 rounded-3xl border border-white/10">
-
           {/* STEP 1 */}
           {step === 1 && (
             <>
-              <h2 className="text-white text-2xl mb-6">Select Device & Service</h2>
+              <h2 className="text-white text-2xl mb-6">
+                Select Device & Service
+              </h2>
 
               <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
                 {deviceTypes.map((d) => (
@@ -176,7 +206,9 @@ const BookService = () => {
                     }`}
                   >
                     <d.icon className="text-blue-400 mx-auto mb-2" />
-                    <p className="text-white text-sm text-center">{d.label}</p>
+                    <p className="text-white text-sm text-center">
+                      {d.label}
+                    </p>
                   </button>
                 ))}
               </div>
@@ -187,7 +219,10 @@ const BookService = () => {
                 onValueChange={setSelectedService}
               >
                 {serviceTypes.map((s) => (
-                  <label key={s.id} className="flex items-center gap-3 text-white">
+                  <label
+                    key={s.id}
+                    className="flex items-center gap-3 text-white"
+                  >
                     <RadioGroupItem value={s.id} />
                     {s.label}
                   </label>
@@ -214,22 +249,28 @@ const BookService = () => {
                 onChange={(e) => setDescription(e.target.value)}
               />
 
-              {/* WHITE UPLOAD BUTTON */}
-              <label className="mt-6 flex items-center justify-center gap-3 cursor-pointer bg-white text-black py-3 rounded-xl">
+              {/* MODERN WHITE UPLOAD */}
+              <label className="mt-6 flex items-center justify-center gap-3 cursor-pointer bg-white text-black py-3 rounded-xl hover:bg-gray-100 transition">
                 <Upload />
                 Upload Image
                 <input type="file" hidden onChange={handleImage} />
               </label>
 
               {preview && (
-                <img src={preview} className="w-32 h-32 mt-4 rounded-xl" />
+                <img
+                  src={preview}
+                  className="w-32 h-32 mt-4 rounded-xl object-cover"
+                />
               )}
 
               <div className="flex gap-4 mt-6">
                 <Button variant="outline" onClick={() => setStep(1)}>
                   Back
                 </Button>
-                <Button className="flex-1 bg-blue-600" onClick={() => setStep(3)}>
+                <Button
+                  className="flex-1 bg-blue-600"
+                  onClick={() => setStep(3)}
+                >
                   Continue
                 </Button>
               </div>
@@ -243,31 +284,41 @@ const BookService = () => {
                 placeholder="Full Name"
                 className="mb-3"
                 value={form.fullName}
-                onChange={(e) => setForm({ ...form, fullName: e.target.value })}
+                onChange={(e) =>
+                  setForm({ ...form, fullName: e.target.value })
+                }
               />
               <Input
                 placeholder="Phone Number"
                 className="mb-3"
                 value={form.phone}
-                onChange={(e) => setForm({ ...form, phone: e.target.value })}
+                onChange={(e) =>
+                  setForm({ ...form, phone: e.target.value })
+                }
               />
               <Input
                 placeholder="Email"
                 className="mb-3"
                 value={form.email}
-                onChange={(e) => setForm({ ...form, email: e.target.value })}
+                onChange={(e) =>
+                  setForm({ ...form, email: e.target.value })
+                }
               />
               <Input
                 placeholder="Address"
                 className="mb-3"
                 value={form.address}
-                onChange={(e) => setForm({ ...form, address: e.target.value })}
+                onChange={(e) =>
+                  setForm({ ...form, address: e.target.value })
+                }
               />
               <Input
                 placeholder="City"
                 className="mb-6"
                 value={form.city}
-                onChange={(e) => setForm({ ...form, city: e.target.value })}
+                onChange={(e) =>
+                  setForm({ ...form, city: e.target.value })
+                }
               />
 
               <Button className="w-full bg-blue-600" onClick={submitBooking}>
