@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Link, useNavigate } from "react-router-dom";
 import {
   Calendar,
   Upload,
@@ -13,7 +12,7 @@ import {
   Wifi,
   HardDrive,
   Clock,
-  ShieldCheck
+  ShieldCheck,
 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -41,58 +40,52 @@ const serviceTypes = [
   { id: "pickup", label: "Pickup & Delivery", description: "We pick up and deliver" },
 ];
 
-/* ------------------ SLIDER CONTENT ------------------ */
+/* ------------------ SLIDER ------------------ */
 
 const slides = [
   {
     title: "Book Service Anytime",
     text: "Schedule IT support 24/7 from your phone or computer.",
     image: "https://images.unsplash.com/photo-1556740738-b6a63e27c4df?w=1200",
-    icon: Calendar
+    icon: Calendar,
   },
   {
     title: "Faster Response",
     text: "Online booking ensures quicker technician assignment.",
     image: "https://images.unsplash.com/photo-1517430816045-df4b7de4a7d5?w=1200",
-    icon: Clock
+    icon: Clock,
   },
   {
     title: "Secure & Reliable",
     text: "Your service requests are handled securely.",
     image: "https://images.unsplash.com/photo-1519389950473-47ba0277781c?w=1200",
-    icon: ShieldCheck
-  }
+    icon: ShieldCheck,
+  },
 ];
 
 const BookService = () => {
-  const navigate = useNavigate();
-
   const [step, setStep] = useState(1);
   const [selectedDevice, setSelectedDevice] = useState("");
   const [selectedService, setSelectedService] = useState("");
-
-  const [problemDetails, setProblemDetails] = useState("");
+  const [description, setDescription] = useState("");
 
   const [image, setImage] = useState<File | null>(null);
   const [preview, setPreview] = useState("");
 
-  const [customerName, setCustomerName] = useState("");
-  const [customerPhone, setCustomerPhone] = useState("");
-  const [customerEmail, setCustomerEmail] = useState("");
+  const [name, setName] = useState("");
+  const [phone, setPhone] = useState("");
+  const [email, setEmail] = useState("");
 
   const [index, setIndex] = useState(0);
-  const [errors, setErrors] = useState<any>({});
   const [loading, setLoading] = useState(false);
 
-  /* Auto Slide */
   useEffect(() => {
     const interval = setInterval(() => {
-      setIndex((prev) => (prev + 1) % slides.length);
+      setIndex((p) => (p + 1) % slides.length);
     }, 4000);
     return () => clearInterval(interval);
   }, []);
 
-  /* Image Handler */
   const handleImage = (e: any) => {
     const file = e.target.files[0];
     if (file) {
@@ -101,45 +94,61 @@ const BookService = () => {
     }
   };
 
-  /* Validation */
-  const validateStep2 = () => {
-    let err: any = {};
-    if (!problemDetails) err.problem = "Please describe the issue";
-    if (!image) err.image = "Please upload at least one image";
-    setErrors(err);
-    return Object.keys(err).length === 0;
-  };
-
-  /* SUBMIT BOOKING */
+  /* ------------------ SUBMIT BOOKING ------------------ */
   const submitBooking = async () => {
-    if (!customerName || !customerPhone || !customerEmail) {
+    if (!name || !phone || !email) {
       toast.error("Please fill all contact details");
       return;
     }
 
     setLoading(true);
 
-    const { error } = await supabase.from("bookings").insert({
-      device_type: selectedDevice,
-      service_type: selectedService,
-      problem_description: problemDetails,
-      customer_name: customerName,
-      customer_phone: customerPhone,
-      customer_email: customerEmail,
-      image_name: image?.name || null,
-      status: "new",
-    });
+    try {
+      let imageUrl = null;
 
-    setLoading(false);
+      if (image) {
+        const fileName = `${Date.now()}-${image.name}`;
+        const { error: uploadError } = await supabase.storage
+          .from("booking-images")
+          .upload(fileName, image);
 
-    if (error) {
-      console.error(error);
-      toast.error("Failed to submit booking");
-      return;
+        if (uploadError) throw uploadError;
+
+        const { data } = supabase.storage
+          .from("booking-images")
+          .getPublicUrl(fileName);
+
+        imageUrl = data.publicUrl;
+      }
+
+      const { error } = await supabase.from("bookings").insert({
+        device_type: selectedDevice,
+        service_type: selectedService,
+        description,
+        customer_name: name,
+        customer_phone: phone,
+        customer_email: email,
+        image_url: imageUrl,
+        status: "pending",
+      });
+
+      if (error) throw error;
+
+      toast.success("Service booked successfully!");
+      setStep(1);
+      setSelectedDevice("");
+      setSelectedService("");
+      setDescription("");
+      setImage(null);
+      setPreview("");
+      setName("");
+      setPhone("");
+      setEmail("");
+    } catch (err: any) {
+      toast.error(err.message || "Failed to submit booking");
+    } finally {
+      setLoading(false);
     }
-
-    toast.success("Service booked successfully!");
-    navigate("/dashboard");
   };
 
   return (
@@ -150,12 +159,6 @@ const BookService = () => {
         <AnimatePresence mode="wait">
           <motion.div key={index} className="absolute inset-0">
             <img src={slides[index].image} className="w-full h-full object-cover" />
-            <div className="absolute inset-0 bg-black/70 flex items-center">
-              <div className="container mx-auto px-4 text-white">
-                <h2 className="text-3xl font-bold mb-3">{slides[index].title}</h2>
-                <p className="text-gray-300">{slides[index].text}</p>
-              </div>
-            </div>
           </motion.div>
         </AnimatePresence>
       </section>
@@ -164,42 +167,81 @@ const BookService = () => {
       <section className="py-16">
         <div className="container mx-auto px-4 max-w-3xl">
 
-          {/* STEP 3 ONLY SHOWN BELOW (UI UNCHANGED ABOVE) */}
-          {step === 3 && (
-            <div className="p-8 rounded-3xl border border-white/10 bg-black">
-              <h2 className="text-2xl font-bold text-white mb-6">
-                Your Contact Details
-              </h2>
+          {/* STEP 1 */}
+          {step === 1 && (
+            <>
+              <h2 className="text-white text-2xl mb-6">Select Device</h2>
+              <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                {deviceTypes.map((d) => (
+                  <button
+                    key={d.id}
+                    onClick={() => setSelectedDevice(d.id)}
+                    className={`p-5 border rounded-xl ${
+                      selectedDevice === d.id ? "border-blue-600" : "border-white/10"
+                    }`}
+                  >
+                    <d.icon className="text-blue-400 mx-auto mb-2" />
+                    <span className="text-white">{d.label}</span>
+                  </button>
+                ))}
+              </div>
 
-              <Input
-                placeholder="Full Name"
-                value={customerName}
-                onChange={(e) => setCustomerName(e.target.value)}
-                className="mb-4 bg-black text-white border-white/10"
-              />
-
-              <Input
-                placeholder="Phone Number"
-                value={customerPhone}
-                onChange={(e) => setCustomerPhone(e.target.value)}
-                className="mb-4 bg-black text-white border-white/10"
-              />
-
-              <Input
-                placeholder="Email Address"
-                value={customerEmail}
-                onChange={(e) => setCustomerEmail(e.target.value)}
-                className="mb-4 bg-black text-white border-white/10"
-              />
+              <RadioGroup
+                className="mt-6"
+                value={selectedService}
+                onValueChange={setSelectedService}
+              >
+                {serviceTypes.map((s) => (
+                  <label key={s.id} className="flex gap-3 p-4 border rounded-xl">
+                    <RadioGroupItem value={s.id} />
+                    <span className="text-white">{s.label}</span>
+                  </label>
+                ))}
+              </RadioGroup>
 
               <Button
-                className="w-full bg-gradient-to-r from-blue-600 to-blue-800"
-                onClick={submitBooking}
-                disabled={loading}
+                className="w-full mt-6"
+                disabled={!selectedDevice || !selectedService}
+                onClick={() => setStep(2)}
               >
-                {loading ? "Submitting..." : "Submit Booking"}
+                Continue
               </Button>
-            </div>
+            </>
+          )}
+
+          {/* STEP 2 */}
+          {step === 2 && (
+            <>
+              <Textarea
+                placeholder="Describe your issue"
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
+              />
+
+              <input type="file" onChange={handleImage} className="mt-4" />
+              {preview && <img src={preview} className="w-32 mt-4 rounded" />}
+
+              <div className="flex gap-4 mt-6">
+                <Button variant="outline" onClick={() => setStep(1)}>Back</Button>
+                <Button onClick={() => setStep(3)}>Continue</Button>
+              </div>
+            </>
+          )}
+
+          {/* STEP 3 */}
+          {step === 3 && (
+            <>
+              <Input placeholder="Full Name" value={name} onChange={(e) => setName(e.target.value)} />
+              <Input placeholder="Phone" value={phone} onChange={(e) => setPhone(e.target.value)} className="mt-3" />
+              <Input placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} className="mt-3" />
+
+              <div className="flex gap-4 mt-6">
+                <Button variant="outline" onClick={() => setStep(2)}>Back</Button>
+                <Button onClick={submitBooking} disabled={loading}>
+                  {loading ? "Submitting..." : "Submit Booking"}
+                </Button>
+              </div>
+            </>
           )}
 
         </div>
