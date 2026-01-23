@@ -12,7 +12,7 @@ import {
   Wifi,
   HardDrive,
   Clock,
-  ShieldCheck,
+  ShieldCheck
 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -35,9 +35,9 @@ const deviceTypes = [
 ];
 
 const serviceTypes = [
-  { id: "onsite", label: "On-site Visit", description: "Technician visits your location" },
-  { id: "remote", label: "Remote Support", description: "Quick fix via remote access" },
-  { id: "pickup", label: "Pickup & Delivery", description: "We pick up and deliver" },
+  { id: "onsite", label: "On-site Visit" },
+  { id: "remote", label: "Remote Support" },
+  { id: "pickup", label: "Pickup & Delivery" },
 ];
 
 /* ------------------ SLIDER ------------------ */
@@ -45,19 +45,19 @@ const serviceTypes = [
 const slides = [
   {
     title: "Book Service Anytime",
-    text: "Schedule IT support 24/7 from your phone or computer.",
+    text: "Schedule IT support 24/7",
     image: "https://images.unsplash.com/photo-1556740738-b6a63e27c4df?w=1200",
     icon: Calendar,
   },
   {
     title: "Faster Response",
-    text: "Online booking ensures quicker technician assignment.",
+    text: "Quick technician assignment",
     image: "https://images.unsplash.com/photo-1517430816045-df4b7de4a7d5?w=1200",
     icon: Clock,
   },
   {
     title: "Secure & Reliable",
-    text: "Your service requests are handled securely.",
+    text: "Handled securely",
     image: "https://images.unsplash.com/photo-1519389950473-47ba0277781c?w=1200",
     icon: ShieldCheck,
   },
@@ -65,6 +65,8 @@ const slides = [
 
 const BookService = () => {
   const [step, setStep] = useState(1);
+  const [index, setIndex] = useState(0);
+
   const [selectedDevice, setSelectedDevice] = useState("");
   const [selectedService, setSelectedService] = useState("");
   const [description, setDescription] = useState("");
@@ -72,42 +74,36 @@ const BookService = () => {
   const [image, setImage] = useState<File | null>(null);
   const [preview, setPreview] = useState("");
 
-  const [name, setName] = useState("");
-  const [phone, setPhone] = useState("");
-  const [email, setEmail] = useState("");
+  const [form, setForm] = useState({
+    fullName: "",
+    phone: "",
+    email: "",
+    address: "",
+    city: "",
+  });
 
-  const [index, setIndex] = useState(0);
-  const [loading, setLoading] = useState(false);
-
+  /* Slider */
   useEffect(() => {
-    const interval = setInterval(() => {
-      setIndex((p) => (p + 1) % slides.length);
-    }, 4000);
-    return () => clearInterval(interval);
+    const i = setInterval(() => setIndex((p) => (p + 1) % slides.length), 4000);
+    return () => clearInterval(i);
   }, []);
 
+  /* Image handler */
   const handleImage = (e: any) => {
-    const file = e.target.files[0];
-    if (file) {
-      setImage(file);
-      setPreview(URL.createObjectURL(file));
-    }
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setImage(file);
+    setPreview(URL.createObjectURL(file));
   };
 
-  /* ------------------ SUBMIT BOOKING ------------------ */
+  /* Submit booking */
   const submitBooking = async () => {
-    if (!name || !phone || !email) {
-      toast.error("Please fill all contact details");
-      return;
-    }
-
-    setLoading(true);
-
     try {
       let imageUrl = null;
 
       if (image) {
         const fileName = `${Date.now()}-${image.name}`;
+
         const { error: uploadError } = await supabase.storage
           .from("booking-images")
           .upload(fileName, image);
@@ -122,32 +118,23 @@ const BookService = () => {
       }
 
       const { error } = await supabase.from("bookings").insert({
-        device_type: selectedDevice,
+        full_name: form.fullName,
+        phone: form.phone,
+        email: form.email,
+        address: form.address,
+        city: form.city,
+        device: selectedDevice,
         service_type: selectedService,
         description,
-        customer_name: name,
-        customer_phone: phone,
-        customer_email: email,
         image_url: imageUrl,
-        status: "pending",
       });
 
       if (error) throw error;
 
       toast.success("Service booked successfully!");
       setStep(1);
-      setSelectedDevice("");
-      setSelectedService("");
-      setDescription("");
-      setImage(null);
-      setPreview("");
-      setName("");
-      setPhone("");
-      setEmail("");
     } catch (err: any) {
-      toast.error(err.message || "Failed to submit booking");
-    } finally {
-      setLoading(false);
+      toast.error(err.message || "Booking failed");
     }
   };
 
@@ -157,31 +144,39 @@ const BookService = () => {
       {/* SLIDER */}
       <section className="relative h-[380px] overflow-hidden">
         <AnimatePresence mode="wait">
-          <motion.div key={index} className="absolute inset-0">
-            <img src={slides[index].image} className="w-full h-full object-cover" />
-          </motion.div>
+          <motion.img
+            key={index}
+            src={slides[index].image}
+            className="absolute inset-0 w-full h-full object-cover"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+          />
         </AnimatePresence>
       </section>
 
       {/* FORM */}
       <section className="py-16">
-        <div className="container mx-auto px-4 max-w-3xl">
+        <div className="max-w-3xl mx-auto p-6 bg-gradient-to-br from-black to-gray-900 rounded-3xl border border-white/10">
 
           {/* STEP 1 */}
           {step === 1 && (
             <>
-              <h2 className="text-white text-2xl mb-6">Select Device</h2>
+              <h2 className="text-white text-2xl mb-6">Select Device & Service</h2>
+
               <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
                 {deviceTypes.map((d) => (
                   <button
                     key={d.id}
                     onClick={() => setSelectedDevice(d.id)}
-                    className={`p-5 border rounded-xl ${
-                      selectedDevice === d.id ? "border-blue-600" : "border-white/10"
+                    className={`p-4 rounded-xl border ${
+                      selectedDevice === d.id
+                        ? "border-blue-600"
+                        : "border-white/10"
                     }`}
                   >
                     <d.icon className="text-blue-400 mx-auto mb-2" />
-                    <span className="text-white">{d.label}</span>
+                    <p className="text-white text-sm text-center">{d.label}</p>
                   </button>
                 ))}
               </div>
@@ -192,19 +187,19 @@ const BookService = () => {
                 onValueChange={setSelectedService}
               >
                 {serviceTypes.map((s) => (
-                  <label key={s.id} className="flex gap-3 p-4 border rounded-xl">
+                  <label key={s.id} className="flex items-center gap-3 text-white">
                     <RadioGroupItem value={s.id} />
-                    <span className="text-white">{s.label}</span>
+                    {s.label}
                   </label>
                 ))}
               </RadioGroup>
 
               <Button
-                className="w-full mt-6"
-                disabled={!selectedDevice || !selectedService}
+                className="w-full mt-6 bg-blue-600"
                 onClick={() => setStep(2)}
+                disabled={!selectedDevice || !selectedService}
               >
-                Continue
+                Continue <ArrowRight className="ml-2 w-4 h-4" />
               </Button>
             </>
           )}
@@ -212,18 +207,31 @@ const BookService = () => {
           {/* STEP 2 */}
           {step === 2 && (
             <>
+              <Label className="text-white">Problem Description</Label>
               <Textarea
-                placeholder="Describe your issue"
+                className="bg-black/50 text-white mt-2"
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
               />
 
-              <input type="file" onChange={handleImage} className="mt-4" />
-              {preview && <img src={preview} className="w-32 mt-4 rounded" />}
+              {/* WHITE UPLOAD BUTTON */}
+              <label className="mt-6 flex items-center justify-center gap-3 cursor-pointer bg-white text-black py-3 rounded-xl">
+                <Upload />
+                Upload Image
+                <input type="file" hidden onChange={handleImage} />
+              </label>
+
+              {preview && (
+                <img src={preview} className="w-32 h-32 mt-4 rounded-xl" />
+              )}
 
               <div className="flex gap-4 mt-6">
-                <Button variant="outline" onClick={() => setStep(1)}>Back</Button>
-                <Button onClick={() => setStep(3)}>Continue</Button>
+                <Button variant="outline" onClick={() => setStep(1)}>
+                  Back
+                </Button>
+                <Button className="flex-1 bg-blue-600" onClick={() => setStep(3)}>
+                  Continue
+                </Button>
               </div>
             </>
           )}
@@ -231,19 +239,42 @@ const BookService = () => {
           {/* STEP 3 */}
           {step === 3 && (
             <>
-              <Input placeholder="Full Name" value={name} onChange={(e) => setName(e.target.value)} />
-              <Input placeholder="Phone" value={phone} onChange={(e) => setPhone(e.target.value)} className="mt-3" />
-              <Input placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} className="mt-3" />
+              <Input
+                placeholder="Full Name"
+                className="mb-3"
+                value={form.fullName}
+                onChange={(e) => setForm({ ...form, fullName: e.target.value })}
+              />
+              <Input
+                placeholder="Phone Number"
+                className="mb-3"
+                value={form.phone}
+                onChange={(e) => setForm({ ...form, phone: e.target.value })}
+              />
+              <Input
+                placeholder="Email"
+                className="mb-3"
+                value={form.email}
+                onChange={(e) => setForm({ ...form, email: e.target.value })}
+              />
+              <Input
+                placeholder="Address"
+                className="mb-3"
+                value={form.address}
+                onChange={(e) => setForm({ ...form, address: e.target.value })}
+              />
+              <Input
+                placeholder="City"
+                className="mb-6"
+                value={form.city}
+                onChange={(e) => setForm({ ...form, city: e.target.value })}
+              />
 
-              <div className="flex gap-4 mt-6">
-                <Button variant="outline" onClick={() => setStep(2)}>Back</Button>
-                <Button onClick={submitBooking} disabled={loading}>
-                  {loading ? "Submitting..." : "Submit Booking"}
-                </Button>
-              </div>
+              <Button className="w-full bg-blue-600" onClick={submitBooking}>
+                Submit Booking
+              </Button>
             </>
           )}
-
         </div>
       </section>
     </div>
