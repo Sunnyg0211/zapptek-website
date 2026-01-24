@@ -8,7 +8,6 @@ import {
   ShieldCheck,
   Laptop,
   ArrowRight,
-  X,
 } from "lucide-react";
 
 const caseStudies = [
@@ -18,7 +17,6 @@ const caseStudies = [
     content:
       "A growing startup faced constant network downtime and slow systems. We restructured their office network and optimized devices.",
     icon: Wifi,
-    video: "https://www.youtube.com/embed/tgbNymZ7vqY",
   },
   {
     title: "Critical Data Recovery",
@@ -26,7 +24,6 @@ const caseStudies = [
     content:
       "Recovered 100% critical files from crashed hard disk and restored business operations within hours.",
     icon: Cpu,
-    video: "https://www.youtube.com/embed/tgbNymZ7vqY",
   },
   {
     title: "Complete IT Maintenance",
@@ -34,7 +31,6 @@ const caseStudies = [
     content:
       "Through our AMC plan, company avoided failures and received regular system health checks.",
     icon: ShieldCheck,
-    video: "https://www.youtube.com/embed/tgbNymZ7vqY",
   },
   {
     title: "Laptop Repair Turnaround",
@@ -42,7 +38,6 @@ const caseStudies = [
     content:
       "Urgent laptop repair delivered same day before client’s important meeting.",
     icon: Laptop,
-    video: "https://www.youtube.com/embed/tgbNymZ7vqY",
   },
   {
     title: "Security Upgrade Project",
@@ -50,7 +45,6 @@ const caseStudies = [
     content:
       "Installed security solutions and backup systems protecting from cyber threats.",
     icon: ShieldCheck,
-    video: "https://www.youtube.com/embed/tgbNymZ7vqY",
   },
   {
     title: "Printer & Device Setup",
@@ -58,14 +52,11 @@ const caseStudies = [
     content:
       "Configured multiple devices across departments with full network setup.",
     icon: Wifi,
-    video: "https://www.youtube.com/embed/tgbNymZ7vqY",
   },
 ];
 
 export function TestimonialsSection() {
   const [index, setIndex] = useState(0);
-  const [videoOpen, setVideoOpen] = useState(false);
-  const [currentVideo, setCurrentVideo] = useState("");
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -79,11 +70,6 @@ export function TestimonialsSection() {
     caseStudies[index],
     caseStudies[(index + 1) % caseStudies.length],
   ];
-
-  const openVideo = (url: string) => {
-    setCurrentVideo(url);
-    setVideoOpen(true);
-  };
 
   return (
     <section className="relative py-16 md:py-20 overflow-hidden">
@@ -111,7 +97,7 @@ export function TestimonialsSection() {
           </h2>
 
           <p className="text-gray-300 max-w-2xl mx-auto">
-            See how we solved real IT problems for real customers.
+            Real IT problems. Real solutions. Real results.
           </p>
         </div>
 
@@ -156,13 +142,9 @@ export function TestimonialsSection() {
                     “{item.content}”
                   </p>
 
-                  {/* CTA Button */}
+                  {/* CTA (NO VIDEO) */}
                   <button
-                    onClick={() => openVideo(item.video)}
-                    className="group flex items-center gap-2 px-4 py-2 rounded-lg
-                               bg-gradient-to-r from-blue-600 to-blue-800
-                               hover:from-blue-500 hover:to-blue-700
-                               transition text-white text-sm"
+                    className="group flex items-center gap-2 text-blue-400 hover:text-blue-300 text-sm font-medium"
                   >
                     View Case Study
                     <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
@@ -173,40 +155,6 @@ export function TestimonialsSection() {
           </AnimatePresence>
         </div>
       </div>
-
-      {/* Modal */}
-      <AnimatePresence>
-        {videoOpen && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4"
-          >
-            <motion.div
-              initial={{ scale: 0.9 }}
-              animate={{ scale: 1 }}
-              exit={{ scale: 0.9 }}
-              className="relative bg-black rounded-xl max-w-3xl w-full p-4"
-            >
-              <button
-                onClick={() => setVideoOpen(false)}
-                className="absolute -top-4 -right-4 bg-blue-600 text-white rounded-full p-2"
-              >
-                <X className="w-5 h-5" />
-              </button>
-
-              <div className="relative pb-[56.25%] h-0">
-                <iframe
-                  src={currentVideo}
-                  className="absolute top-0 left-0 w-full h-full rounded-lg"
-                  allowFullScreen
-                />
-              </div>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
     </section>
   );
 }
