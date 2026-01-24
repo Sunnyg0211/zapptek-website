@@ -13,15 +13,13 @@ import {
   HardDrive,
   Clock,
   ShieldCheck,
-  MapPin,
 } from "lucide-react";
-
+import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 
 /* ------------------ DEVICE & SERVICE TYPES ------------------ */
@@ -58,7 +56,7 @@ const slides = [
   },
   {
     title: "Secure & Reliable",
-    text: "Handled safely & professionally",
+    text: "Handled securely",
     image: "https://images.unsplash.com/photo-1519389950473-47ba0277781c?w=1200",
     icon: ShieldCheck,
   },
@@ -70,27 +68,24 @@ const BookService = () => {
 
   const [device, setDevice] = useState("");
   const [service, setService] = useState("");
-  const [description, setDescription] = useState("");
 
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
   const [email, setEmail] = useState("");
   const [address, setAddress] = useState("");
   const [city, setCity] = useState("");
+  const [issue, setIssue] = useState("");
 
   const [image, setImage] = useState<File | null>(null);
   const [preview, setPreview] = useState("");
 
   /* Auto slider */
   useEffect(() => {
-    const i = setInterval(
-      () => setSlideIndex((p) => (p + 1) % slides.length),
-      4000
-    );
+    const i = setInterval(() => {
+      setSlideIndex((p) => (p + 1) % slides.length);
+    }, 4000);
     return () => clearInterval(i);
   }, []);
-
-  const SlideIcon = slides[slideIndex].icon;
 
   const handleImage = (e: any) => {
     const file = e.target.files[0];
@@ -102,7 +97,7 @@ const BookService = () => {
 
   const submitBooking = async () => {
     if (!name || !phone || !email || !address || !city) {
-      toast.error("Please fill all required fields");
+      toast.error("Please fill all details");
       return;
     }
 
@@ -114,41 +109,45 @@ const BookService = () => {
       city,
       device_type: device,
       service_type: service,
-      description,
     });
 
     if (error) {
       console.error(error);
       toast.error("Failed to submit booking");
-      return;
+    } else {
+      toast.success("Booking submitted successfully");
+      setStep(1);
+      setName("");
+      setPhone("");
+      setEmail("");
+      setAddress("");
+      setCity("");
+      setIssue("");
+      setImage(null);
+      setPreview("");
     }
-
-    toast.success("Booking submitted successfully");
-    setStep(1);
   };
 
+  const Icon = slides[slideIndex].icon;
+
   return (
-    <div className="min-h-screen bg-black">
+    <div className="min-h-screen bg-black pt-24">
+
       {/* SLIDER */}
-      <section className="relative h-[360px] overflow-hidden">
+      <section className="relative h-[320px] overflow-hidden">
         <AnimatePresence mode="wait">
           <motion.div
             key={slideIndex}
-            className="absolute inset-0"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
+            className="absolute inset-0"
           >
-            <img
-              src={slides[slideIndex].image}
-              className="w-full h-full object-cover"
-            />
+            <img src={slides[slideIndex].image} className="w-full h-full object-cover" />
             <div className="absolute inset-0 bg-black/70 flex items-center">
-              <div className="container px-6 text-white">
-                <SlideIcon className="w-12 h-12 text-blue-500 mb-4" />
-                <h2 className="text-3xl font-bold">
-                  {slides[slideIndex].title}
-                </h2>
+              <div className="container mx-auto px-6 text-white">
+                <Icon className="w-12 h-12 text-blue-400 mb-4" />
+                <h2 className="text-3xl font-bold">{slides[slideIndex].title}</h2>
                 <p className="text-gray-300">{slides[slideIndex].text}</p>
               </div>
             </div>
@@ -158,113 +157,79 @@ const BookService = () => {
 
       {/* FORM */}
       <section className="py-16">
-        <div className="max-w-3xl mx-auto px-4">
-          <div className="bg-black/80 border border-white/10 rounded-3xl p-8">
-            {/* STEP 1 */}
-            {step === 1 && (
-              <>
-                <h2 className="text-white text-xl mb-6">
-                  Select Device & Service
-                </h2>
+        <div className="max-w-3xl mx-auto p-8 rounded-3xl border border-white/10 bg-black/80">
 
-                <div className="grid grid-cols-3 gap-4">
-                  {deviceTypes.map((d) => (
-                    <button
-                      key={d.id}
-                      onClick={() => setDevice(d.id)}
-                      className={`p-4 rounded-xl border ${
-                        device === d.id
-                          ? "border-blue-600"
-                          : "border-white/10"
-                      }`}
-                    >
-                      <d.icon className="mx-auto text-blue-400" />
-                      <p className="text-white text-sm mt-2">{d.label}</p>
-                    </button>
-                  ))}
-                </div>
-
-                <RadioGroup
-                  value={service}
-                  onValueChange={setService}
-                  className="mt-6"
-                >
-                  {serviceTypes.map((s) => (
-                    <label
-                      key={s.id}
-                      className="flex items-center gap-3 p-3 border border-white/10 rounded-lg mt-2"
-                    >
-                      <RadioGroupItem value={s.id} />
-                      <span className="text-white">{s.label}</span>
-                    </label>
-                  ))}
-                </RadioGroup>
-
-                <Button
-                  className="w-full mt-6 bg-blue-600"
-                  disabled={!device || !service}
-                  onClick={() => setStep(2)}
-                >
-                  Continue <ArrowRight className="ml-2 w-4 h-4" />
-                </Button>
-              </>
-            )}
-
-            {/* STEP 2 */}
-            {step === 2 && (
-              <>
-                <Label className="text-white">Problem Description</Label>
-                <Textarea
-                  className="mt-2 bg-black border-white/10 text-white"
-                  value={description}
-                  onChange={(e) => setDescription(e.target.value)}
-                />
-
-                <div className="mt-4">
-                  <input type="file" hidden id="img" onChange={handleImage} />
-                  <label
-                    htmlFor="img"
-                    className="border-dashed border p-6 block text-center text-gray-300 cursor-pointer"
+          {step === 1 && (
+            <>
+              <h2 className="text-white text-2xl mb-6">Select Device & Service</h2>
+              <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                {deviceTypes.map((d) => (
+                  <button
+                    key={d.id}
+                    onClick={() => setDevice(d.id)}
+                    className={`p-4 rounded-xl border ${
+                      device === d.id ? "border-blue-600" : "border-white/10"
+                    }`}
                   >
-                    <Upload className="mx-auto mb-2" />
-                    Upload Image
+                    <d.icon className="mx-auto text-blue-400" />
+                    <p className="text-white mt-2">{d.label}</p>
+                  </button>
+                ))}
+              </div>
+
+              <RadioGroup className="mt-6" value={service} onValueChange={setService}>
+                {serviceTypes.map((s) => (
+                  <label key={s.id} className="flex items-center gap-3 text-white mt-2">
+                    <RadioGroupItem value={s.id} />
+                    {s.label}
                   </label>
-                  {preview && (
-                    <img
-                      src={preview}
-                      className="w-32 h-32 mt-3 rounded-xl object-cover"
-                    />
-                  )}
-                </div>
+                ))}
+              </RadioGroup>
 
-                <div className="flex gap-4 mt-6">
-                  <Button variant="outline" onClick={() => setStep(1)}>
-                    Back
-                  </Button>
-                  <Button className="flex-1 bg-blue-600" onClick={() => setStep(3)}>
-                    Continue
-                  </Button>
-                </div>
-              </>
-            )}
+              <Button className="w-full mt-6" onClick={() => setStep(2)} disabled={!device || !service}>
+                Continue <ArrowRight className="ml-2" />
+              </Button>
+            </>
+          )}
 
-            {/* STEP 3 */}
-            {step === 3 && (
-              <>
-                <h2 className="text-white mb-4">Contact Details</h2>
+          {step === 2 && (
+            <>
+              <h2 className="text-white text-2xl mb-6">Issue Details</h2>
+              <Textarea
+                value={issue}
+                onChange={(e) => setIssue(e.target.value)}
+                className="mb-4"
+                placeholder="Describe the issue"
+              />
 
-                <Input value={name} onChange={(e) => setName(e.target.value)} placeholder="Full Name" />
-                <Input value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="Phone" className="mt-3" />
-                <Input value={email} onChange={(e) => setEmail(e.target.value)} placeholder="Email" className="mt-3" />
-                <Input value={address} onChange={(e) => setAddress(e.target.value)} placeholder="Full Address" className="mt-3" />
-                <Input value={city} onChange={(e) => setCity(e.target.value)} placeholder="City" className="mt-3" />
+              <input type="file" hidden id="file" onChange={handleImage} />
+              <label htmlFor="file" className="block border-dashed border p-6 text-center cursor-pointer">
+                <Upload className="mx-auto mb-2" />
+                Upload Image
+              </label>
 
-                <Button className="w-full mt-6 bg-blue-600" onClick={submitBooking}>
-                  Submit Booking
-                </Button>
-              </>
-            )}
-          </div>
+              {preview && <img src={preview} className="mt-4 w-32 rounded-xl" />}
+
+              <Button className="w-full mt-6" onClick={() => setStep(3)}>
+                Continue
+              </Button>
+            </>
+          )}
+
+          {step === 3 && (
+            <>
+              <h2 className="text-white text-2xl mb-6">Contact Details</h2>
+              <Input placeholder="Full Name" value={name} onChange={(e) => setName(e.target.value)} />
+              <Input placeholder="Phone" className="mt-3" value={phone} onChange={(e) => setPhone(e.target.value)} />
+              <Input placeholder="Email" className="mt-3" value={email} onChange={(e) => setEmail(e.target.value)} />
+              <Input placeholder="Address" className="mt-3" value={address} onChange={(e) => setAddress(e.target.value)} />
+              <Input placeholder="City" className="mt-3" value={city} onChange={(e) => setCity(e.target.value)} />
+
+              <Button className="w-full mt-6 bg-blue-600" onClick={submitBooking}>
+                Submit Booking
+              </Button>
+            </>
+          )}
         </div>
       </section>
     </div>
