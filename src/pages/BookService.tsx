@@ -12,7 +12,7 @@ import {
   HardDrive,
   Clock,
   ShieldCheck,
-  Headphones,
+  Calendar,
 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -20,7 +20,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { supabase } from "@/lib/supabase";
+
+import { supabase } from "@/integrations/supabase/client";
 
 /* ------------------ DEVICE & SERVICE TYPES ------------------ */
 
@@ -39,24 +40,24 @@ const serviceTypes = [
   { id: "pickup", label: "Pickup & Delivery", description: "We pick up and deliver" },
 ];
 
-/* ------------------ IT SERVICE BANNERS ------------------ */
+/* ------------------ SLIDER ------------------ */
 
 const slides = [
   {
     title: "Professional IT Support",
-    text: "Expert laptop, desktop, printer & network repair services.",
+    text: "Expert laptop, desktop & network repair services.",
     image: "https://images.unsplash.com/photo-1581092334651-ddf26d9a09d0?w=1600",
-    icon: Headphones,
+    icon: Calendar,
   },
   {
-    title: "Fast On-Site & Remote Service",
-    text: "Quick technician assignment for home & office IT issues.",
+    title: "Fast Response",
+    text: "Quick technician assignment for urgent issues.",
     image: "https://images.unsplash.com/photo-1581092918056-0c4c3acd3789?w=1600",
     icon: Clock,
   },
   {
-    title: "Secure Systems & Networks",
-    text: "Protection against malware, data loss & network failures.",
+    title: "Secure & Reliable",
+    text: "Your data and systems are always protected.",
     image: "https://images.unsplash.com/photo-1600267165477-6d4cc741b379?w=1600",
     icon: ShieldCheck,
   },
@@ -80,7 +81,7 @@ export default function BookService() {
   const [city, setCity] = useState("");
   const [pincode, setPincode] = useState("");
 
-  /* ------------------ SLIDER AUTO PLAY ------------------ */
+  /* ------------------ SLIDER AUTO ------------------ */
   useEffect(() => {
     const i = setInterval(() => {
       setIndex((p) => (p + 1) % slides.length);
@@ -88,7 +89,7 @@ export default function BookService() {
     return () => clearInterval(i);
   }, []);
 
-  /* ------------------ LOAD USER PROFILE ------------------ */
+  /* ------------------ LOAD USER + PROFILE ------------------ */
   useEffect(() => {
     const loadProfile = async () => {
       const { data } = await supabase.auth.getUser();
@@ -171,7 +172,7 @@ export default function BookService() {
   return (
     <div className="min-h-screen bg-black">
 
-      {/* ------------------ BANNER ------------------ */}
+      {/* ---------- SLIDER ---------- */}
       <section className="relative h-[380px] overflow-hidden">
         <AnimatePresence mode="wait">
           <motion.div
@@ -181,31 +182,22 @@ export default function BookService() {
             exit={{ opacity: 0 }}
             className="absolute inset-0"
           >
-            <img
-              src={slides[index].image}
-              className="w-full h-full object-cover"
-            />
+            <img src={slides[index].image} className="w-full h-full object-cover" />
             <div className="absolute inset-0 bg-black/70 flex items-center">
               <div className="container mx-auto px-4 text-white">
-
                 {(() => {
                   const Icon = slides[index].icon;
                   return <Icon className="w-12 h-12 text-blue-400 mb-4" />;
                 })()}
-
-                <h2 className="text-3xl font-bold mb-3">
-                  {slides[index].title}
-                </h2>
-                <p className="max-w-xl text-gray-300">
-                  {slides[index].text}
-                </p>
+                <h2 className="text-3xl font-bold mb-3">{slides[index].title}</h2>
+                <p className="max-w-xl text-gray-300">{slides[index].text}</p>
               </div>
             </div>
           </motion.div>
         </AnimatePresence>
       </section>
 
-      {/* ------------------ FORM ------------------ */}
+      {/* ---------- FORM ---------- */}
       <section className="py-16">
         <div className="container mx-auto px-4 max-w-3xl">
 
@@ -222,9 +214,7 @@ export default function BookService() {
                     key={d.id}
                     onClick={() => setSelectedDevice(d.id)}
                     className={`p-4 rounded-xl border ${
-                      selectedDevice === d.id
-                        ? "border-blue-600"
-                        : "border-white/10"
+                      selectedDevice === d.id ? "border-blue-600" : "border-white/10"
                     }`}
                   >
                     <d.icon className="mx-auto text-blue-400 mb-2" />
@@ -239,16 +229,11 @@ export default function BookService() {
                 className="mt-6"
               >
                 {serviceTypes.map((s) => (
-                  <label
-                    key={s.id}
-                    className="flex gap-3 p-4 border border-white/10 rounded-xl mt-2"
-                  >
+                  <label key={s.id} className="flex gap-3 p-4 border border-white/10 rounded-xl mt-2">
                     <RadioGroupItem value={s.id} />
                     <div>
                       <div className="text-white">{s.label}</div>
-                      <div className="text-gray-400 text-sm">
-                        {s.description}
-                      </div>
+                      <div className="text-gray-400 text-sm">{s.description}</div>
                     </div>
                   </label>
                 ))}
@@ -279,20 +264,11 @@ export default function BookService() {
               </Label>
               <input type="file" onChange={handleImage} />
 
-              {preview && (
-                <img
-                  src={preview}
-                  className="w-40 mt-4 rounded-xl"
-                />
-              )}
+              {preview && <img src={preview} className="w-40 mt-4 rounded-xl" />}
 
               <div className="flex gap-4 mt-6">
-                <Button variant="outline" onClick={() => setStep(1)}>
-                  Back
-                </Button>
-                <Button onClick={() => setStep(3)}>
-                  Continue
-                </Button>
+                <Button variant="outline" onClick={() => setStep(1)}>Back</Button>
+                <Button onClick={() => setStep(3)}>Continue</Button>
               </div>
             </>
           )}
@@ -306,34 +282,15 @@ export default function BookService() {
 
               {!profile?.address && (
                 <>
-                  <Input
-                    placeholder="Address"
-                    value={address}
-                    onChange={(e) => setAddress(e.target.value)}
-                    className="mb-3"
-                  />
-                  <Input
-                    placeholder="City"
-                    value={city}
-                    onChange={(e) => setCity(e.target.value)}
-                    className="mb-3"
-                  />
-                  <Input
-                    placeholder="Pincode"
-                    value={pincode}
-                    onChange={(e) => setPincode(e.target.value)}
-                    className="mb-3"
-                  />
+                  <Input placeholder="Address" value={address} onChange={(e) => setAddress(e.target.value)} className="mb-3" />
+                  <Input placeholder="City" value={city} onChange={(e) => setCity(e.target.value)} className="mb-3" />
+                  <Input placeholder="Pincode" value={pincode} onChange={(e) => setPincode(e.target.value)} className="mb-3" />
                 </>
               )}
 
               <div className="flex gap-4 mt-6">
-                <Button variant="outline" onClick={() => setStep(2)}>
-                  Back
-                </Button>
-                <Button onClick={submitBooking}>
-                  Submit Booking
-                </Button>
+                <Button variant="outline" onClick={() => setStep(2)}>Back</Button>
+                <Button onClick={submitBooking}>Submit Booking</Button>
               </div>
             </>
           )}
