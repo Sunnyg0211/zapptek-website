@@ -1,6 +1,15 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { useEffect, useState } from "react";
-import { Star, Quote, Cpu, Wifi, ShieldCheck, Laptop, Play, X } from "lucide-react";
+import {
+  Star,
+  Quote,
+  Cpu,
+  Wifi,
+  ShieldCheck,
+  Laptop,
+  ArrowRight,
+  X,
+} from "lucide-react";
 
 const caseStudies = [
   {
@@ -78,17 +87,11 @@ export function TestimonialsSection() {
 
   return (
     <section className="relative py-16 md:py-20 overflow-hidden">
-      {/* Animated Black Gradient Background */}
+      {/* Animated Background */}
       <motion.div
         className="absolute inset-0 -z-10"
-        animate={{
-          backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"],
-        }}
-        transition={{
-          duration: 10,
-          repeat: Infinity,
-          ease: "linear",
-        }}
+        animate={{ backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"] }}
+        transition={{ duration: 10, repeat: Infinity, ease: "linear" }}
         style={{
           background:
             "linear-gradient(270deg, #000000, #0f0f0f, #1a1a1a, #050505)",
@@ -104,11 +107,11 @@ export function TestimonialsSection() {
           </span>
 
           <h2 className="text-2xl md:text-3xl font-bold mb-2 text-white">
-            Client Video Testimonials
+            Client Testimonials
           </h2>
 
           <p className="text-gray-300 max-w-2xl mx-auto">
-            Watch how we solved real IT problems for real customers.
+            See how we solved real IT problems for real customers.
           </p>
         </div>
 
@@ -153,12 +156,16 @@ export function TestimonialsSection() {
                     “{item.content}”
                   </p>
 
+                  {/* CTA Button */}
                   <button
                     onClick={() => openVideo(item.video)}
-                    className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-blue-600 to-blue-800 hover:from-blue-500 hover:to-blue-700 transition rounded-lg text-white text-sm"
+                    className="group flex items-center gap-2 px-4 py-2 rounded-lg
+                               bg-gradient-to-r from-blue-600 to-blue-800
+                               hover:from-blue-500 hover:to-blue-700
+                               transition text-white text-sm"
                   >
-                    <Play className="w-4 h-4 text-white" />
-                    Watch Video
+                    View Case Study
+                    <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
                   </button>
                 </div>
               ))}
@@ -167,7 +174,7 @@ export function TestimonialsSection() {
         </div>
       </div>
 
-      {/* Video Modal */}
+      {/* Modal */}
       <AnimatePresence>
         {videoOpen && (
           <motion.div
