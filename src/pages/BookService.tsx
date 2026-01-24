@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { useNavigate } from "react-router-dom";
 import {
   Calendar,
   Upload,
@@ -13,18 +12,19 @@ import {
   Wifi,
   HardDrive,
   Clock,
-  ShieldCheck
+  ShieldCheck,
+  Headphones,
 } from "lucide-react";
 
-import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { toast } from "sonner";
 
-/* ------------------ STATIC DATA ------------------ */
+import { supabase } from "@/lib/supabase";
+
+/* ------------------ DEVICE & SERVICE TYPES ------------------ */
 
 const deviceTypes = [
   { id: "desktop", icon: Monitor, label: "Desktop" },
@@ -36,200 +36,269 @@ const deviceTypes = [
 ];
 
 const serviceTypes = [
-  { id: "onsite", label: "On-site Visit" },
-  { id: "remote", label: "Remote Support" },
-  { id: "pickup", label: "Pickup & Delivery" },
+  { id: "onsite", label: "On-site Visit", description: "Technician visits your location" },
+  { id: "remote", label: "Remote Support", description: "Quick fix via remote access" },
+  { id: "pickup", label: "Pickup & Delivery", description: "We pick up and deliver" },
 ];
+
+/* ------------------ IT SERVICE BANNERS ------------------ */
 
 const slides = [
   {
-    title: "Book Service Anytime",
-    text: "Schedule IT support 24/7",
-    image: "https://images.unsplash.com/photo-1556740738-b6a63e27c4df?w=1200",
-    icon: Calendar,
+    title: "Professional IT Support",
+    text: "Expert laptop, desktop, printer & network repair services.",
+    image: "https://images.unsplash.com/photo-1581092334651-ddf26d9a09d0?w=1600",
+    icon: Headphones,
   },
   {
-    title: "Faster Response",
-    text: "Quick technician assignment",
-    image: "https://images.unsplash.com/photo-1517430816045-df4b7de4a7d5?w=1200",
+    title: "Fast On-Site & Remote Service",
+    text: "Quick technician assignment for home & office IT issues.",
+    image: "https://images.unsplash.com/photo-1581092918056-0c4c3acd3789?w=1600",
     icon: Clock,
   },
   {
-    title: "Secure & Reliable",
-    text: "Handled securely",
-    image: "https://images.unsplash.com/photo-1519389950473-47ba0277781c?w=1200",
+    title: "Secure Systems & Networks",
+    text: "Protection against malware, data loss & network failures.",
+    image: "https://images.unsplash.com/photo-1600267165477-6d4cc741b379?w=1600",
     icon: ShieldCheck,
   },
 ];
 
-export default function BookService() {
-  const navigate = useNavigate();
-
+const BookService = () => {
   const [step, setStep] = useState(1);
   const [index, setIndex] = useState(0);
 
-  const [device, setDevice] = useState("");
-  const [service, setService] = useState("");
-  const [description, setDescription] = useState("");
+  const [selectedDevice, setSelectedDevice] = useState("");
+  const [selectedService, setSelectedService] = useState("");
 
-  const [name, setName] = useState("");
-  const [phone, setPhone] = useState("");
-  const [contactEmail, setContactEmail] = useState("");
-  const [city, setCity] = useState("");
-  const [address, setAddress] = useState("");
-
+  const [problem, setProblem] = useState("");
   const [image, setImage] = useState<File | null>(null);
-  const [loading, setLoading] = useState(false);
+  const [preview, setPreview] = useState("");
 
-  /* Slider */
+  const [user, setUser] = useState<any>(null);
+  const [profile, setProfile] = useState<any>(null);
+
+  const [address, setAddress] = useState("");
+  const [city, setCity] = useState("");
+  const [pincode, setPincode] = useState("");
+
+  /* ------------------ AUTO SLIDER ------------------ */
   useEffect(() => {
-    const i = setInterval(() => {
-      setIndex((p) => (p + 1) % slides.length);
+    const interval = setInterval(() => {
+      setIndex((prev) => (prev + 1) % slides.length);
     }, 4000);
-    return () => clearInterval(i);
+    return () => clearInterval(interval);
   }, []);
 
-  /* Submit Booking */
-  const submitBooking = async () => {
-    try {
-      setLoading(true);
+  /* ------------------ LOAD USER PROFILE ------------------ */
+  useEffect(() => {
+    const loadProfile = async () => {
+      const { data } = await supabase.auth.getUser();
+      if (!data?.user) return;
 
-      // 1️⃣ Auth user
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) {
-        toast.error("Please login first");
-        navigate("/login");
-        return;
-      }
+      setUser(data.user);
 
-      // 2️⃣ Get username from profiles
-      const { data: profile } = await supabase
+      const { data: profileData } = await supabase
         .from("profiles")
-        .select("full_name")
-        .eq("id", user.id)
+        .select("*")
+        .eq("id", data.user.id)
         .single();
 
-      // 3️⃣ Upload image
-      let imageUrl = null;
-      if (image) {
-        const filePath = `bookings/${user.id}-${Date.now()}`;
-        const { error } = await supabase.storage
-          .from("booking-images")
-          .upload(filePath, image);
-
-        if (error) throw error;
-
-        imageUrl = filePath;
+      if (profileData) {
+        setProfile(profileData);
+        setAddress(profileData.address || "");
+        setCity(profileData.city || "");
+        setPincode(profileData.pincode || "");
       }
+    };
 
-      // 4️⃣ Insert booking
-      const { error } = await supabase.from("bookings").insert({
-        user_id: user.id,
-        username: profile?.full_name || "Customer",
-        contact_email: contactEmail,
-        phone,
-        city,
-        address,
-        device,
-        service_type: service,
-        description,
-        image_url: imageUrl,
-      });
+    loadProfile();
+  }, []);
 
-      if (error) throw error;
+  /* ------------------ IMAGE HANDLER ------------------ */
+  const handleImage = (e: any) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setImage(file);
+    setPreview(URL.createObjectURL(file));
+  };
 
-      toast.success("Booking submitted successfully!");
-      navigate("/");
+  /* ------------------ IMAGE UPLOAD (OPTIONAL) ------------------ */
+  const uploadImage = async () => {
+    if (!image || !user) return null;
 
-    } catch (err: any) {
-      console.error(err);
-      toast.error(err.message || "Failed to submit booking");
-    } finally {
-      setLoading(false);
+    const filePath = `${user.id}/${Date.now()}-${image.name}`;
+
+    const { error } = await supabase.storage
+      .from("booking-images")
+      .upload(filePath, image);
+
+    if (error) throw error;
+
+    return filePath;
+  };
+
+  /* ------------------ SUBMIT BOOKING ------------------ */
+  const submitBooking = async () => {
+    if (!user) {
+      alert("Please login to submit booking");
+      return;
     }
+
+    const imagePath = await uploadImage();
+
+    const { error } = await supabase.from("bookings").insert({
+      user_id: user.id,
+      device_type: selectedDevice,
+      service_type: selectedService,
+      problem_description: problem,
+      image_url: imagePath,
+      address,
+      city,
+      pincode,
+      status: "pending",
+    });
+
+    if (error) {
+      alert("Failed to submit booking");
+      return;
+    }
+
+    if (!profile?.address) {
+      await supabase
+        .from("profiles")
+        .update({ address, city, pincode })
+        .eq("id", user.id);
+    }
+
+    alert("Booking submitted successfully!");
+    setStep(1);
   };
 
   return (
-    <div className="min-h-screen bg-black text-white">
-      {/* Slider */}
-      <section className="relative h-[350px] overflow-hidden">
+    <div className="min-h-screen bg-black">
+
+      {/* ------------------ SLIDER ------------------ */}
+      <section className="relative h-[380px] overflow-hidden">
         <AnimatePresence mode="wait">
-          <motion.div key={index} className="absolute inset-0">
+          <motion.div
+            key={index}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="absolute inset-0"
+          >
             <img src={slides[index].image} className="w-full h-full object-cover" />
-            <div className="absolute inset-0 bg-black/70 flex items-center justify-center">
-              <div className="text-center px-4">
-                {(() => {
-                  const Icon = slides[index].icon;
-                  return <Icon className="mx-auto mb-4 text-blue-400 w-10 h-10" />;
-                })()}
-                <h2 className="text-3xl font-bold">{slides[index].title}</h2>
-                <p className="text-gray-300">{slides[index].text}</p>
+            <div className="absolute inset-0 bg-black/70 flex items-center">
+              <div className="container mx-auto px-4 text-white">
+                <slides[index].icon className="w-12 h-12 text-blue-400 mb-4" />
+                <h2 className="text-3xl font-bold mb-3">{slides[index].title}</h2>
+                <p className="max-w-xl text-gray-300">{slides[index].text}</p>
               </div>
             </div>
           </motion.div>
         </AnimatePresence>
       </section>
 
-      {/* FORM */}
-      <section className="py-14">
-        <div className="max-w-3xl mx-auto p-8 border border-white/10 rounded-2xl bg-black/70">
+      {/* ------------------ FORM ------------------ */}
+      <section className="py-16">
+        <div className="container mx-auto px-4 max-w-3xl">
+
+          {/* ------------------ STEP 1 ------------------ */}
           {step === 1 && (
             <>
-              <h2 className="text-xl mb-4">Select Device & Service</h2>
-              <div className="grid grid-cols-3 gap-3">
-                {deviceTypes.map(d => (
-                  <button key={d.id} onClick={() => setDevice(d.id)}
-                    className={`p-4 rounded ${device === d.id ? "bg-blue-600" : "bg-white/10"}`}>
-                    <d.icon className="mx-auto" />
-                    {d.label}
+              <h2 className="text-2xl font-bold text-white mb-6">Select Device & Service</h2>
+
+              <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                {deviceTypes.map((d) => (
+                  <button
+                    key={d.id}
+                    onClick={() => setSelectedDevice(d.id)}
+                    className={`p-4 rounded-xl border ${
+                      selectedDevice === d.id
+                        ? "border-blue-600"
+                        : "border-white/10"
+                    }`}
+                  >
+                    <d.icon className="mx-auto text-blue-400 mb-2" />
+                    <span className="text-white text-sm">{d.label}</span>
                   </button>
                 ))}
               </div>
 
-              <RadioGroup className="mt-6" value={service} onValueChange={setService}>
-                {serviceTypes.map(s => (
-                  <label key={s.id} className="flex gap-2 items-center">
-                    <RadioGroupItem value={s.id} /> {s.label}
+              <RadioGroup
+                value={selectedService}
+                onValueChange={setSelectedService}
+                className="mt-6"
+              >
+                {serviceTypes.map((s) => (
+                  <label key={s.id} className="flex gap-3 p-4 border border-white/10 rounded-xl mt-2">
+                    <RadioGroupItem value={s.id} />
+                    <div>
+                      <div className="text-white">{s.label}</div>
+                      <div className="text-gray-400 text-sm">{s.description}</div>
+                    </div>
                   </label>
                 ))}
               </RadioGroup>
 
-              <Button className="mt-6 w-full" onClick={() => setStep(2)} disabled={!device || !service}>
-                Continue
+              <Button
+                className="w-full mt-6"
+                disabled={!selectedDevice || !selectedService}
+                onClick={() => setStep(2)}
+              >
+                Continue <ArrowRight className="ml-2 w-4 h-4" />
               </Button>
             </>
           )}
 
+          {/* ------------------ STEP 2 ------------------ */}
           {step === 2 && (
             <>
+              <Label className="text-white">Problem Details</Label>
               <Textarea
-                placeholder="Describe the issue"
-                value={description}
-                onChange={(e) => setDescription(e.target.value)}
+                className="mt-2 bg-black/50 text-white"
+                value={problem}
+                onChange={(e) => setProblem(e.target.value)}
               />
 
-              <Input type="file" className="mt-4" onChange={(e) => setImage(e.target.files?.[0] || null)} />
+              <Label className="text-white mt-6 block">Upload Image (Optional)</Label>
+              <input type="file" onChange={handleImage} />
 
-              <Button className="mt-6 w-full" onClick={() => setStep(3)}>
-                Continue
-              </Button>
+              {preview && <img src={preview} className="w-40 mt-4 rounded-xl" />}
+
+              <div className="flex gap-4 mt-6">
+                <Button variant="outline" onClick={() => setStep(1)}>Back</Button>
+                <Button onClick={() => setStep(3)}>Continue</Button>
+              </div>
             </>
           )}
 
+          {/* ------------------ STEP 3 ------------------ */}
           {step === 3 && (
             <>
-              <Input placeholder="Phone" value={phone} onChange={e => setPhone(e.target.value)} />
-              <Input placeholder="Contact Email" value={contactEmail} onChange={e => setContactEmail(e.target.value)} />
-              <Input placeholder="City" value={city} onChange={e => setCity(e.target.value)} />
-              <Textarea placeholder="Address" value={address} onChange={e => setAddress(e.target.value)} />
+              <Input value={profile?.full_name || ""} disabled className="mb-3" />
+              <Input value={profile?.phone || ""} disabled className="mb-3" />
+              <Input value={profile?.email || ""} disabled className="mb-3" />
 
-              <Button className="mt-6 w-full" onClick={submitBooking} disabled={loading}>
-                {loading ? "Submitting..." : "Submit Booking"}
-              </Button>
+              {!profile?.address && (
+                <>
+                  <Input placeholder="Address" value={address} onChange={(e) => setAddress(e.target.value)} />
+                  <Input placeholder="City" value={city} onChange={(e) => setCity(e.target.value)} />
+                  <Input placeholder="Pincode" value={pincode} onChange={(e) => setPincode(e.target.value)} />
+                </>
+              )}
+
+              <div className="flex gap-4 mt-6">
+                <Button variant="outline" onClick={() => setStep(2)}>Back</Button>
+                <Button onClick={submitBooking}>Submit Booking</Button>
+              </div>
             </>
           )}
         </div>
       </section>
     </div>
   );
-}
+};
+
+export default BookService;
