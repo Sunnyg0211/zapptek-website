@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
-  Calendar,
   Upload,
   Check,
   ArrowRight,
@@ -21,7 +20,6 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-
 import { supabase } from "@/lib/supabase";
 
 /* ------------------ DEVICE & SERVICE TYPES ------------------ */
@@ -64,14 +62,14 @@ const slides = [
   },
 ];
 
-const BookService = () => {
+export default function BookService() {
   const [step, setStep] = useState(1);
   const [index, setIndex] = useState(0);
 
   const [selectedDevice, setSelectedDevice] = useState("");
   const [selectedService, setSelectedService] = useState("");
-
   const [problem, setProblem] = useState("");
+
   const [image, setImage] = useState<File | null>(null);
   const [preview, setPreview] = useState("");
 
@@ -82,12 +80,12 @@ const BookService = () => {
   const [city, setCity] = useState("");
   const [pincode, setPincode] = useState("");
 
-  /* ------------------ AUTO SLIDER ------------------ */
+  /* ------------------ SLIDER AUTO PLAY ------------------ */
   useEffect(() => {
-    const interval = setInterval(() => {
-      setIndex((prev) => (prev + 1) % slides.length);
+    const i = setInterval(() => {
+      setIndex((p) => (p + 1) % slides.length);
     }, 4000);
-    return () => clearInterval(interval);
+    return () => clearInterval(i);
   }, []);
 
   /* ------------------ LOAD USER PROFILE ------------------ */
@@ -115,7 +113,7 @@ const BookService = () => {
     loadProfile();
   }, []);
 
-  /* ------------------ IMAGE HANDLER ------------------ */
+  /* ------------------ IMAGE (OPTIONAL) ------------------ */
   const handleImage = (e: any) => {
     const file = e.target.files?.[0];
     if (!file) return;
@@ -123,25 +121,20 @@ const BookService = () => {
     setPreview(URL.createObjectURL(file));
   };
 
-  /* ------------------ IMAGE UPLOAD (OPTIONAL) ------------------ */
   const uploadImage = async () => {
     if (!image || !user) return null;
-
-    const filePath = `${user.id}/${Date.now()}-${image.name}`;
-
+    const path = `${user.id}/${Date.now()}-${image.name}`;
     const { error } = await supabase.storage
       .from("booking-images")
-      .upload(filePath, image);
-
+      .upload(path, image);
     if (error) throw error;
-
-    return filePath;
+    return path;
   };
 
   /* ------------------ SUBMIT BOOKING ------------------ */
   const submitBooking = async () => {
     if (!user) {
-      alert("Please login to submit booking");
+      alert("Please login first");
       return;
     }
 
@@ -160,7 +153,7 @@ const BookService = () => {
     });
 
     if (error) {
-      alert("Failed to submit booking");
+      alert("Booking failed");
       return;
     }
 
@@ -178,7 +171,7 @@ const BookService = () => {
   return (
     <div className="min-h-screen bg-black">
 
-      {/* ------------------ SLIDER ------------------ */}
+      {/* ------------------ BANNER ------------------ */}
       <section className="relative h-[380px] overflow-hidden">
         <AnimatePresence mode="wait">
           <motion.div
@@ -188,12 +181,24 @@ const BookService = () => {
             exit={{ opacity: 0 }}
             className="absolute inset-0"
           >
-            <img src={slides[index].image} className="w-full h-full object-cover" />
+            <img
+              src={slides[index].image}
+              className="w-full h-full object-cover"
+            />
             <div className="absolute inset-0 bg-black/70 flex items-center">
               <div className="container mx-auto px-4 text-white">
-                <slides[index].icon className="w-12 h-12 text-blue-400 mb-4" />
-                <h2 className="text-3xl font-bold mb-3">{slides[index].title}</h2>
-                <p className="max-w-xl text-gray-300">{slides[index].text}</p>
+
+                {(() => {
+                  const Icon = slides[index].icon;
+                  return <Icon className="w-12 h-12 text-blue-400 mb-4" />;
+                })()}
+
+                <h2 className="text-3xl font-bold mb-3">
+                  {slides[index].title}
+                </h2>
+                <p className="max-w-xl text-gray-300">
+                  {slides[index].text}
+                </p>
               </div>
             </div>
           </motion.div>
@@ -204,10 +209,12 @@ const BookService = () => {
       <section className="py-16">
         <div className="container mx-auto px-4 max-w-3xl">
 
-          {/* ------------------ STEP 1 ------------------ */}
+          {/* STEP 1 */}
           {step === 1 && (
             <>
-              <h2 className="text-2xl font-bold text-white mb-6">Select Device & Service</h2>
+              <h2 className="text-2xl font-bold text-white mb-6">
+                Select Device & Service
+              </h2>
 
               <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
                 {deviceTypes.map((d) => (
@@ -232,11 +239,16 @@ const BookService = () => {
                 className="mt-6"
               >
                 {serviceTypes.map((s) => (
-                  <label key={s.id} className="flex gap-3 p-4 border border-white/10 rounded-xl mt-2">
+                  <label
+                    key={s.id}
+                    className="flex gap-3 p-4 border border-white/10 rounded-xl mt-2"
+                  >
                     <RadioGroupItem value={s.id} />
                     <div>
                       <div className="text-white">{s.label}</div>
-                      <div className="text-gray-400 text-sm">{s.description}</div>
+                      <div className="text-gray-400 text-sm">
+                        {s.description}
+                      </div>
                     </div>
                   </label>
                 ))}
@@ -252,7 +264,7 @@ const BookService = () => {
             </>
           )}
 
-          {/* ------------------ STEP 2 ------------------ */}
+          {/* STEP 2 */}
           {step === 2 && (
             <>
               <Label className="text-white">Problem Details</Label>
@@ -262,19 +274,30 @@ const BookService = () => {
                 onChange={(e) => setProblem(e.target.value)}
               />
 
-              <Label className="text-white mt-6 block">Upload Image (Optional)</Label>
+              <Label className="text-white mt-6 block">
+                Upload Image (Optional)
+              </Label>
               <input type="file" onChange={handleImage} />
 
-              {preview && <img src={preview} className="w-40 mt-4 rounded-xl" />}
+              {preview && (
+                <img
+                  src={preview}
+                  className="w-40 mt-4 rounded-xl"
+                />
+              )}
 
               <div className="flex gap-4 mt-6">
-                <Button variant="outline" onClick={() => setStep(1)}>Back</Button>
-                <Button onClick={() => setStep(3)}>Continue</Button>
+                <Button variant="outline" onClick={() => setStep(1)}>
+                  Back
+                </Button>
+                <Button onClick={() => setStep(3)}>
+                  Continue
+                </Button>
               </div>
             </>
           )}
 
-          {/* ------------------ STEP 3 ------------------ */}
+          {/* STEP 3 */}
           {step === 3 && (
             <>
               <Input value={profile?.full_name || ""} disabled className="mb-3" />
@@ -283,22 +306,40 @@ const BookService = () => {
 
               {!profile?.address && (
                 <>
-                  <Input placeholder="Address" value={address} onChange={(e) => setAddress(e.target.value)} />
-                  <Input placeholder="City" value={city} onChange={(e) => setCity(e.target.value)} />
-                  <Input placeholder="Pincode" value={pincode} onChange={(e) => setPincode(e.target.value)} />
+                  <Input
+                    placeholder="Address"
+                    value={address}
+                    onChange={(e) => setAddress(e.target.value)}
+                    className="mb-3"
+                  />
+                  <Input
+                    placeholder="City"
+                    value={city}
+                    onChange={(e) => setCity(e.target.value)}
+                    className="mb-3"
+                  />
+                  <Input
+                    placeholder="Pincode"
+                    value={pincode}
+                    onChange={(e) => setPincode(e.target.value)}
+                    className="mb-3"
+                  />
                 </>
               )}
 
               <div className="flex gap-4 mt-6">
-                <Button variant="outline" onClick={() => setStep(2)}>Back</Button>
-                <Button onClick={submitBooking}>Submit Booking</Button>
+                <Button variant="outline" onClick={() => setStep(2)}>
+                  Back
+                </Button>
+                <Button onClick={submitBooking}>
+                  Submit Booking
+                </Button>
               </div>
             </>
           )}
+
         </div>
       </section>
     </div>
   );
-};
-
-export default BookService;
+}
